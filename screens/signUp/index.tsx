@@ -7,7 +7,6 @@ import {
   Platform,
 } from "react-native";
 import { Formik } from "formik";
-import { signUp } from "../../api";
 import { Block, Button, Input, Text, theme } from "galio-framework";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -16,10 +15,12 @@ import { HeaderHeight } from "../../constants/utils";
 import useValidation from "../../hooks/useValidation";
 import * as Yup from "yup";
 import { handleSignUpSubmit, initSignUpValues } from "./utils";
+import { useNavigation } from "@react-navigation/native";
 
 const { height, width } = Dimensions.get("window");
 
-const SignUp = ({ navigation }: any) => {
+const SignUp = () => {
+  const navigation = useNavigation();
   const [state, setState] = useState<any>({
     phone: "-",
     email: "-",
@@ -40,7 +41,7 @@ const SignUp = ({ navigation }: any) => {
   const { firstName, lastName, password, passwordConfirm, phone, email } =
     useValidation();
 
-  const toggleActive = (name) => {
+  const toggleActive = (name: string) => {
     const { active } = state;
 
     active[name] = !active[name];
@@ -54,7 +55,10 @@ const SignUp = ({ navigation }: any) => {
       end={{ x: 0.25, y: 1.1 }}
       locations={[0.2, 1]}
       colors={["#6C24AA", "#15002B"]}
-      style={[styles.signup, { flex: 1, paddingTop: theme.SIZES.BASE * 4 }]}
+      style={[
+        styles.signup,
+        { flex: 1, paddingTop: (theme.SIZES?.BASE || 0) * 4 },
+      ]}
     >
       <Block flex middle>
         <KeyboardAvoidingView
@@ -67,19 +71,19 @@ const SignUp = ({ navigation }: any) => {
               row
               center
               space="between"
-              style={{ marginVertical: theme.SIZES.BASE * 1.875 }}
+              style={{ marginVertical: (theme.SIZES?.BASE || 0) * 1.875 }}
             >
               <Block flex middle right>
                 <Button
                   round
                   onlyIcon
-                  iconSize={theme.SIZES.BASE * 1.625}
+                  iconSize={(theme.SIZES?.BASE || 0) * 1.625}
                   icon="facebook"
                   iconFamily="font-awesome"
                   onPress={() => Alert.alert("Not implemented")}
-                  color={theme.COLORS.FACEBOOK}
+                  color={theme.COLORS?.FACEBOOK}
                   shadowless
-                  iconColor={theme.COLORS.WHITE}
+                  iconColor={theme.COLORS?.WHITE}
                   style={styles.social}
                 />
               </Block>
@@ -87,13 +91,13 @@ const SignUp = ({ navigation }: any) => {
                 <Button
                   round
                   onlyIcon
-                  iconSize={theme.SIZES.BASE * 1.625}
+                  iconSize={(theme.SIZES?.BASE || 0) * 1.625}
                   icon="twitter"
                   iconFamily="font-awesome"
                   onPress={() => Alert.alert("Not implemented")}
-                  color={theme.COLORS.TWITTER}
+                  color={theme.COLORS?.TWITTER}
                   shadowless
-                  iconColor={theme.COLORS.WHITE}
+                  iconColor={theme.COLORS?.WHITE}
                   style={styles.social}
                 />
               </Block>
@@ -101,18 +105,18 @@ const SignUp = ({ navigation }: any) => {
                 <Button
                   round
                   onlyIcon
-                  iconSize={theme.SIZES.BASE * 1.625}
+                  iconSize={(theme.SIZES?.BASE || 0) * 1.625}
                   icon="dribbble"
                   iconFamily="font-awesome"
                   onPress={() => Alert.alert("Not implemented")}
-                  color={theme.COLORS.DRIBBBLE}
+                  color={theme.COLORS?.DRIBBBLE}
                   shadowless
-                  iconColor={theme.COLORS.WHITE}
+                  iconColor={theme.COLORS?.WHITE}
                   style={styles.social}
                 />
               </Block>
             </Block>
-            <Text color="#fff" center size={theme.SIZES.FONT * 0.875}>
+            <Text color="#fff" center size={(theme.SIZES?.FONT || 0) * 0.875}>
               or be classical
             </Text>
           </Block>
@@ -306,12 +310,12 @@ const SignUp = ({ navigation }: any) => {
                     size="large"
                     color="transparent"
                     shadowless
-                    onPress={() => navigation.navigate("Sign In")}
+                    onPress={() => navigation.navigate("Sign In" as never)}
                   >
                     <Text
                       center
-                      color={theme.COLORS.WHITE}
-                      size={theme.SIZES.FONT * 0.75}
+                      color={theme.COLORS?.WHITE}
+                      size={(theme.SIZES?.FONT || 0) * 0.75}
                     >
                       Already have an account? Sign In
                     </Text>
@@ -333,9 +337,9 @@ const styles = StyleSheet.create({
     marginTop: Platform.OS === "android" ? -HeaderHeight : 0,
   },
   social: {
-    width: theme.SIZES.BASE * 3.5,
-    height: theme.SIZES.BASE * 3.5,
-    borderRadius: theme.SIZES.BASE * 1.75,
+    width: (theme.SIZES?.BASE || 0) * 3.5,
+    height: (theme.SIZES?.BASE || 0) * 3.5,
+    borderRadius: (theme.SIZES?.BASE || 0) * 1.75,
     justifyContent: "center",
     shadowColor: "rgba(0, 0, 0, 0.3)",
     shadowOffset: {

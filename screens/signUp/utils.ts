@@ -2,7 +2,7 @@ import { FormikValues } from "formik";
 import { Alert } from "react-native";
 import { signUp } from "../../api";
 
-export const handleSignUpSubmit = ({ navigation }) => {
+export const handleSignUpSubmit = ({ navigation }: any) => {
   return async (
     values: any,
     { setStatus, setSubmitting, setValues, setTouched }: FormikValues
@@ -50,12 +50,3 @@ export const initSignUpValues = {
 //   firstName: "muhammadu",
 //   lastName: "zaini",
 // };
-
-const touchedInitState = {
-  phone: false,
-  email: false,
-  password: false,
-  passwordConfirm: false,
-  firstName: false,
-  lastName: false,
-};

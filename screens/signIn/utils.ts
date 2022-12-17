@@ -25,15 +25,15 @@ export const handleSignInSubmit = ({ navigation }: any) => {
   };
 };
 
-// const initSignInValues = {
-//   email: "zainіііi@gmail.com",
-//   password: "pass1234",
-// };
-
 const initSignInValues = {
-  email: "",
-  password: "",
+  email: "zainіііi@gmail.com",
+  password: "pass1234",
 };
+
+// const initSignInValues = {
+//   email: "",
+//   password: "",
+// };
 
 const touchedInitState = {
   email: false,

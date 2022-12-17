@@ -6,14 +6,11 @@ import { Icon, Product } from "../components/";
 
 const { width } = Dimensions.get("screen");
 import homeImages from "../constants/images/home";
+import CreateDossier from "./dossiers/create";
 
 export default class Home extends React.Component {
   render() {
-    return (
-      <Block flex center style={styles.home}>
-        {/* {this.renderProducts()} */}
-      </Block>
-    );
+    return <CreateDossier />;
   }
 }
 

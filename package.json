@@ -15,7 +15,9 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@react-native-community/checkbox": "^0.5.14",
     "@react-native-masked-view/masked-view": "0.2.8",
+    "@react-native-picker/picker": "^2.4.8",
     "@react-navigation/drawer": "6.4.1",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/stack": "^6.2.1",
@@ -26,24 +28,27 @@
     "expo-linear-gradient": "~11.3.0",
     "formik": "^2.2.9",
     "galio-framework": "^0.8.0",
+    "pod-install": "^0.1.38",
     "react": "18.1.0",
     "react-native": "0.70.6",
+    "react-native-bouncy-checkbox": "^3.0.6",
     "react-native-dropdown-picker": "^5.4.2",
     "react-native-gesture-handler": "~2.2.1",
     "react-native-modal-dropdown": "git+https://github.com/siemiatj/react-native-modal-dropdown.git",
+    "react-native-ratings": "^8.1.0",
     "react-native-reanimated": "~2.8.0",
     "react-native-safe-area-context": "4.2.4",
     "react-native-screens": "~3.11.1",
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@types/react": "~17.0.21",
+    "@types/react-native": "~0.67.6",
     "babel-preset-expo": "~9.1.0",
     "cross-env": "^7.0.3",
     "expo-cli": "^4.3.0",
     "jest-expo": "^45.0.1",
-    "typescript": "~4.3.5",
-    "@types/react": "~17.0.21",
-    "@types/react-native": "~0.67.6"
+    "typescript": "~4.3.5"
   },
   "bugs": {
     "url": "https://github.com/creativetimofficial/ct-material-kit-pro-react-native/issues"
