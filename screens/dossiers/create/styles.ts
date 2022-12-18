@@ -53,6 +53,7 @@ export const styles = StyleSheet.create({
     marginBottom: -35,
   },
   pickerLabelText: {
+    paddingTop: 2,
     color: materialTheme.COLORS.PLACEHOLDER,
   },
   pickerLabelIcon: {
@@ -84,5 +85,19 @@ export const styles = StyleSheet.create({
     wordBreak: "break-word",
     width: "100%",
   },
-  checkboxText: { color: materialTheme.COLORS.PLACEHOLDER, paddingLeft: 10 },
+  checkboxText: { color: materialTheme.COLORS.PLACEHOLDER, paddingLeft: 16 },
+  checkbox: { marginRight: "18%", paddingLeft: 14 },
+  //rich-editor
+  richContainer: { marginBottom: 100 },
+  richBar: {
+    height: 50,
+    width: width * 0.9,
+    backgroundColor: "#F5FCFF",
+  },
+  tib: {
+    textAlign: "center",
+    color: "#515156",
+  },
 });
+
+export const styles2 = StyleSheet.create({});

@@ -40,6 +40,7 @@ export const initCreateDossierValues = {
   appartmentFloorConditionRate: "",
   appartmentWindowsQualityRate: "",
   appartmentWindowsConditionRate: "",
+  description: "",
   //
   phone: "+493482932441",
   email: "zainіііi@gmail.com",
@@ -50,15 +51,20 @@ export const initCreateDossierValues = {
 };
 
 export const dossierTypes: DossierType[] = [
-  { id: DossierTypeIds.APPARTMENT, name: "Apartment" },
-  { id: DossierTypeIds.HOUSE, name: "House" },
-  { id: DossierTypeIds.MULTI_FAMILY_HOUSE, name: "Multi-family house" },
+  { id: DossierTypeIds.APPARTMENT, name: "Apartment", icon: "apartment" },
+  { id: DossierTypeIds.HOUSE, name: "House", icon: "house" },
+  {
+    id: DossierTypeIds.MULTI_FAMILY_HOUSE,
+    name: "Multi-family house",
+    icon: "corporate-fare",
+  },
 ];
 
 export const dossierTypeIdInit = DossierTypeIds.APPARTMENT;
 export const defaultRating = 0;
 export const RATING_REVIEW_SIZE = 12;
 export const RATING_SIZE = 18;
+export const MIN_HEIGHT_RICH_CONTAINER = 150;
 
 export const appartmentSubtypes: AppartmentSubtype[] = [
   { id: 1, name: "Apartment" },

@@ -103,6 +103,7 @@ export interface Dossier {
 export interface DossierType {
   id: DossierTypeIds;
   name: DossierTypeName;
+  icon?: string;
 }
 
 export type DossierTypeName = "Apartment" | "House" | "Multi-family house";

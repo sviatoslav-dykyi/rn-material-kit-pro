@@ -1,4 +1,4 @@
-import React, { useState, ReactElement } from "react";
+import React, { useState, ReactElement, useRef } from "react";
 import {
   Alert,
   Dimensions,
@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   View,
+  ScrollView,
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { Picker } from "@react-native-picker/picker";
@@ -27,6 +28,7 @@ import {
   conditionRates,
   RATING_REVIEW_SIZE,
   RATING_SIZE,
+  MIN_HEIGHT_RICH_CONTAINER,
 } from "../utils";
 import Form from ".";
 
@@ -55,7 +57,24 @@ const AppartmentForm = ({
   return (
     <React.Fragment>
       <Block center>
-        <Text style={styles.pickerLabel}>Subtype:</Text>
+        <Block
+          row
+          style={[
+            styles.pickerLabel,
+            {
+              marginTop: 15,
+            },
+          ]}
+        >
+          <Icon
+            name="business"
+            color={materialTheme.COLORS.PLACEHOLDER}
+            family="MaterialIcons"
+            size={20}
+            style={styles.pickerLabelIcon}
+          />
+          <Text style={styles.pickerLabelText}>Subtype:</Text>
+        </Block>
         <Picker
           selectedValue={values.appartmentSubtypeId}
           onValueChange={(value) => setFieldValue("appartmentSubtypeId", value)}
@@ -67,7 +86,16 @@ const AppartmentForm = ({
         </Picker>
       </Block>
       <Block center>
-        <Text style={styles.pickerLabel}>Deal type:</Text>
+        <Block row style={[styles.pickerLabel, { marginTop: 15 }]}>
+          <Icon
+            name="vpn-key"
+            color={materialTheme.COLORS.PLACEHOLDER}
+            family="MaterialIcons"
+            size={20}
+            style={styles.pickerLabelIcon}
+          />
+          <Text style={styles.pickerLabelText}>Deal type:</Text>
+        </Block>
         <Picker
           selectedValue={values.appartmentDealTypeId}
           onValueChange={(value) =>
@@ -433,7 +461,7 @@ const AppartmentForm = ({
           onPress={(isChecked: boolean) => {
             setFieldValue("appartmentNewBuilding", isChecked);
           }}
-          style={{ marginRight: "20%" }}
+          style={styles.checkbox}
         />
         <BouncyCheckbox
           size={25}
@@ -445,7 +473,15 @@ const AppartmentForm = ({
           }}
         />
       </Block>
+
       <Block style={styles.checkboxBlock} row>
+        <Icon
+          name="countertops"
+          color={materialTheme.COLORS.PLACEHOLDER}
+          family="MaterialIcons"
+          size={20}
+          style={styles.pickerLabelIcon}
+        />
         <Text style={styles.ratingBlockTitle}>Kitchen: </Text>
       </Block>
       <Block center style={[styles.ratingBlock]}>
@@ -473,8 +509,16 @@ const AppartmentForm = ({
         />
       </Block>
       <Block style={styles.checkboxBlock} row>
-        <Text style={styles.ratingBlockTitle}>Bathrooms: </Text>
+        <Icon
+          name="hot-tub"
+          color={materialTheme.COLORS.PLACEHOLDER}
+          family="MaterialIcons"
+          size={20}
+          style={styles.pickerLabelIcon}
+        />
+        <Text style={styles.ratingBlockTitle}>Bathrooms:: </Text>
       </Block>
+
       <Block center style={[styles.ratingBlock]}>
         <Text style={styles.ratingBlockSubTitle}>Rate the quality</Text>
         <AirbnbRating
@@ -500,6 +544,13 @@ const AppartmentForm = ({
         />
       </Block>
       <Block style={styles.checkboxBlock} row>
+        <Icon
+          name="view-day"
+          color={materialTheme.COLORS.PLACEHOLDER}
+          family="MaterialIcons"
+          size={20}
+          style={styles.pickerLabelIcon}
+        />
         <Text style={styles.ratingBlockTitle}>Floor: </Text>
       </Block>
       <Block center style={[styles.ratingBlock]}>
@@ -525,8 +576,16 @@ const AppartmentForm = ({
         />
       </Block>
       <Block style={styles.checkboxBlock} row>
+        <Icon
+          name="web-asset"
+          color={materialTheme.COLORS.PLACEHOLDER}
+          family="MaterialIcons"
+          size={20}
+          style={styles.pickerLabelIcon}
+        />
         <Text style={styles.ratingBlockTitle}>Windows: </Text>
       </Block>
+
       <Block center style={[styles.ratingBlock]}>
         <Text style={styles.ratingBlockSubTitle}>Rate the quality</Text>
         <AirbnbRating
