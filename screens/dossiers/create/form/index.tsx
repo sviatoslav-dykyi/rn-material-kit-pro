@@ -13,8 +13,11 @@ import { DossierTypeIds } from "../../../../utils/constants";
 import { Dossier } from "../types";
 import { styles } from "../styles";
 import AppartmentForm from "./Appartment";
-// import DocumentPicker from "react-native-document-picker";
-import DocumentPicker from "react-native-document-picker";
+import { View } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import * as DocumentPicker from "expo-document-picker";
+import HouseForm from "./House";
+
 const CreateDossiersForm = ({
   handleChange,
   handleBlur,
@@ -30,6 +33,8 @@ const CreateDossiersForm = ({
   const navigation = useNavigation();
   const RichText = useRef(null);
   const [height, setHeight] = useState(MIN_HEIGHT_RICH_CONTAINER);
+  const [image, setImage] = useState(null);
+
   const handleConditionRate = (field: string) => (rating: number) =>
     setFieldValue(field, Number(rating));
 
@@ -49,37 +54,42 @@ const CreateDossiersForm = ({
   const hanleButtonTypePress = (id: DossierTypeIds) => () =>
     setFieldValue("typeId", id);
 
-  const docPicker = async () => {
+  const pickDocument = async () => {
     try {
-      const res: any = await DocumentPicker.pick({
-        type: [DocumentPicker.types.allFiles],
+      const res = await DocumentPicker.getDocumentAsync({
+        copyToCacheDirectory: true,
       });
-      console.log(
-        res.uri,
-        res.type, // mime type
-        res.name,
-        res.size
-      );
+      //console.log("res", res);
       //this.uploadAPICall(res); //here you can call your API and send the data to that API
     } catch (err) {
-      if (DocumentPicker.isCancel(err)) {
-        console.log("error -----", err);
-      } else {
-        throw err;
-      }
+      //console.log("error--");
     }
   };
 
+  const pickImage = async () => {
+    try {
+      let result: any = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsMultipleSelection: true,
+        allowsEditing: false,
+        aspect: [4, 3],
+        quality: 1,
+      });
+      console.log("www");
+      if (!result.canceled) {
+        // console.log("111");
+        console.log("result", result);
+        //setImage(result.assets[0].uri);
+      }
+      //this.uploadAPICall(res); //here you can call your API and send the data to that API
+    } catch (err) {
+      console.log("error -----", err);
+    }
+    // No permissions request is necessary for launching the image library
+  };
   return (
     <Block flex={1} center space="between">
       <Block center>
-        <Button
-          title="11Select 📑"
-          onPress={() => {
-            //console.log("11");
-            docPicker();
-          }}
-        />
         <Input
           bgColor="transparent"
           placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
@@ -163,6 +173,23 @@ const CreateDossiersForm = ({
             }}
           />
         )}
+        {values.typeId === DossierTypeIds.HOUSE && (
+          <HouseForm
+            {...{
+              handleChange,
+              handleBlur,
+              values,
+              touched,
+              status,
+              errors,
+              setFieldValue,
+              state,
+              toggleActive,
+              handleQualityRate,
+              handleConditionRate,
+            }}
+          />
+        )}
         <Block
           style={[
             styles.richContainer,
@@ -202,6 +229,28 @@ const CreateDossiersForm = ({
             }}
           />
         </Block>
+        <View
+          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+        >
+          <Button
+            uppercase
+            onPress={pickDocument}
+            icon={"star"}
+            iconFamily="AntDesign"
+            iconSize={19}
+          >
+            Upload document
+          </Button>
+          <Button
+            uppercase
+            onPress={pickImage}
+            icon={"picture"}
+            iconFamily="AntDesign"
+            iconSize={19}
+          >
+            Upload images
+          </Button>
+        </View>
       </Block>
       <Block flex center style={{ marginTop: 20 }}>
         <Button

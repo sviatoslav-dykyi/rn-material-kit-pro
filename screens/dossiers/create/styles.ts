@@ -50,7 +50,7 @@ export const styles = StyleSheet.create({
   pickerLabel: {
     width: width * 0.9,
     color: materialTheme.COLORS.PLACEHOLDER,
-    marginBottom: -35,
+    marginBottom: -15,
   },
   pickerLabelText: {
     paddingTop: 2,
@@ -61,7 +61,8 @@ export const styles = StyleSheet.create({
     paddingRight: 17,
   },
   picker: {
-    width: width * 0.93,
+    //width: width * 0.93,
+    width: width * 0.8,
   },
   checkboxBlock: {
     width: width * 0.9,

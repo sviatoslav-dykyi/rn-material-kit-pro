@@ -37,12 +37,10 @@ export interface Dossier {
   houseNetLivingAreaInM2: number;
   houseLandAreaInM2: number;
   houseEnergyLabel: EnergyLabel;
-  houseFloorNumber: number;
   houseNumberOfFloors: number;
   houseNumberOfRooms: number;
   houseNumberOfBathrooms: number;
   houseBalconyOrTerraceInM2: number;
-  houseGardenInM2: number;
   houseGarageSpaces: number;
   houseOutdoorParkingSpaces: number;
   houseNewBuilding: true;

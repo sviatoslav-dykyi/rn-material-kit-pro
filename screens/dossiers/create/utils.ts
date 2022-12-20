@@ -8,6 +8,7 @@ import {
   DealType,
   DossierType,
   EnergyLabel,
+  HouseSubtype,
   QualityRate,
 } from "./types";
 import { DossierTypeIds } from "../../../utils/constants";
@@ -41,6 +42,10 @@ export const initCreateDossierValues = {
   appartmentWindowsQualityRate: "",
   appartmentWindowsConditionRate: "",
   description: "",
+
+  //house
+
+  houseLandAreaInM2: "",
   //
   phone: "+493482932441",
   email: "zainіііi@gmail.com",
@@ -73,6 +78,13 @@ export const appartmentSubtypes: AppartmentSubtype[] = [
   { id: 4, name: "Attic apartment" },
   { id: 5, name: "Terraced apartment" },
   { id: 6, name: "Studio" },
+];
+
+export const houseSubtypes: HouseSubtype[] = [
+  { id: 1, name: "Detached house" },
+  { id: 2, name: "Semi-detached house" },
+  { id: 3, name: "Terraced house - end" },
+  { id: 4, name: "Farm" },
 ];
 
 export const appartmentDealTypes: DealType[] = [

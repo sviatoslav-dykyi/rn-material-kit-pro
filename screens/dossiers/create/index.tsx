@@ -38,6 +38,8 @@ const CreateDossier = (): ReactElement => {
       appartmentGardenInM2: false,
       appartmentGarageSpaces: false,
       appartmentOutdoorParkingSpaces: false,
+      //house
+      houseLandAreaInM2: false,
     },
   });
 
