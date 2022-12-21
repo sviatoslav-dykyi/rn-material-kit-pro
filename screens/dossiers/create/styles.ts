@@ -99,6 +99,15 @@ export const styles = StyleSheet.create({
     textAlign: "center",
     color: "#515156",
   },
+  dropDownPickerBlock: {
+    width: width * 0.9,
+    height: 100,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 15,
+    zIndex: 11111,
+  },
+  dropDownPickerContainer: { width: width * 0.9 },
 });
 
 export const styles2 = StyleSheet.create({});

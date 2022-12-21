@@ -111,6 +111,11 @@ function CustomDrawerContent({
           navigation={navigation}
           focused={state.index === 9 ? true : false}
         />
+        <DrawerCustomItem
+          title="Home"
+          navigation={navigation}
+          focused={state.index === 9 ? true : false}
+        />
       </Block>
     </Block>
   );

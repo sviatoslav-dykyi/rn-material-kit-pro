@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   StyleSheet,
   Dimensions,
@@ -8,6 +8,7 @@ import {
   TextInput,
 } from "react-native";
 import { Block, Button, Input, Text, theme } from "galio-framework";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { LinearGradient } from "expo-linear-gradient";
 import { materialTheme } from "../../constants";
@@ -16,9 +17,10 @@ import { Formik } from "formik";
 import useValidation from "../../hooks/useValidation";
 import * as Yup from "yup";
 import { signIn } from "../../api";
-import { handleSignInSubmit } from "./utils";
+import { handleSignInSubmit, initSignInValues, storeUserData } from "./utils";
 import { initSignUpValues } from "../signUp/utils";
 import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../../navigation/context-utils";
 
 const { width } = Dimensions.get("window");
 
@@ -42,6 +44,33 @@ const SignIn = () => {
     setState({ active });
   };
 
+  const { signIn, signOut } = useContext(AuthContext);
+
+  // const storeData = async (value: any) => {
+  //   try {
+  //     const jsonValue = JSON.stringify(value);
+  //     await AsyncStorage.setItem("user", jsonValue);
+  //   } catch (e) {
+  //     // saving error
+  //   }
+  // };
+
+  // const getData = async () => {
+  //   try {
+  //     const value = await AsyncStorage.getItem("user");
+  //     if (value !== null) {
+  //       console.log("value", value);
+  //     }
+  //   } catch (e) {
+  //     // error reading value
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   storeData({ id: 1, name: "Gog" });
+  //   getData();
+  // }, []);
+  console.log("");
   return (
     <LinearGradient
       start={{ x: 0, y: 0 }}
@@ -115,7 +144,7 @@ const SignIn = () => {
             </Text>
           </Block>
           <Formik
-            initialValues={initSignUpValues}
+            initialValues={initSignInValues}
             onSubmit={handleSignInSubmit({ navigation })}
             validationSchema={Yup.object().shape({
               email,
@@ -134,7 +163,6 @@ const SignIn = () => {
             }) => (
               <Block flex>
                 <Block center>
-                  <Block style={{ width: 200, height: 200 }}></Block>
                   <Input
                     borderless
                     autoFocus
@@ -207,6 +235,7 @@ const SignIn = () => {
                     style={{ height: 48 }}
                     onPress={
                       () => {
+                        signIn({});
                         submitForm();
                       }
 
@@ -218,6 +247,7 @@ const SignIn = () => {
                   >
                     SIGN IN
                   </Button>
+
                   <Button
                     size="large"
                     color="transparent"

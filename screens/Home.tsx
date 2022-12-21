@@ -2,17 +2,29 @@ import React from "react";
 import { StyleSheet, Dimensions, ScrollView } from "react-native";
 import { Button, Block, Text, Input, theme } from "galio-framework";
 
-import { Icon, Product } from "../components/";
+import { Icon, Product } from "../components";
 
 const { width } = Dimensions.get("screen");
 import homeImages from "../constants/images/home";
 import CreateDossier from "./dossiers/create";
+import { useNavigation } from "@react-navigation/native";
 
-export default class Home extends React.Component {
-  render() {
-    return <CreateDossier />;
-  }
-}
+const Home = () => {
+  const navigation = useNavigation();
+  return (
+    <Block row center>
+      <Button
+        onPress={() => {
+          navigation.navigate("CreateDossier" as never);
+        }}
+      >
+        Create
+      </Button>
+    </Block>
+  );
+};
+
+export default Home;
 
 const styles = StyleSheet.create({
   home: {
@@ -26,8 +38,8 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   header: {
-    backgroundColor: theme.COLORS.WHITE,
-    shadowColor: theme.COLORS.BLACK,
+    backgroundColor: theme.COLORS?.WHITE,
+    shadowColor: theme.COLORS?.BLACK,
     shadowOffset: {
       width: 0,
       height: 2,
@@ -43,7 +55,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   tab: {
-    backgroundColor: theme.COLORS.TRANSPARENT,
+    backgroundColor: theme.COLORS?.TRANSPARENT,
     width: width * 0.5,
     borderRadius: 0,
     borderWidth: 0,
@@ -56,10 +68,10 @@ const styles = StyleSheet.create({
   },
   divider: {
     borderRightWidth: 0.3,
-    borderRightColor: theme.COLORS.MUTED,
+    borderRightColor: theme.COLORS?.MUTED,
   },
   products: {
-    width: width - theme.SIZES.BASE * 2,
-    paddingVertical: theme.SIZES.BASE * 2,
+    width: width - Number(theme.SIZES?.BASE) * 2,
+    paddingVertical: Number(theme.SIZES?.BASE) * 2,
   },
 });
