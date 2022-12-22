@@ -1,4 +1,4 @@
-import React, { useState, ReactElement, useRef } from "react";
+import React, { useState, ReactElement, useRef, useEffect } from "react";
 import {
   Alert,
   Dimensions,
@@ -18,11 +18,11 @@ import { Formik } from "formik";
 import { Block, Button, Input, Text, theme, Icon } from "galio-framework";
 import DropDownPicker from "react-native-dropdown-picker";
 import { LinearGradient } from "expo-linear-gradient";
-import { materialTheme } from "../../../../constants";
-import { HeaderHeight } from "../../../../constants/utils";
-import useValidation from "../../../../hooks/useValidation";
+import { materialTheme } from "../../../constants";
+import { HeaderHeight } from "../../../constants/utils";
+import useValidation from "../../../hooks/useValidation";
+import Rating from "./Rating";
 import {
-  appartmentDealTypes,
   appartmentSubtypes,
   defaultRating,
   dossierTypeIdInit,
@@ -33,17 +33,19 @@ import {
   RATING_REVIEW_SIZE,
   RATING_SIZE,
   MIN_HEIGHT_RICH_CONTAINER,
+  dealTypes,
 } from "../utils";
 import Form from ".";
-
+import { getConditionRatingIndex, getQualityRatingIndex } from "./utils";
 const { height, width } = Dimensions.get("window");
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { FormikValues } from "formik";
-import { Tabs } from "../../../../components";
-import { DossierTypeIds } from "../../../../utils/constants";
-import { Rating, AirbnbRating } from "react-native-ratings";
+import { Tabs } from "../../../components";
+import { DossierTypeIds, DossierTypes } from "../../../utils/constants";
+import { AirbnbRating } from "react-native-ratings";
 import { Dossier } from "../types";
 import { styles } from "../styles";
+import { useEvent } from "react-native-reanimated";
 
 const AppartmentForm = ({
   handleChange,
@@ -58,28 +60,66 @@ const AppartmentForm = ({
   handleQualityRate,
   handleConditionRate,
 }: FormikValues): ReactElement => {
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
-  const [items, setItems] = useState([
-    { label: "Spain", value: "spain" },
-    { label: "Madrid", value: "madrid", parent: "spain" },
-    { label: "Barcelona", value: "barcelona", parent: "spain" },
+  const [openSubtype, setOpenSubtype] = useState(false);
+  const [openDealtype, setOpenDealtype] = useState(false);
+  const [openEnergyLabel, setOpenEnergyLabel] = useState(false);
+  const [subtype, setSubtype] = useState(values.property.propertyType.subcode);
+  const [dealtype, setDealtype] = useState(values.dealType);
+  const [energyLabel, setEnergyLabel] = useState(values.property.energyLabel);
+  const [itemsSubtype, setItemsSubtype] = useState(appartmentSubtypes);
+  const [itemsDealtype, setItemsDealtype] = useState(dealTypes);
+  const [itemsEnergyLabel, setItemsEnergyLabel] = useState(energyLabels);
 
-    { label: "Italy", value: "italy" },
-    { label: "Rome", value: "rome", parent: "italy" },
+  useEffect(() => {
+    setFieldValue("dealType", dealtype);
+  }, [dealtype]);
 
-    { label: "Finland", value: "finland" },
-  ]);
+  useEffect(() => {
+    setFieldValue("property.propertyType.subcode", subtype);
+  }, [subtype]);
+
+  useEffect(() => {
+    setFieldValue("energyLabel", energyLabel);
+  }, [energyLabel]);
+
+  useEffect(() => {
+    if (openSubtype) {
+      handleCloseDropdownPickers();
+      setOpenSubtype(true);
+    }
+  }, [openSubtype]);
+
+  useEffect(() => {
+    if (openDealtype) {
+      handleCloseDropdownPickers();
+      setOpenDealtype(true);
+    }
+  }, [openDealtype]);
+
+  useEffect(() => {
+    if (openEnergyLabel) {
+      handleCloseDropdownPickers();
+      setOpenEnergyLabel(true);
+    }
+  }, [openEnergyLabel]);
+
+  const handleCloseSubtype = (): void => setOpenSubtype(false);
+
+  const handleCloseDealtype = (): void => setOpenDealtype(false);
+
+  const handleCloseEnergyLabel = (): void => setOpenEnergyLabel(false);
+
+  const handleCloseDropdownPickers = (): void => {
+    handleCloseSubtype();
+    handleCloseDealtype();
+    handleCloseEnergyLabel();
+  };
 
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      onPress={() => {
-        setOpen(false);
-      }}
-    >
+    <TouchableOpacity activeOpacity={1} onPress={handleCloseDropdownPickers}>
       <>
-        <Block center>
+        {/* <Text>{JSON.stringify(values, null, 2)}</Text> */}
+        <Block center style={{ zIndex: 1 }}>
           <Block
             row
             style={[
@@ -98,52 +138,26 @@ const AppartmentForm = ({
             />
             <Text style={styles.pickerLabelText}>Subtype:</Text>
           </Block>
-          <Block style={styles.dropDownPickerBlock}>
+          <Block
+            style={[
+              styles.dropDownPickerBlock,
+              { zIndex: openSubtype ? 3 : 1 },
+            ]}
+          >
             <DropDownPicker
               listMode="SCROLLVIEW"
-              open={open}
-              value={value}
-              items={items}
-              setOpen={setOpen}
-              setValue={setValue}
-              setItems={setItems}
+              open={openSubtype}
+              value={subtype}
+              items={itemsSubtype}
+              setOpen={setOpenSubtype}
+              setValue={setSubtype}
+              setItems={setItemsSubtype}
               theme="DARK"
               multiple={false}
               containerProps={styles.dropDownPickerContainer as any}
+              maxHeight={1500}
             />
           </Block>
-
-          <Block
-            row
-            style={[
-              styles.pickerLabel,
-              {
-                marginTop: 15,
-              },
-            ]}
-          >
-            <Icon
-              name="business"
-              color={materialTheme.COLORS.PLACEHOLDER}
-              family="MaterialIcons"
-              size={20}
-              style={styles.pickerLabelIcon}
-            />
-            <Text style={styles.pickerLabelText}>Subtype:</Text>
-          </Block>
-          <Picker
-            selectedValue={values.appartmentSubtypeId}
-            onValueChange={(value) =>
-              setFieldValue("appartmentSubtypeId", value)
-            }
-            style={styles.picker}
-          >
-            {appartmentSubtypes.map(({ id, name }) => (
-              <Picker.Item key={id} label={name} value={id} />
-            ))}
-          </Picker>
-        </Block>
-        <Block center>
           <Block row style={[styles.pickerLabel, { marginTop: 15 }]}>
             <Icon
               name="vpn-key"
@@ -154,17 +168,26 @@ const AppartmentForm = ({
             />
             <Text style={styles.pickerLabelText}>Deal type:</Text>
           </Block>
-          <Picker
-            selectedValue={values.appartmentDealTypeId}
-            onValueChange={(value) =>
-              setFieldValue("appartmentDealTypeId", value)
-            }
-            style={styles.picker}
+          <Block
+            style={[
+              styles.dropDownPickerBlock,
+              { zIndex: openSubtype ? 3 : 1 },
+            ]}
           >
-            {appartmentDealTypes.map(({ id, name }) => (
-              <Picker.Item key={id} label={name} value={id} />
-            ))}
-          </Picker>
+            <DropDownPicker
+              listMode="SCROLLVIEW"
+              open={openDealtype}
+              value={dealtype}
+              items={itemsDealtype}
+              setOpen={setOpenDealtype}
+              setValue={setDealtype}
+              setItems={setItemsDealtype}
+              theme="DARK"
+              multiple={false}
+              containerProps={styles.dropDownPickerContainer as any}
+              maxHeight={1500}
+            />
+          </Block>
         </Block>
         <Input
           bgColor="transparent"
@@ -176,19 +199,20 @@ const AppartmentForm = ({
           autoCapitalize="none"
           style={[
             styles.input,
-            state.active.appartmentBuildYear ? styles.inputActive : null,
+            state.active.property.buildingYear ? styles.inputActive : null,
           ]}
           onBlur={() => {
-            toggleActive("appartmentBuildYear");
-            handleBlur("appartmentBuildYear");
+            toggleActive("property.buildingYear");
+            handleBlur("property.buildingYear");
           }}
-          onFocus={() => toggleActive("appartmentBuildYear")}
-          onChangeText={handleChange("appartmentBuildYear")}
-          value={values.appartmentBuildYear}
+          onFocus={() => toggleActive("property.buildingYear")}
+          onChangeText={handleChange("property.buildingYear")}
+          value={values.property.buildingYear}
           bottomHelp
           help={
-            touched.appartmentBuildYear &&
-            (status?.errors.appartmentBuildYear || errors.appartmentBuildYear)
+            touched.property?.buildingYear &&
+            (status?.errors?.property?.buildingYear ||
+              errors?.property?.buildingYear)
           }
           icon="build"
           family="MaterialIcons"
@@ -204,20 +228,20 @@ const AppartmentForm = ({
           autoCapitalize="none"
           style={[
             styles.input,
-            state.active.appartmentRenovationYear ? styles.inputActive : null,
+            state.active.property.renovationYear ? styles.inputActive : null,
           ]}
           onBlur={() => {
-            toggleActive("appartmentRenovationYear");
-            handleBlur("appartmentRenovationYear");
+            toggleActive("property.renovationYear");
+            handleBlur("property.renovationYear");
           }}
-          onFocus={() => toggleActive("appartmentRenovationYear")}
-          onChangeText={handleChange("appartmentRenovationYear")}
-          value={values.appartmentRenovationYear}
+          onFocus={() => toggleActive("property.renovationYear")}
+          onChangeText={handleChange("property.renovationYear")}
+          value={values.property.renovationYear}
           bottomHelp
           help={
-            touched.appartmentRenovationYear &&
-            (status?.errors.appartmentRenovationYear ||
-              errors.appartmentRenovationYear)
+            touched.property?.renovationYear &&
+            (status?.errors?.property?.renovationYear ||
+              errors?.property?.renovationYear)
           }
           icon="handyman"
           family="MaterialIcons"
@@ -233,50 +257,51 @@ const AppartmentForm = ({
           autoCapitalize="none"
           style={[
             styles.input,
-            state.active.appartmentNetLivingAreaInM2
-              ? styles.inputActive
-              : null,
+            state.active.property.livingArea ? styles.inputActive : null,
           ]}
           onBlur={() => {
-            toggleActive("appartmentNetLivingAreaInM2");
-            handleBlur("appartmentNetLivingAreaInM2");
+            toggleActive("property.livingArea");
+            handleBlur("property.livingArea");
           }}
-          onFocus={() => toggleActive("appartmentNetLivingAreaInM2")}
-          onChangeText={handleChange("appartmentNetLivingAreaInM2")}
-          value={values.appartmentNetLivingAreaInM2}
+          onFocus={() => toggleActive("property.livingArea")}
+          onChangeText={handleChange("property.livingArea")}
+          value={values.property.livingArea}
           bottomHelp
           help={
-            touched.appartmentNetLivingAreaInM2 &&
-            (status?.errors.appartmentNetLivingAreaInM2 ||
-              errors.appartmentNetLivingAreaInM2)
+            touched.property?.livingArea &&
+            (status?.errors?.property?.livingArea ||
+              errors?.property?.livingArea)
           }
           icon="roofing"
           family="MaterialIcons"
           iconSize={18}
         />
-        <Block center>
-          <Block row style={[styles.pickerLabel, { marginTop: 15 }]}>
-            <Icon
-              name="battery-charging-full"
-              color={materialTheme.COLORS.PLACEHOLDER}
-              family="MaterialIcons"
-              size={20}
-              style={styles.pickerLabelIcon}
-            />
-            <Text style={styles.pickerLabelText}>Energy label:</Text>
-          </Block>
-
-          <Picker
-            selectedValue={values.appartmentEnergyLabel}
-            onValueChange={(value) =>
-              setFieldValue("appartmentEnergyLabel", value)
-            }
-            style={styles.picker}
-          >
-            {energyLabels.map(({ id, name }) => (
-              <Picker.Item key={id} label={name} value={id} />
-            ))}
-          </Picker>
+        <Block row style={[styles.pickerLabel, { marginTop: 15 }]}>
+          <Icon
+            name="battery-charging-full"
+            color={materialTheme.COLORS.PLACEHOLDER}
+            family="MaterialIcons"
+            size={20}
+            style={styles.pickerLabelIcon}
+          />
+          <Text style={styles.pickerLabelText}>Energy label:</Text>
+        </Block>
+        <Block
+          style={[styles.dropDownPickerBlock, { zIndex: openSubtype ? 3 : 1 }]}
+        >
+          <DropDownPicker
+            listMode="SCROLLVIEW"
+            open={openEnergyLabel}
+            value={energyLabel}
+            items={itemsEnergyLabel}
+            setOpen={setOpenEnergyLabel}
+            setValue={setEnergyLabel}
+            setItems={setItemsEnergyLabel}
+            theme="DARK"
+            multiple={false}
+            containerProps={styles.dropDownPickerContainer as any}
+            maxHeight={1500}
+          />
         </Block>
         <Input
           bgColor="transparent"
@@ -288,20 +313,20 @@ const AppartmentForm = ({
           autoCapitalize="none"
           style={[
             styles.input,
-            state.active.appartmentFloorNumber ? styles.inputActive : null,
+            state.active.property.floorNumber ? styles.inputActive : null,
           ]}
           onBlur={() => {
-            toggleActive("appartmentFloorNumber");
-            handleBlur("appartmentFloorNumber");
+            toggleActive("property.floorNumber");
+            handleBlur("property.floorNumber");
           }}
-          onFocus={() => toggleActive("appartmentFloorNumber")}
-          onChangeText={handleChange("appartmentFloorNumber")}
-          value={values.appartmentFloorNumber}
+          onFocus={() => toggleActive("property.floorNumber")}
+          onChangeText={handleChange("property.floorNumber")}
+          value={values.property.floorNumber}
           bottomHelp
           help={
-            touched.appartmentFloorNumber &&
-            (status?.errors.appartmentFloorNumber ||
-              errors.appartmentFloorNumber)
+            touched.property?.floorNumber &&
+            (status?.errors?.property?.floorNumber ||
+              errors?.property?.floorNumber)
           }
           icon="stairs"
           family="MaterialIcons"
@@ -317,20 +342,22 @@ const AppartmentForm = ({
           autoCapitalize="none"
           style={[
             styles.input,
-            state.active.appartmentNumberOfFloors ? styles.inputActive : null,
+            state.active.property.numberOfFloorsInBuilding
+              ? styles.inputActive
+              : null,
           ]}
           onBlur={() => {
-            toggleActive("appartmentNumberOfFloors");
-            handleBlur("appartmentNumberOfFloors");
+            toggleActive("property.numberOfFloorsInBuilding");
+            handleBlur("property.numberOfFloorsInBuilding");
           }}
-          onFocus={() => toggleActive("appartmentNumberOfFloors")}
-          onChangeText={handleChange("appartmentNumberOfFloors")}
-          value={values.appartmentNumberOfFloors}
+          onFocus={() => toggleActive("property.numberOfFloorsInBuilding")}
+          onChangeText={handleChange("property.numberOfFloorsInBuilding")}
+          value={values.property.numberOfFloorsInBuilding}
           bottomHelp
           help={
-            touched.appartmentNumberOfFloors &&
-            (status?.errors.appartmentNumberOfFloors ||
-              errors.appartmentNumberOfFloors)
+            touched.property?.numberOfFloorsInBuilding &&
+            (status?.errors?.property.numberOfFloorsInBuilding ||
+              errors?.property?.numberOfFloorsInBuilding)
           }
           icon="stairs"
           family="MaterialIcons"
@@ -349,17 +376,17 @@ const AppartmentForm = ({
             state.active.appartmentNumberOfRooms ? styles.inputActive : null,
           ]}
           onBlur={() => {
-            toggleActive("appartmentNumberOfRooms");
-            handleBlur("appartmentNumberOfRooms");
+            toggleActive("property.numberOfRooms");
+            handleBlur("property.numberOfRooms");
           }}
-          onFocus={() => toggleActive("appartmentNumberOfRooms")}
-          onChangeText={handleChange("appartmentNumberOfRooms")}
-          value={values.appartmentNumberOfRooms}
+          onFocus={() => toggleActive("property.numberOfRooms")}
+          onChangeText={handleChange("property.numberOfRooms")}
+          value={values.property.numberOfRooms}
           bottomHelp
           help={
-            touched.appartmentNumberOfRooms &&
-            (status?.errors.appartmentNumberOfRooms ||
-              errors.appartmentNumberOfRooms)
+            touched.property?.numberOfRooms &&
+            (status?.errors?.property.numberOfRooms ||
+              errors?.property?.numberOfRooms)
           }
           icon="meeting-room"
           family="MaterialIcons"
@@ -375,22 +402,20 @@ const AppartmentForm = ({
           autoCapitalize="none"
           style={[
             styles.input,
-            state.active.appartmentNumberOfBathrooms
-              ? styles.inputActive
-              : null,
+            state.active.property.numberOfBathrooms ? styles.inputActive : null,
           ]}
           onBlur={() => {
-            toggleActive("appartmentNumberOfBathrooms");
-            handleBlur("appartmentNumberOfBathrooms");
+            toggleActive("property.numberOfBathrooms");
+            handleBlur("property.numberOfBathrooms");
           }}
-          onFocus={() => toggleActive("appartmentNumberOfBathrooms")}
-          onChangeText={handleChange("appartmentNumberOfBathrooms")}
-          value={values.appartmentNumberOfBathrooms}
+          onFocus={() => toggleActive("property.numberOfBathrooms")}
+          onChangeText={handleChange("property.numberOfBathrooms")}
+          value={values.property.numberOfBathrooms}
           bottomHelp
           help={
-            touched.appartmentNumberOfBathrooms &&
-            (status?.errors.appartmentNumberOfBathrooms ||
-              errors.appartmentNumberOfBathrooms)
+            touched.property?.numberOfBathrooms &&
+            (status?.errors?.property.numberOfBathrooms ||
+              errors?.property?.numberOfBathrooms)
           }
           icon="bathtub"
           family="MaterialIcons"
@@ -406,22 +431,20 @@ const AppartmentForm = ({
           autoCapitalize="none"
           style={[
             styles.input,
-            state.active.appartmentBalconyOrTerraceInM2
-              ? styles.inputActive
-              : null,
+            state.active.property.balconyArea ? styles.inputActive : null,
           ]}
           onBlur={() => {
-            toggleActive("appartmentBalconyOrTerraceInM2");
-            handleBlur("appartmentBalconyOrTerraceInM2");
+            toggleActive("property.balconyArea");
+            handleBlur("property.balconyArea");
           }}
-          onFocus={() => toggleActive("appartmentBalconyOrTerraceInM2")}
-          onChangeText={handleChange("appartmentBalconyOrTerraceInM2")}
-          value={values.appartmentBalconyOrTerraceInM2}
+          onFocus={() => toggleActive("property.balconyArea")}
+          onChangeText={handleChange("property.balconyArea")}
+          value={values.property.balconyArea}
           bottomHelp
           help={
-            touched.appartmentBalconyOrTerraceInM2 &&
-            (status?.errors.appartmentBalconyOrTerraceInM2 ||
-              errors.appartmentBalconyOrTerraceInM2)
+            touched.property?.balconyArea &&
+            (status?.errors?.property?.balconyArea ||
+              errors?.property?.balconyArea)
           }
           icon="deck"
           family="MaterialIcons"
@@ -437,19 +460,20 @@ const AppartmentForm = ({
           autoCapitalize="none"
           style={[
             styles.input,
-            state.active.appartmentGardenInM2 ? styles.inputActive : null,
+            state.active.property.gardenArea ? styles.inputActive : null,
           ]}
           onBlur={() => {
-            toggleActive("appartmentGardenInM2");
-            handleBlur("appartmentGardenInM2");
+            toggleActive("property.gardenArea");
+            handleBlur("property.gardenArea");
           }}
-          onFocus={() => toggleActive("appartmentGardenInM2")}
-          onChangeText={handleChange("appartmentGardenInM2")}
-          value={values.appartmentGardenInM2}
+          onFocus={() => toggleActive("property.gardenArea")}
+          onChangeText={handleChange("property.gardenArea")}
+          value={values.property.gardenArea}
           bottomHelp
           help={
-            touched.appartmentGardenInM2 &&
-            (status?.errors.appartmentGardenInM2 || errors.appartmentGardenInM2)
+            touched.property?.gardenArea &&
+            (status?.errors?.property?.gardenArea ||
+              errors?.property?.gardenArea)
           }
           icon="grass"
           family="MaterialIcons"
@@ -478,7 +502,7 @@ const AppartmentForm = ({
           help={
             touched.appartmentGarageSpaces &&
             (status?.errors.appartmentGarageSpaces ||
-              errors.appartmentGarageSpaces)
+              errors?.appartmentGarageSpaces)
           }
           icon="directions-car"
           family="MaterialIcons"
@@ -494,22 +518,22 @@ const AppartmentForm = ({
           autoCapitalize="none"
           style={[
             styles.input,
-            state.active.appartmentOutdoorParkingSpaces
+            state.active.property.numberOfOutdoorParkingSpaces
               ? styles.inputActive
               : null,
           ]}
           onBlur={() => {
-            toggleActive("appartmentOutdoorParkingSpaces");
-            handleBlur("appartmentOutdoorParkingSpaces");
+            toggleActive("property.numberOfOutdoorParkingSpaces");
+            handleBlur("property.numberOfOutdoorParkingSpaces");
           }}
-          onFocus={() => toggleActive("appartmentOutdoorParkingSpaces")}
-          onChangeText={handleChange("appartmentOutdoorParkingSpaces")}
-          value={values.appartmentOutdoorParkingSpaces}
+          onFocus={() => toggleActive("property.numberOfOutdoorParkingSpaces")}
+          onChangeText={handleChange("property.numberOfOutdoorParkingSpaces")}
+          value={values.property.numberOfOutdoorParkingSpaces}
           bottomHelp
           help={
-            touched.appartmentOutdoorParkingSpaces &&
-            (status?.errors.appartmentOutdoorParkingSpaces ||
-              errors.appartmentOutdoorParkingSpaces)
+            touched.property?.numberOfOutdoorParkingSpaces &&
+            (status?.errors?.property.numberOfOutdoorParkingSpaces ||
+              errors?.property?.numberOfOutdoorParkingSpaces)
           }
           icon="local-parking"
           family="MaterialIcons"
@@ -522,9 +546,9 @@ const AppartmentForm = ({
             textComponent={
               <Text style={styles.checkboxText}>New building</Text>
             }
-            isChecked={Boolean(values.appartmentNewBuilding)}
+            isChecked={Boolean(values.isNew)}
             onPress={(isChecked: boolean) => {
-              setFieldValue("appartmentNewBuilding", isChecked);
+              setFieldValue("isNew", isChecked);
             }}
             style={styles.checkbox}
           />
@@ -532,14 +556,19 @@ const AppartmentForm = ({
             size={25}
             fillColor={materialTheme.COLORS.BUTTON_COLOR}
             textComponent={<Text style={styles.checkboxText}>Lift</Text>}
-            isChecked={Boolean(values.appartmentLift)}
+            isChecked={Boolean(values.hasLift)}
             onPress={(isChecked: boolean) => {
-              setFieldValue("appartmentLift", isChecked);
+              setFieldValue("hasLift", isChecked);
             }}
           />
         </Block>
-
-        <Block style={styles.checkboxBlock} row>
+        <Rating
+          values={values}
+          handleQualityRate={handleQualityRate}
+          handleConditionRate={handleConditionRate}
+          type={DossierTypes.APARTMENT}
+        />
+        {/* <Block style={styles.checkboxBlock} row>
           <Icon
             name="countertops"
             color={materialTheme.COLORS.PLACEHOLDER}
@@ -554,11 +583,11 @@ const AppartmentForm = ({
           <AirbnbRating
             count={qualityRates.length}
             ratingContainerStyle={styles.ratingContainerStyle}
-            onFinishRating={handleQualityRate("appartmentKitchenQualityRate")}
+            onFinishRating={handleQualityRate("property.quality.kitchen")}
             reviews={qualityRates.map(
-              ({ name, description }) => `${name}: ${description}`
+              ({ label, description }) => `${label}: ${description}`
             )}
-            defaultRating={defaultRating}
+            defaultRating={getQualityRatingIndex("property.quality.kitchen")}
             reviewSize={RATING_REVIEW_SIZE}
             size={RATING_SIZE}
           />
@@ -566,11 +595,11 @@ const AppartmentForm = ({
           <AirbnbRating
             count={conditionRates.length}
             ratingContainerStyle={styles.ratingContainerStyle}
-            onFinishRating={handleConditionRate(
-              "appartmentKitchenConditionRate"
+            onFinishRating={handleConditionRate("property.condition.kitchen")}
+            reviews={conditionRates.map(({ label }) => label)}
+            defaultRating={getConditionRatingIndex(
+              "property.condition.kitchen"
             )}
-            reviews={conditionRates.map(({ name }) => name)}
-            defaultRating={defaultRating}
             reviewSize={RATING_REVIEW_SIZE}
             size={RATING_SIZE}
           />
@@ -583,7 +612,7 @@ const AppartmentForm = ({
             size={20}
             style={styles.pickerLabelIcon}
           />
-          <Text style={styles.ratingBlockTitle}>Bathrooms:: </Text>
+          <Text style={styles.ratingBlockTitle}>Bathrooms: </Text>
         </Block>
 
         <Block center style={[styles.ratingBlock]}>
@@ -591,9 +620,9 @@ const AppartmentForm = ({
           <AirbnbRating
             count={qualityRates.length}
             ratingContainerStyle={styles.ratingContainerStyle}
-            onFinishRating={handleQualityRate("appartmentBathroomsQualityRate")}
-            reviews={qualityRates.map(({ name, description }) => name)}
-            defaultRating={defaultRating}
+            onFinishRating={handleQualityRate("property.quality.bathrooms")}
+            reviews={qualityRates.map(({ label, description }) => label)}
+            defaultRating={getQualityRatingIndex("property.quality.bathrooms")}
             reviewSize={RATING_REVIEW_SIZE}
             size={RATING_SIZE}
           />
@@ -601,11 +630,11 @@ const AppartmentForm = ({
           <AirbnbRating
             count={conditionRates.length}
             ratingContainerStyle={styles.ratingContainerStyle}
-            onFinishRating={handleConditionRate(
-              "appartmentBathroomsConditionRate"
+            onFinishRating={handleConditionRate("property.condition.bathrooms")}
+            reviews={conditionRates.map(({ label }) => label)}
+            defaultRating={getConditionRatingIndex(
+              "property.condition.bathrooms"
             )}
-            reviews={conditionRates.map(({ name }) => name)}
-            defaultRating={defaultRating}
             reviewSize={RATING_REVIEW_SIZE}
             size={RATING_SIZE}
           />
@@ -625,9 +654,11 @@ const AppartmentForm = ({
           <AirbnbRating
             count={qualityRates.length}
             ratingContainerStyle={styles.ratingContainerStyle}
-            onFinishRating={handleQualityRate("appartmentFloorQualityRate")}
-            reviews={qualityRates.map(({ name, description }) => name)}
-            defaultRating={defaultRating}
+            onFinishRating={handleQualityRate(values.property.quality.flooring)}
+            reviews={qualityRates.map(({ label }) => label)}
+            defaultRating={getQualityRatingIndex(
+              values.property.quality.flooring
+            )}
             reviewSize={RATING_REVIEW_SIZE}
             size={RATING_SIZE}
           />
@@ -635,9 +666,13 @@ const AppartmentForm = ({
           <AirbnbRating
             count={conditionRates.length}
             ratingContainerStyle={styles.ratingContainerStyle}
-            onFinishRating={handleConditionRate("appartmentFloorConditionRate")}
-            reviews={conditionRates.map(({ name }) => name)}
-            defaultRating={defaultRating}
+            onFinishRating={handleConditionRate(
+              values.property.condition.flooring
+            )}
+            reviews={conditionRates.map(({ label }) => label)}
+            defaultRating={getConditionRatingIndex(
+              "property.condition.flooring"
+            )}
             reviewSize={RATING_REVIEW_SIZE}
             size={RATING_SIZE}
           />
@@ -658,9 +693,11 @@ const AppartmentForm = ({
           <AirbnbRating
             count={qualityRates.length}
             ratingContainerStyle={styles.ratingContainerStyle}
-            onFinishRating={handleQualityRate("appartmentWindowsQualityRate")}
-            reviews={qualityRates.map(({ name, description }) => name)}
-            defaultRating={defaultRating}
+            onFinishRating={handleQualityRate(values.property.quality.windows)}
+            reviews={qualityRates.map(({ label }) => label)}
+            defaultRating={getQualityRatingIndex(
+              values.property.quality.windows
+            )}
             reviewSize={RATING_REVIEW_SIZE}
             size={RATING_SIZE}
           />
@@ -669,14 +706,16 @@ const AppartmentForm = ({
             count={conditionRates.length}
             ratingContainerStyle={styles.ratingContainerStyle}
             onFinishRating={handleConditionRate(
-              "appartmentWindowsConditionRate"
+              values.property.condition.windows
             )}
-            reviews={conditionRates.map(({ name }) => name)}
-            defaultRating={defaultRating}
+            reviews={conditionRates.map(({ label }) => label)}
+            defaultRating={getConditionRatingIndex(
+              values.property.condition.windows
+            )}
             reviewSize={RATING_REVIEW_SIZE}
             size={RATING_SIZE}
           />
-        </Block>
+        </Block> */}
       </>
       {/* old */}
     </TouchableOpacity>

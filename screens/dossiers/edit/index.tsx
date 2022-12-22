@@ -17,15 +17,13 @@ import { initCreateDossierValues } from "../utils";
 import Form from "../form";
 import { handleSignUpSubmit } from "../../signUp/utils";
 import { styles } from "../styles";
-import { DossierTypes } from "../../../utils/constants";
-import { handleCreateDossierSubmit, initCreateDossier } from "./utils";
-import { prepareDossierBeforeForm } from "./utils";
-import { mockDossier } from "../form/utils";
-const CreateDossier = (): ReactElement => {
+
+const EditDossier = (): ReactElement => {
   const { firstName, lastName, password, passwordConfirm, phone, email } =
     useValidation();
   const navigation = useNavigation();
-
+  const route = useRoute();
+  console.log("route1", route);
   const [state, setState] = useState<any>({
     active: {
       title: false,
@@ -50,7 +48,7 @@ const CreateDossier = (): ReactElement => {
     active[name] = !active[name];
     setState({ active });
   };
-
+  console.log("11111");
   return (
     <ScrollView>
       <LinearGradient
@@ -65,20 +63,21 @@ const CreateDossier = (): ReactElement => {
       >
         <Block flex middle>
           <KeyboardAvoidingView
-            //behavior={Platform.OS === "ios" ? "padding" : "position"}
+            behavior={Platform.OS === "ios" ? "padding" : "position"}
             enabled
             keyboardVerticalOffset={0}
           >
             <Formik
-              initialValues={prepareDossierBeforeForm(mockDossier)}
-              onSubmit={handleCreateDossierSubmit()}
+              initialValues={initCreateDossierValues}
+              //onSubmit={() => {}}
+              onSubmit={handleSignUpSubmit({ navigation })}
               validationSchema={Yup.object().shape({
-                // firstName,
-                // lastName,
-                // email,
-                // phone,
-                // password,
-                // passwordConfirm,
+                firstName,
+                lastName,
+                email,
+                phone,
+                password,
+                passwordConfirm,
               })}
             >
               {(props) => (
@@ -96,4 +95,4 @@ const CreateDossier = (): ReactElement => {
   );
 };
 
-export default CreateDossier;
+export default EditDossier;

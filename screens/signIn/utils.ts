@@ -1,30 +1,39 @@
 import { FormikValues } from "formik";
 import { signUp, signIn } from "../../api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthContext } from "../../navigation/context-utils";
+import { useContext } from "react";
 
-export const handleSignInSubmit = ({ navigation }: any) => {
+export const handleSignInSubmit = ({ navigation, signInContext }: any) => {
   return async (
     values: any,
     { setStatus, setSubmitting, setValues, setTouched }: FormikValues
   ): Promise<void> => {
-    //console.log("values", values);
+    const response = await signIn(values);
+    const json = await response.json();
+    console.log("json", json);
+    if ([200, 201].includes(response.status)) {
+      signInContext(json);
+      setValues(initSignInValues);
+      setTouched({});
+      navigation.navigate("Home");
+    }
+    // signIn(values)
+    //   .then((res) => {
+    //     if ([200, 201].includes(res.status)) {
+    //       setValues(initSignInValues);
+    //       setTouched({});
 
-    signIn(values)
-      .then((res) => {
-        if ([200, 201].includes(res.status)) {
-          setValues(initSignInValues);
-          setTouched({});
-
-          navigation.navigate("Home");
-        } else {
-          setSubmitting(false);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        return data;
-      })
-      .catch((err) => console.error("Rejected", err));
+    //       navigation.navigate("Home");
+    //     } else {
+    //       setSubmitting(false);
+    //     }
+    //     return res.json();
+    //   })
+    //   .then((data) => {
+    //     return data;
+    //   })
+    //   .catch((err) => console.error("Rejected", err));
   };
 };
 
@@ -40,7 +49,7 @@ export const storeUserData = async (data: any) => {
 };
 
 export const initSignInValues = {
-  email: "zainіііi@gmail.com",
+  email: "zain@gmail.com",
   password: "pass1234",
 };
 

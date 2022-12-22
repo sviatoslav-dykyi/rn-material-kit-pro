@@ -1,7 +1,7 @@
 import { Dimensions, Platform, StyleSheet } from "react-native";
 import { theme } from "galio-framework";
-import { HeaderHeight } from "../../../constants/utils";
-import { materialTheme } from "../../../constants";
+import { HeaderHeight } from "../../constants/utils";
+import { materialTheme } from "../../constants";
 
 const { width } = Dimensions.get("window");
 
@@ -34,8 +34,9 @@ export const styles = StyleSheet.create({
   typesBlock: {
     width: width * 0.9,
     justifyContent: "space-between",
-    marginTop: 10,
+    marginTop: -30,
     marginBottom: 15,
+    z: 111,
   },
   typesButtons: {
     flexShrink: 1,
@@ -105,9 +106,26 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 15,
-    zIndex: 11111,
+    zIndex: 2,
   },
   dropDownPickerContainer: { width: width * 0.9 },
+  googlePlacesLabelContainer: {
+    width: width * 0.9,
+    color: materialTheme.COLORS.PLACEHOLDER,
+    marginBottom: 15,
+    marginTop: 20,
+  },
+  googlePlacesContainer: {
+    width: width * 0.9,
+    backgroundColor: "transparent",
+    zIndex: 222,
+  },
+  googlePlacesAutocomplete: {
+    width: width * 0.9,
+  },
+  disableScrollingWarning: {
+    width: "100%",
+  },
 });
 
 export const styles2 = StyleSheet.create({});

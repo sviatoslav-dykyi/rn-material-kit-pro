@@ -1,22 +1,31 @@
 import React, { useState, ReactElement, useRef, useCallback } from "react";
 import { Block, Button, Input, Text, theme } from "galio-framework";
-import { materialTheme } from "../../../../constants";
+import { materialTheme } from "../../../constants";
 import {
   actions,
   RichEditor,
   RichToolbar,
 } from "react-native-pell-rich-editor";
-import { dossierTypes, MIN_HEIGHT_RICH_CONTAINER } from "../utils";
+import {
+  conditionRates,
+  dossierTypes,
+  MIN_HEIGHT_RICH_CONTAINER,
+  qualityRates,
+} from "../utils";
 import { useNavigation } from "@react-navigation/native";
 import { FormikValues } from "formik";
-import { DossierTypeIds } from "../../../../utils/constants";
+import { DossierTypeIds, DossierTypes } from "../../../utils/constants";
 import { Dossier } from "../types";
 import { styles } from "../styles";
 import AppartmentForm from "./Appartment";
-import { View } from "react-native";
+import { Dimensions, ScrollView, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 import HouseForm from "./House";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
+import { findAddressDetail } from "./utils";
+import { Icon } from "../../../components";
+import MultiFamilyHouseForm from "./MultiFamilyHouse";
 
 const CreateDossiersForm = ({
   handleChange,
@@ -29,14 +38,12 @@ const CreateDossiersForm = ({
   setFieldValue,
   state,
   toggleActive,
+  mode = "create",
 }: FormikValues): ReactElement => {
   const navigation = useNavigation();
   const RichText = useRef(null);
   const [height, setHeight] = useState(MIN_HEIGHT_RICH_CONTAINER);
   const [image, setImage] = useState(null);
-
-  const handleConditionRate = (field: string) => (rating: number) =>
-    setFieldValue(field, Number(rating));
 
   const handleEditorTextChange = (newText: string) =>
     setFieldValue("description", newText);
@@ -49,10 +56,13 @@ const CreateDossiersForm = ({
     );
 
   const handleQualityRate = (field: keyof Dossier) => (rating: number) =>
-    setFieldValue(field, Number(rating));
+    setFieldValue(field, qualityRates[rating - 1].value);
 
-  const hanleButtonTypePress = (id: DossierTypeIds) => () =>
-    setFieldValue("typeId", id);
+  const handleConditionRate = (field: string) => (rating: number) =>
+    setFieldValue(field, conditionRates[rating - 1].value);
+
+  const hanleButtonTypePress = (code: DossierTypes) => () =>
+    setFieldValue("property.propertyType.code", code);
 
   const pickDocument = async () => {
     try {
@@ -87,8 +97,9 @@ const CreateDossiersForm = ({
     }
     // No permissions request is necessary for launching the image library
   };
+
   return (
-    <Block flex={1} center space="between">
+    <Block flex={1} center space="between" style={{ paddingBottom: 100 }}>
       <Block center>
         <Input
           bgColor="transparent"
@@ -106,57 +117,98 @@ const CreateDossiersForm = ({
           onChangeText={handleChange("title")}
           value={values.title}
           bottomHelp
-          help={touched.title && (status?.errors.title || errors.title)}
+          help={touched.title && (status?.errors?.title || errors?.title)}
           icon="article"
           family="MaterialIcons"
           iconSize={18}
-          label={values.title ? undefined : "Title"}
+          //label={values.title ? undefined : "Title"}
         />
-        <Input
-          bgColor="transparent"
-          placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
-          borderless
-          color="white"
-          placeholder="Enter your address"
-          autoCapitalize="none"
-          style={[
-            styles.input,
-            state.active.address ? styles.inputActive : null,
-          ]}
-          onBlur={() => {
-            toggleActive("address");
-            handleBlur("address");
-          }}
-          onFocus={() => toggleActive("address")}
-          onChangeText={handleChange("address")}
-          value={values.address}
-          bottomHelp
-          help={touched.address && (status?.errors.address || errors.address)}
-          icon="location-on"
-          family="MaterialIcons"
-          iconSize={18}
-          label={values.address ? undefined : "Address"}
-        />
+        <Block row style={styles.googlePlacesLabelContainer}>
+          <Icon
+            name="location-on"
+            color={materialTheme.COLORS.PLACEHOLDER}
+            family="MaterialIcons"
+            icon="location-on"
+            iconSize={18}
+            size={20}
+            style={styles.pickerLabelIcon}
+          />
+          <Text style={styles.pickerLabelText}>Address:</Text>
+        </Block>
+        <ScrollView
+          horizontal={false}
+          style={[styles.disableScrollingWarning, { marginBottom: -15 }]}
+        >
+          <ScrollView horizontal={true} style={styles.disableScrollingWarning}>
+            <View style={styles.googlePlacesContainer}>
+              <GooglePlacesAutocomplete
+                placeholder="Search"
+                onPress={(_, details = null) => {
+                  if (!details) return;
+                  const { geometry, address_components } = details;
+                  const latitude = geometry.location.lat;
+                  const longitude = geometry.location.lng;
+                  const postCode = findAddressDetail(
+                    address_components,
+                    "postal_code"
+                  );
+                  const city = findAddressDetail(
+                    address_components,
+                    "administrative_area_level_1"
+                  );
+                  const street = findAddressDetail(address_components, "route");
+                  const houseNumber = findAddressDetail(
+                    address_components,
+                    "street_number"
+                  );
+                  const location = {
+                    address: {
+                      postCode,
+                      city,
+                      street,
+                      houseNumber,
+                    },
+                    coordinates: {
+                      latitude,
+                      longitude,
+                    },
+                  };
+                  setFieldValue("property.location", location);
+                }}
+                styles={{
+                  borderColor: "red",
+                  borderWidth: 2,
+                  height: 200,
+                }}
+                fetchDetails
+                query={{
+                  key: "AIzaSyC1jikr2uE40MmY83vnuDzFCYFhZWYAolg",
+                  language: "en",
+                }}
+              />
+            </View>
+          </ScrollView>
+        </ScrollView>
         <Block row style={styles.typesBlock}>
-          {dossierTypes.map(({ id, name, icon }) => (
+          {dossierTypes.map(({ value, label, icon }) => (
             <Button
-              key={id}
+              key={value}
               style={[
                 styles.typesButtons,
-                values.typeId == id && styles.selected,
+                values.property.propertyType.code == value && styles.selected,
                 { height: 65 },
               ]}
               size={"small"}
-              onPress={hanleButtonTypePress(id)}
+              onPress={hanleButtonTypePress(value)}
               icon={icon}
               iconFamily="MaterialIcons"
               iconSize={19}
             >
-              {name}
+              {label}
             </Button>
           ))}
         </Block>
-        {values.typeId === DossierTypeIds.APPARTMENT && (
+        {values.property.propertyType.code === DossierTypes.APARTMENT && (
           <AppartmentForm
             {...{
               handleChange,
@@ -173,8 +225,26 @@ const CreateDossiersForm = ({
             }}
           />
         )}
-        {values.typeId === DossierTypeIds.HOUSE && (
+        {values.property.propertyType.code === DossierTypes.HOUSE && (
           <HouseForm
+            {...{
+              handleChange,
+              handleBlur,
+              values,
+              touched,
+              status,
+              errors,
+              setFieldValue,
+              state,
+              toggleActive,
+              handleQualityRate,
+              handleConditionRate,
+            }}
+          />
+        )}
+        {values.property.propertyType.code ===
+          DossierTypes.MULTI_FAMILY_HOUSE && (
+          <MultiFamilyHouseForm
             {...{
               handleChange,
               handleBlur,
@@ -259,10 +329,11 @@ const CreateDossiersForm = ({
           style={{ height: 48 }}
           color={materialTheme.COLORS.BUTTON_COLOR}
           onPress={() => {
+            console.log("values", values);
             submitForm();
           }}
         >
-          CREATE
+          {mode === "create" ? "CREATE" : "EDIT"}
         </Button>
         <Button
           size="large"

@@ -145,7 +145,7 @@ const SignIn = () => {
           </Block>
           <Formik
             initialValues={initSignInValues}
-            onSubmit={handleSignInSubmit({ navigation })}
+            onSubmit={handleSignInSubmit({ navigation, signInContext: signIn })}
             validationSchema={Yup.object().shape({
               email,
               password,
@@ -235,8 +235,8 @@ const SignIn = () => {
                     style={{ height: 48 }}
                     onPress={
                       () => {
-                        signIn({});
-                        submitForm();
+                        signIn(values);
+                        //signIn({});
                       }
 
                       // Alert.alert(
