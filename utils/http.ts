@@ -14,6 +14,7 @@ const getToken = async () => {
 export const http = {
   post: async (endpoint: string, body = {}) => {
     const token = await getToken();
+    console.log("tokenn", token);
     return fetch(`${REACT_BASE_URL}/${endpoint}`, {
       method: "POST",
       mode: "cors",

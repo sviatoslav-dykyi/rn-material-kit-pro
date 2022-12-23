@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   TouchableWithoutFeedback,
   ScrollView,
@@ -11,8 +11,9 @@ import {
 import { Block, Text, theme } from "galio-framework";
 import { useSafeArea } from "react-native-safe-area-context";
 
-import { Icon, Drawer as DrawerCustomItem } from "../components/";
-import { Images, materialTheme } from "../constants/";
+import { Icon, Drawer as DrawerCustomItem } from "../components";
+import { Images, materialTheme } from "../constants";
+import { AuthContext } from "./context-utils";
 
 const { width } = Dimensions.get("screen");
 
@@ -31,7 +32,7 @@ function CustomDrawerContent({
   focused,
   state,
   ...rest
-}) {
+}: any) {
   const insets = useSafeArea();
   const screens = [
     "Home",
@@ -43,65 +44,44 @@ function CustomDrawerContent({
     "Settings",
     "Components",
   ];
+
   return (
     <Block
       style={styles.container}
       forceInset={{ top: "always", horizontal: "never" }}
     >
-      {/* <Block flex={0.23} style={styles.header}>
+      <Block flex={0.23} style={styles.header}>
         <TouchableWithoutFeedback
           onPress={() => navigation.navigate("Profile")}
         >
           <Block style={styles.profile}>
-            <Image source={{ uri: profile.avatar }} style={styles.avatar} />
+            <Image source={{ uri: profile?.avatar }} style={styles.avatar} />
             <Text h5 color={"white"}>
-              {profile.name}
+              {profile?.firstName} {profile?.lastName}
             </Text>
           </Block>
         </TouchableWithoutFeedback>
         <Block row>
           <Block middle style={styles.pro}>
             <Text size={16} color="white">
-              {profile.plan}
+              {profile?.plan}
             </Text>
           </Block>
           <Text size={16} muted style={styles.seller}>
-            {profile.type}
+            {profile?.type}
           </Text>
           <Text size={16} color={materialTheme.COLORS.WARNING}>
-            {profile.rating}{" "}
+            {profile?.rating}{" "}
             <Icon name="shape-star" family="GalioExtra" size={14} />
           </Text>
         </Block>
-      </Block> */}
-      {/* <Block flex style={{ paddingLeft: 7, paddingRight: 14 }}>
-        <ScrollView
-          contentContainerStyle={[
-            {
-              paddingTop: insets.top * 0.4,
-              paddingLeft: drawerPosition === "left" ? insets.left : 0,
-              paddingRight: drawerPosition === "right" ? insets.right : 0,
-            },
-          ]}
-          showsVerticalScrollIndicator={false}
-        >
-          {screens.map((item, index) => {
-            return (
-              <DrawerCustomItem
-                title={item}
-                key={index}
-                navigation={navigation}
-                focused={state.index === index ? true : false}
-              />
-            );
-          })}
-        </ScrollView>
-      </Block> */}
+      </Block>
+
       <Block
         flex={0.25}
         style={{ paddingLeft: 7, paddingRight: 14, paddingTop: 60 }}
       >
-        <DrawerCustomItem
+        {/* <DrawerCustomItem
           title="Sign In"
           navigation={navigation}
           focused={state.index === 8 ? true : false}
@@ -110,9 +90,14 @@ function CustomDrawerContent({
           title="Sign Up"
           navigation={navigation}
           focused={state.index === 9 ? true : false}
-        />
+        /> */}
         <DrawerCustomItem
           title="Home"
+          navigation={navigation}
+          focused={state.index === 9 ? true : false}
+        />
+        <DrawerCustomItem
+          title="Logout"
           navigation={navigation}
           focused={state.index === 9 ? true : false}
         />
@@ -128,8 +113,8 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: "#4B1958",
     paddingHorizontal: 28,
-    paddingBottom: theme.SIZES.BASE,
-    paddingTop: theme.SIZES.BASE * 2,
+    paddingBottom: theme.SIZES?.BASE,
+    paddingTop: Number(theme.SIZES?.BASE) * 2,
     justifyContent: "center",
   },
   footer: {
@@ -137,13 +122,13 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   profile: {
-    marginBottom: theme.SIZES.BASE / 2,
+    marginBottom: Number(theme.SIZES?.BASE) / 2,
   },
   avatar: {
     height: 40,
     width: 40,
     borderRadius: 20,
-    marginBottom: theme.SIZES.BASE,
+    marginBottom: Number(theme.SIZES?.BASE),
   },
   pro: {
     backgroundColor: materialTheme.COLORS.LABEL,

@@ -97,72 +97,24 @@ const Header = (props) => {
     // const { options } = scene.descriptor;
     // const routeName = options.headerTitle; // wip
 
-    if (title === "Title") {
-      return [
-        <ChatButton
-          key="chat-search"
-          navigation={navigation}
-          isWhite={white}
-        />,
-        <BasketButton
-          key="basket-search"
-          navigation={navigation}
-          isWhite={white}
-        />,
-      ];
-    }
-
-    switch (title) {
-      case "About":
-      case "Agreement":
-      case "Cart":
-      case "Categories":
-      case "Category":
-      case "Deals":
-      case "Home":
-      case "Woman":
-      case "Man":
-      case "Kids":
-      case "NewCollection":
-      case "Notifications":
-      case "Privacy":
-      case "Profile":
-      case "Search":
-      case "Settings":
-        return [
-          // <ChatButton
-          //   key="chat-search"
-          //   navigation={navigation}
-          //   isWhite={white}
-          // />,
-          // <BasketButton
-          //   key="basket-search"
-          //   navigation={navigation}
-          //   isWhite={white}
-          // />,
-          <LogoutButton
-            key="logout"
-            isWhite={white}
-            signOut={signOut}
-            navigation={navigation}
-          />,
-        ];
-      case "Product":
-        return [
-          <SearchButton
-            key="search-product"
-            navigation={navigation}
-            isWhite={white}
-          />,
-          <BasketButton
-            key="basket-product"
-            navigation={navigation}
-            isWhite={white}
-          />,
-        ];
-      default:
-        break;
-    }
+    return [
+      // <ChatButton
+      //   key="chat-search"
+      //   navigation={navigation}
+      //   isWhite={white}
+      // />,
+      // <BasketButton
+      //   key="basket-search"
+      //   navigation={navigation}
+      //   isWhite={white}
+      // />,
+      <LogoutButton
+        key="logout"
+        isWhite={white}
+        signOut={signOut}
+        navigation={navigation}
+      />,
+    ];
   };
 
   const renderSearch = () => {

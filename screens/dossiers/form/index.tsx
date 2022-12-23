@@ -1,4 +1,10 @@
-import React, { useState, ReactElement, useRef, useCallback } from "react";
+import React, {
+  useState,
+  ReactElement,
+  useRef,
+  useCallback,
+  useEffect,
+} from "react";
 import { Block, Button, Input, Text, theme } from "galio-framework";
 import { materialTheme } from "../../../constants";
 import {
@@ -23,7 +29,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 import HouseForm from "./House";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { findAddressDetail } from "./utils";
+import { findAddressDetail, GOOGLE_API_KEY } from "./utils";
 import { Icon } from "../../../components";
 import MultiFamilyHouseForm from "./MultiFamilyHouse";
 
@@ -39,6 +45,7 @@ const CreateDossiersForm = ({
   state,
   toggleActive,
   mode = "create",
+  addressText,
 }: FormikValues): ReactElement => {
   const navigation = useNavigation();
   const RichText = useRef(null);
@@ -76,6 +83,14 @@ const CreateDossiersForm = ({
     }
   };
 
+  const ref = useRef(null);
+
+  useEffect(() => {
+    //console.log("addressText", addressText);
+    // @ts-ignore
+    ref.current?.setAddressText(addressText);
+  }, [addressText]);
+
   const pickImage = async () => {
     try {
       let result: any = await ImagePicker.launchImageLibraryAsync({
@@ -100,6 +115,8 @@ const CreateDossiersForm = ({
 
   return (
     <Block flex={1} center space="between" style={{ paddingBottom: 100 }}>
+      {/* <Text>{JSON.stringify(values)}</Text> */}
+      {/* <Text>{JSON.stringify(addressText)}</Text> */}
       <Block center>
         <Input
           bgColor="transparent"
@@ -142,6 +159,7 @@ const CreateDossiersForm = ({
           <ScrollView horizontal={true} style={styles.disableScrollingWarning}>
             <View style={styles.googlePlacesContainer}>
               <GooglePlacesAutocomplete
+                ref={ref}
                 placeholder="Search"
                 onPress={(_, details = null) => {
                   if (!details) return;
@@ -182,7 +200,7 @@ const CreateDossiersForm = ({
                 }}
                 fetchDetails
                 query={{
-                  key: "AIzaSyC1jikr2uE40MmY83vnuDzFCYFhZWYAolg",
+                  key: GOOGLE_API_KEY,
                   language: "en",
                 }}
               />

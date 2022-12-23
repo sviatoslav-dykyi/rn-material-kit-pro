@@ -64,15 +64,7 @@ class DrawerItem extends React.Component {
             color={focused ? "white" : materialTheme.COLORS.MUTED}
           />
         );
-      case "Settings":
-        return (
-          <Icon
-            size={15}
-            name="gears"
-            family="font-awesome"
-            color={focused ? "white" : materialTheme.COLORS.MUTED}
-          />
-        );
+
       case "Components":
         return (
           <Icon
@@ -100,6 +92,16 @@ class DrawerItem extends React.Component {
             color={focused ? "white" : materialTheme.COLORS.MUTED}
           />
         );
+      case "Logout":
+        return (
+          <Icon
+            size={15}
+            family="MaterialIcons"
+            size={15}
+            name="logout"
+            color={focused ? "white" : materialTheme.COLORS.MUTED}
+          />
+        );
       default:
         return null;
     }
@@ -116,7 +118,7 @@ class DrawerItem extends React.Component {
           row
           style={[
             styles.defaultStyle,
-            focused ? [styles.activeStyle, styles.shadow] : null
+            focused ? [styles.activeStyle, styles.shadow] : null,
           ]}
         >
           <Block middle flex={0.1} style={{ marginRight: 28 }}>
@@ -139,19 +141,19 @@ const styles = StyleSheet.create({
   defaultStyle: {
     paddingVertical: 16,
     paddingHorizontal: 16,
-    marginBottom: 6
+    marginBottom: 6,
   },
   activeStyle: {
     backgroundColor: materialTheme.COLORS.ACTIVE,
-    borderRadius: 4
+    borderRadius: 4,
   },
   shadow: {
     shadowColor: theme.COLORS.BLACK,
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowRadius: 8,
-    shadowOpacity: 0.2
-  }
+    shadowOpacity: 0.2,
+  },
 });

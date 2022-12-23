@@ -1,6 +1,7 @@
 import { getDossiers } from "../../api";
 
-export const fetchDossiers = async ({ setDossiers }: any) => {
+export const fetchDossiers = async ({ setDossiers, setIsLoading }: any) => {
+  setIsLoading(true);
   const response = await getDossiers();
   const json = await response.json();
   console.log("json", json);
@@ -8,4 +9,5 @@ export const fetchDossiers = async ({ setDossiers }: any) => {
     const { dossiers } = json;
     setDossiers(dossiers);
   }
+  setIsLoading(false);
 };

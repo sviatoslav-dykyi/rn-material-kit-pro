@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Dimensions, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+  View,
+  ActivityIndicator,
+  TouchableOpacity,
+} from "react-native";
 import { Button, Block, Text, Input, theme } from "galio-framework";
-
+import { Appbar, IconButton, Menu, Provider } from "react-native-paper";
 import { Icon, Product } from "../../components";
 
 const { width } = Dimensions.get("screen");
@@ -11,10 +18,18 @@ import { useNavigation } from "@react-navigation/native";
 import { Dossier } from "../dossiers/types";
 import { fetchDossiers } from "./utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { TouchableOpacity } from "react-native-gesture-handler";
+
+import { styles } from "../dossiers/styles";
+import { materialTheme } from "../../constants";
+
+interface OpenMenu {
+  [key: string]: boolean;
+}
 
 const Home = () => {
   const [dossiers, setDossiers] = useState<Dossier[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [openMenu, setOpenMenu] = useState<OpenMenu>({});
   let token: any;
   let user;
   const getToken = async () => {
@@ -30,105 +45,111 @@ const Home = () => {
   useEffect(() => {
     getToken();
     console.log(99999);
-    fetchDossiers({ setDossiers });
+    fetchDossiers({ setDossiers, setIsLoading });
   }, []);
 
   const navigation = useNavigation();
+
+  if (isLoading) {
+    return (
+      <View style={styles.activityIndicator}>
+        <ActivityIndicator
+          size="large"
+          color={materialTheme.COLORS.BUTTON_COLOR}
+        />
+      </View>
+    );
+  }
+
   return (
     <ScrollView>
-      <Block row center>
-        <Button
-          onPress={() => {
-            navigation.navigate("CreateDossier" as never);
-          }}
-        >
-          Create
-        </Button>
-      </Block>
-      <Block>
-        {dossiers.map(({ title }, ind) => (
-          <TouchableOpacity
-            onPress={() => console.log(title)}
-            style={{ margin: 10, backgroundColor: "#777" }}
-            key={ind}
-          >
-            <Text>{title}</Text>
-          </TouchableOpacity>
-        ))}
-        {dossiers.map(({ title, _id }, ind) => (
+      <Provider>
+        <Block row center>
           <Button
             onPress={() => {
-              navigation.navigate("App" as never, {
-                // @ts-ignore
-                screen: "EditDossier",
-                params: { sdfsdf: "sdfdsfs", id: _id } as never,
-              });
-              // navigation.navigate(
-              //   "EditDossier" as never,
-              //   { sdfsdf: "sdfdsfs", id: _id } as never
-              // );
+              navigation.navigate("CreateDossier" as never);
             }}
-            style={{ margin: 10, backgroundColor: "#777" }}
-            key={ind}
           >
-            <Text>{title}</Text>
+            Create
           </Button>
-        ))}
-        {/* <Text>{JSON.stringify(dossiers)}</Text> */}
-        <Text>{JSON.stringify(dossiers)}</Text>
-      </Block>
+        </Block>
+        <Block>
+          {dossiers.map(({ title, _id }) => (
+            <TouchableOpacity
+              onPress={() => {
+                // navigation.navigate("App" as never, {
+                //   // @ts-ignore
+                //   screen: "EditDossier",
+                //   params: { id: _id } as never,
+                // });
+                //navigation.navigate("EditDossier" as never, { id: _id } as never);
+              }}
+              key={_id}
+            >
+              <Block
+                card
+                style={{
+                  margin: 10,
+                  justifyContent: "flex-start",
+                  backgroundColor: materialTheme.COLORS.BUTTON_COLOR,
+                  height: 200,
+                }}
+              >
+                <Block row space="between">
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: "bold",
+                      color: "#fff",
+                      padding: 14,
+                    }}
+                  >
+                    {title}
+                  </Text>
+                  <Menu
+                    visible={Boolean(openMenu[_id!])}
+                    contentStyle={{
+                      marginTop: -40,
+                    }}
+                    onDismiss={() => {
+                      setOpenMenu((state) => ({ ...state, [_id!]: false }));
+                    }}
+                    anchorPosition="top"
+                    anchor={
+                      <Button
+                        onlyIcon
+                        shadowColor={true}
+                        icon="more-vert"
+                        iconFamily="MaterialIcons"
+                        iconSize={30}
+                        onPress={() => {
+                          setOpenMenu((state) => ({ ...state, [_id!]: true }));
+                        }}
+                        style={{ width: 40, height: 40 }}
+                      ></Button>
+                    }
+                  >
+                    <Menu.Item
+                      onPress={() => {
+                        navigation.navigate(
+                          "EditDossier" as never,
+                          { id: _id } as never
+                        );
+                        setOpenMenu((state) => ({ ...state, [_id!]: false }));
+                      }}
+                      title="Edit"
+                    />
+                    <Menu.Item title="View" />
+                    <Menu.Item title="Delete" />
+                  </Menu>
+                </Block>
+              </Block>
+            </TouchableOpacity>
+          ))}
+        </Block>
+      </Provider>
     </ScrollView>
   );
 };
 
 export default Home;
-
-const styles = StyleSheet.create({
-  home: {
-    width: width,
-  },
-  search: {
-    height: 48,
-    width: width - 32,
-    marginHorizontal: 16,
-    borderWidth: 1,
-    borderRadius: 3,
-  },
-  header: {
-    backgroundColor: theme.COLORS?.WHITE,
-    shadowColor: theme.COLORS?.BLACK,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowRadius: 8,
-    shadowOpacity: 0.2,
-    elevation: 4,
-    zIndex: 2,
-  },
-  tabs: {
-    marginBottom: 24,
-    marginTop: 10,
-    elevation: 4,
-  },
-  tab: {
-    backgroundColor: theme.COLORS?.TRANSPARENT,
-    width: width * 0.5,
-    borderRadius: 0,
-    borderWidth: 0,
-    height: 24,
-    elevation: 0,
-  },
-  tabTitle: {
-    lineHeight: 19,
-    fontWeight: "300",
-  },
-  divider: {
-    borderRightWidth: 0.3,
-    borderRightColor: theme.COLORS?.MUTED,
-  },
-  products: {
-    width: width - Number(theme.SIZES?.BASE) * 2,
-    paddingVertical: Number(theme.SIZES?.BASE) * 2,
-  },
-});

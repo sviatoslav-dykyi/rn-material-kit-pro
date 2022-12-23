@@ -12,6 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import SignInScreen from "../screens/signIn";
 import SignUpScreen from "../screens/signUp";
+import SignOutScreen from "../screens/signOut";
 import CustomDrawerContent from "./Menu";
 import {
   createDrawerNavigator,
@@ -28,13 +29,49 @@ const { width } = Dimensions.get("screen");
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
-const profile = {
+const profile2 = {
   avatar: Images.Profile,
   name: "Rachel Brown",
   type: "Seller",
   plan: "Pro",
   rating: 4.8,
 };
+
+function ProfileStack(props) {
+  return (
+    <Stack.Navigator
+      initialRouteName="Profile"
+      screenOptions={{
+        mode: "card",
+        headerShown: "screen",
+      }}
+    ></Stack.Navigator>
+  );
+}
+
+function SettingsStack(props) {
+  return (
+    <Stack.Navigator
+      initialRouteName="Settings"
+      screenOptions={{
+        mode: "card",
+        headerShown: "screen",
+      }}
+    ></Stack.Navigator>
+  );
+}
+
+function ComponentsStack(props) {
+  return (
+    <Stack.Navigator
+      initialRouteName="Components"
+      screenOptions={{
+        mode: "card",
+        headerShown: "screen",
+      }}
+    ></Stack.Navigator>
+  );
+}
 
 export default function OnboardingStack(props) {
   return (
@@ -49,6 +86,43 @@ export default function OnboardingStack(props) {
   );
 }
 
+function WomanStack(props) {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        mode: "card",
+        headerShown: "screen",
+      }}
+    ></Stack.Navigator>
+  );
+}
+
+function ManStack(props) {
+  return <Stack.Navigator mode="card" headerMode="screen"></Stack.Navigator>;
+}
+
+function KidsStack(props) {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        mode: "card",
+        headerShown: "screen",
+      }}
+    ></Stack.Navigator>
+  );
+}
+
+function NewCollectionStack(props) {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        mode: "card",
+        headerShown: "screen",
+      }}
+    ></Stack.Navigator>
+  );
+}
+
 function HomeStack(props) {
   return (
     <Stack.Navigator
@@ -58,7 +132,7 @@ function HomeStack(props) {
       }}
     >
       <Stack.Screen
-        name="Home"
+        name="Home2"
         headerShown={false}
         component={HomeScreen}
         options={{
@@ -66,7 +140,7 @@ function HomeStack(props) {
             <Header
               search
               options
-              title="Home"
+              title="Home3"
               navigation={navigation}
               scene={scene}
             />
@@ -114,7 +188,7 @@ function EditDossierStack(props) {
       }}
     >
       <Stack.Screen
-        name="EditDossier"
+        name="EditDossier2"
         headerShown={false}
         component={EditDossierScreen}
         options={{
@@ -164,7 +238,7 @@ function AppStack(props) {
       userToken: null,
     }
   );
-  console.log("state in AppStack", state);
+  const [profile, setProfile] = useState();
   useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
@@ -216,10 +290,27 @@ function AppStack(props) {
           } catch (e) {
             console.log("Error when saving token to AsyncStorage");
           }
+          setProfile({ ...profile2, ...user });
+          console.log("user", user);
           dispatch({ type: "SIGN_IN", token });
-          //navigation.navigate('Root', { screen: 'Profile' });
           navigation.navigate("Home");
         }
+        // signIn(values)
+        //   .then((res) => {
+        //     if ([200, 201].includes(res.status)) {
+        //       setValues(initSignInValues);
+        //       setTouched({});
+
+        //       navigation.navigate("Home");
+        //     } else {
+        //       setSubmitting(false);
+        //     }
+        //     return res.json();
+        //   })
+        //   .then((data) => {
+        //     return data;
+        //   })
+        //   .catch((err) => console.error("Rejected", err));
       },
       signOut: async () => {
         try {
@@ -241,6 +332,24 @@ function AppStack(props) {
     }),
     []
   );
+
+  // const [userData, setUserData] = useState(null);
+  // const getData = async () => {
+  //   try {
+  //     value = await AsyncStorage.getItem("user");
+  //     if (value !== null) {
+  //       console.log("value22", value);
+  //     }
+  //   } catch (e) {
+  //     // error reading value
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   //console.log("11111");
+  //   getData();
+  // });
+  // console.log("state", state);
 
   return (
     <AuthContext.Provider value={authContext}>
@@ -346,47 +455,50 @@ function AppStack(props) {
           </>
         ) : (
           <>
-            <Drawer.Screen
+            <Stack.Screen
               name="Home"
-              component={HomeStack}
+              headerShown={false}
+              component={HomeScreen}
               options={{
-                headerShown: false,
-                drawerIcon: ({ focused }) => (
-                  <Icon
-                    size={16}
-                    name="shop"
-                    family="GalioExtra"
-                    color={focused ? "white" : materialTheme.COLORS.MUTED}
+                header: ({ navigation, scene }) => (
+                  <Header
+                    search
+                    options
+                    title="Home"
+                    navigation={navigation}
+                    scene={scene}
                   />
                 ),
               }}
             />
-            <Drawer.Screen
+            <Stack.Screen
               name="CreateDossier"
-              component={CreateDossierStack}
+              headerShown={false}
+              component={CreateDossierScreen}
               options={{
-                headerShown: false,
-                drawerIcon: ({ focused }) => (
-                  <Icon
-                    size={16}
-                    name="shop"
-                    family="GalioExtra"
-                    color={focused ? "white" : materialTheme.COLORS.MUTED}
+                header: ({ navigation, scene }) => (
+                  <Header
+                    search
+                    options
+                    title="Create"
+                    navigation={navigation}
+                    scene={scene}
                   />
                 ),
               }}
             />
-            <Drawer.Screen
+            <Stack.Screen
               name="EditDossier"
-              component={EditDossierStack}
+              headerShown={false}
+              component={EditDossierScreen}
               options={{
-                headerShown: false,
-                drawerIcon: ({ focused }) => (
-                  <Icon
-                    size={16}
-                    name="shop"
-                    family="GalioExtra"
-                    color={focused ? "white" : materialTheme.COLORS.MUTED}
+                header: ({ navigation, scene }) => (
+                  <Header
+                    search
+                    options
+                    title="Edit"
+                    navigation={navigation}
+                    scene={scene}
                   />
                 ),
               }}
@@ -409,6 +521,21 @@ function AppStack(props) {
             <Drawer.Screen
               name="Sign Up"
               component={SignUpScreen}
+              options={{
+                headerShown: false,
+                drawerIcon: ({ focused }) => (
+                  <Icon
+                    size={16}
+                    name="md-person-add"
+                    family="ionicon"
+                    color={focused ? "white" : materialTheme.COLORS.MUTED}
+                  />
+                ),
+              }}
+            />
+            <Drawer.Screen
+              name="Logout"
+              component={SignOutScreen}
               options={{
                 headerShown: false,
                 drawerIcon: ({ focused }) => (

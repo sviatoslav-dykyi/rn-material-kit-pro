@@ -52,27 +52,33 @@ export const initCreateDossier: Dossier = {
   userDefinedFields: [],
 };
 
-export const prepareDossierBeforeForm = (data: Dossier): Dossier => {
-  return {
-    ...data,
-    title: data.title ?? "",
-    dealType: data.dealType ?? "",
-    property: {
-      ...data.property,
-      balconyArea: data.property.balconyArea?.toString() ?? "",
-      buildingYear: data.property.buildingYear.toString() ?? "",
-      floorNumber: data.property.floorNumber?.toString() ?? "",
-      gardenArea: data.property.gardenArea?.toString() ?? "",
-      livingArea: data.property.livingArea?.toString() ?? "",
-      numberOfBathrooms: data.property.numberOfBathrooms?.toString() ?? "",
-      numberOfFloorsInBuilding:
-        data.property.numberOfFloorsInBuilding?.toString() ?? "",
-      numberOfIndoorParkingSpaces:
-        data.property.numberOfIndoorParkingSpaces?.toString() ?? "",
-      numberOfOutdoorParkingSpaces:
-        data.property.numberOfOutdoorParkingSpaces?.toString() ?? "",
-      numberOfRooms: data.property.numberOfRooms?.toString() ?? "",
-      renovationYear: data.property.renovationYear?.toString() ?? "",
-    },
-  };
-};
+// export const prepareDossierBeforeSubmit = (data: Dossier): Dossier => {
+//   const auxDossier: any = {};
+//   Object.keys(data).forEach((key: any) => {
+//     if (data[key as keyof Dossier]) {
+//       auxDossier[key as keyof Dossier] = data[key as keyof Dossier];
+//     }
+//   });
+//   return {
+//     ...data,
+//     title: data.title ?? "",
+//     dealType: data.dealType ?? "",
+//     property: {
+//       ...data.property,
+//       balconyArea: data.property.balconyArea?.toString() ?? "",
+//       buildingYear: data.property.buildingYear.toString() ?? "",
+//       floorNumber: data.property.floorNumber?.toString() ?? "",
+//       gardenArea: data.property.gardenArea?.toString() ?? "",
+//       livingArea: data.property.livingArea?.toString() ?? "",
+//       numberOfBathrooms: data.property.numberOfBathrooms?.toString() ?? "",
+//       numberOfFloorsInBuilding:
+//         data.property.numberOfFloorsInBuilding?.toString() ?? "",
+//       numberOfIndoorParkingSpaces:
+//         data.property.numberOfIndoorParkingSpaces?.toString() ?? "",
+//       numberOfOutdoorParkingSpaces:
+//         data.property.numberOfOutdoorParkingSpaces?.toString() ?? "",
+//       numberOfRooms: data.property.numberOfRooms?.toString() ?? "",
+//       renovationYear: data.property.renovationYear?.toString() ?? "",
+//     },
+//   };
+// };

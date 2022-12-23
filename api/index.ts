@@ -17,6 +17,6 @@ export const getDossiers = async () => {
   return await http.get("dossiers");
 };
 
-export const getDossierById = async (id: number) => {
+export const getDossierById = async (id: string) => {
   return await http.get(`dossiers/${id}`);
 };

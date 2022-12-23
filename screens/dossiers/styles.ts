@@ -126,6 +126,12 @@ export const styles = StyleSheet.create({
   disableScrollingWarning: {
     width: "100%",
   },
+  activityIndicator: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10,
+  },
 });
 
 export const styles2 = StyleSheet.create({});

@@ -19,8 +19,8 @@ import { handleSignUpSubmit } from "../../signUp/utils";
 import { styles } from "../styles";
 import { DossierTypes } from "../../../utils/constants";
 import { handleCreateDossierSubmit, initCreateDossier } from "./utils";
-import { prepareDossierBeforeForm } from "./utils";
-import { mockDossier } from "../form/utils";
+
+import { mockDossier, prepareDossierBeforeForm } from "../form/utils";
 const CreateDossier = (): ReactElement => {
   const { firstName, lastName, password, passwordConfirm, phone, email } =
     useValidation();

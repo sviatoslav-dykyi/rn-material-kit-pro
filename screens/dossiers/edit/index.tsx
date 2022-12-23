@@ -1,9 +1,13 @@
-import React, { useState, ReactElement } from "react";
+import React, { useState, ReactElement, useEffect } from "react";
 import {
   Dimensions,
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  StyleSheet,
+  View,
+  ActivityIndicator,
+  Text,
 } from "react-native";
 import { Formik } from "formik";
 import { Block, theme } from "galio-framework";
@@ -17,13 +21,24 @@ import { initCreateDossierValues } from "../utils";
 import Form from "../form";
 import { handleSignUpSubmit } from "../../signUp/utils";
 import { styles } from "../styles";
+import { Dossier } from "../types";
+import { fetchDossier, handleEditDossierSubmit } from "./utils";
+import { materialTheme } from "../../../constants";
+import { GOOGLE_API_KEY, prepareDossierBeforeForm } from "../form/utils";
 
 const EditDossier = (): ReactElement => {
   const { firstName, lastName, password, passwordConfirm, phone, email } =
     useValidation();
   const navigation = useNavigation();
-  const route = useRoute();
+  const route = useRoute<any>();
   console.log("route1", route);
+  const id = route?.params?.id;
+  console.log("id", id);
+
+  const [dossier, setDossier] = useState<Dossier>();
+  const [isLoaing, setIsLoading] = useState(false);
+  const [addressText, setAddressText] = useState("");
+
   const [state, setState] = useState<any>({
     active: {
       title: false,
@@ -43,12 +58,58 @@ const EditDossier = (): ReactElement => {
     },
   });
 
+  useEffect(() => {
+    fetchDossier({ setDossier, setIsLoading, id });
+  }, [id]);
+
   const toggleActive = (name: string) => {
     const { active } = state;
     active[name] = !active[name];
     setState({ active });
   };
-  console.log("11111");
+
+  const getGoogleAddress = async (lat: number, lng: number) => {
+    const response = await fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_API_KEY}`,
+      {
+        method: "GET",
+        // mode: "cors",
+        // headers: {
+        //   "Content-Type": "application/json",
+        //   Authorization: `Bearer ${token}`,
+        // },
+        // body: JSON.stringify(body),
+      }
+    );
+    const json = await response.json();
+    console.log("jsonAdd", json.results[0].formatted_address);
+    setAddressText(json.results[0].formatted_address);
+    //console.log("jsonAdd", json.results[0].formatted_address);
+  };
+
+  useEffect(() => {
+    if (!dossier) return;
+    const {
+      property: {
+        location: {
+          coordinates: { latitude, longitude },
+        },
+      },
+    } = dossier;
+    dossier && getGoogleAddress(latitude, longitude);
+  }, [dossier]);
+
+  if (isLoaing) {
+    return (
+      <View style={styles.activityIndicator}>
+        <ActivityIndicator
+          size="large"
+          color={materialTheme.COLORS.BUTTON_COLOR}
+        />
+      </View>
+    );
+  }
+
   return (
     <ScrollView>
       <LinearGradient
@@ -63,31 +124,36 @@ const EditDossier = (): ReactElement => {
       >
         <Block flex middle>
           <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "position"}
+            //behavior={Platform.OS === "ios" ? "padding" : "position"}
             enabled
             keyboardVerticalOffset={0}
           >
-            <Formik
-              initialValues={initCreateDossierValues}
-              //onSubmit={() => {}}
-              onSubmit={handleSignUpSubmit({ navigation })}
-              validationSchema={Yup.object().shape({
-                firstName,
-                lastName,
-                email,
-                phone,
-                password,
-                passwordConfirm,
-              })}
-            >
-              {(props) => (
-                <Form
-                  {...props}
-                  state={state}
-                  toggleActive={toggleActive}
-                ></Form>
-              )}
-            </Formik>
+            {dossier && (
+              <Formik
+                initialValues={prepareDossierBeforeForm(dossier)}
+                //onSubmit={() => {}}
+                enableReinitialize
+                onSubmit={handleEditDossierSubmit()}
+                validationSchema={Yup.object().shape({
+                  // firstName,
+                  // lastName,
+                  // email,
+                  // phone,
+                  // password,
+                  // passwordConfirm,
+                })}
+              >
+                {(props) => (
+                  <Form
+                    {...props}
+                    state={state}
+                    toggleActive={toggleActive}
+                    mode="edit"
+                    addressText={addressText}
+                  ></Form>
+                )}
+              </Formik>
+            )}
           </KeyboardAvoidingView>
         </Block>
       </LinearGradient>
