@@ -20,7 +20,7 @@ import { styles } from "../styles";
 import { DossierTypes } from "../../../utils/constants";
 import { handleCreateDossierSubmit, initCreateDossier } from "./utils";
 
-import { mockDossier, prepareDossierBeforeForm } from "../form/utils";
+import { prepareDossierBeforeForm } from "../form/utils";
 const CreateDossier = (): ReactElement => {
   const { firstName, lastName, password, passwordConfirm, phone, email } =
     useValidation();
@@ -70,7 +70,7 @@ const CreateDossier = (): ReactElement => {
             keyboardVerticalOffset={0}
           >
             <Formik
-              initialValues={prepareDossierBeforeForm(mockDossier)}
+              initialValues={prepareDossierBeforeForm(initCreateDossier)}
               onSubmit={handleCreateDossierSubmit()}
               validationSchema={Yup.object().shape({
                 // firstName,

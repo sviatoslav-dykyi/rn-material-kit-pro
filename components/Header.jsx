@@ -51,16 +51,20 @@ const BasketButton = ({ isWhite, style, navigation }) => (
 
 const LogoutButton = ({ isWhite, style, signOut, navigation }) => (
   <TouchableOpacity
-    style={[style, { display: "flex", flexDirection: "row" }]}
+    style={[
+      style,
+      { display: "flex", flexDirection: "row", alignItems: "center" },
+    ]}
     onPress={() => {
       signOut();
-      navigation.navigate("Sign In");
     }}
   >
-    <Text style={{ paddingRight: 5 }}>Logout</Text>
+    <Text style={{ paddingRight: 5, fontSize: 10, fontWeight: "bold" }}>
+      Logout
+    </Text>
     <Icon
       family="MaterialIcons"
-      size={16}
+      size={14}
       name="logout"
       color={theme.COLORS[isWhite ? "WHITE" : "ICON"]}
     />

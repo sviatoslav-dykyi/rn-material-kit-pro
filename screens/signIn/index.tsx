@@ -17,7 +17,7 @@ import { Formik } from "formik";
 import useValidation from "../../hooks/useValidation";
 import * as Yup from "yup";
 import { signIn } from "../../api";
-import { handleSignInSubmit, initSignInValues, storeUserData } from "./utils";
+import { initSignInValues, storeUserData } from "./utils";
 import { initSignUpValues } from "../signUp/utils";
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../../navigation/context-utils";
@@ -44,33 +44,8 @@ const SignIn = () => {
     setState({ active });
   };
 
-  const { signIn, signOut } = useContext(AuthContext);
+  const { signIn } = useContext(AuthContext);
 
-  // const storeData = async (value: any) => {
-  //   try {
-  //     const jsonValue = JSON.stringify(value);
-  //     await AsyncStorage.setItem("user", jsonValue);
-  //   } catch (e) {
-  //     // saving error
-  //   }
-  // };
-
-  // const getData = async () => {
-  //   try {
-  //     const value = await AsyncStorage.getItem("user");
-  //     if (value !== null) {
-  //       console.log("value", value);
-  //     }
-  //   } catch (e) {
-  //     // error reading value
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   storeData({ id: 1, name: "Gog" });
-  //   getData();
-  // }, []);
-  console.log("");
   return (
     <LinearGradient
       start={{ x: 0, y: 0 }}
@@ -145,7 +120,7 @@ const SignIn = () => {
           </Block>
           <Formik
             initialValues={initSignInValues}
-            onSubmit={handleSignInSubmit({ navigation, signInContext: signIn })}
+            onSubmit={() => {}}
             validationSchema={Yup.object().shape({
               email,
               password,
@@ -154,12 +129,12 @@ const SignIn = () => {
             {({
               handleChange,
               handleBlur,
-              handleSubmit,
               values,
-              submitForm,
               touched,
               errors,
               status,
+              isSubmitting,
+              setSubmitting,
             }) => (
               <Block flex>
                 <Block center>
@@ -233,17 +208,9 @@ const SignIn = () => {
                     shadowless
                     color={materialTheme.COLORS.BUTTON_COLOR}
                     style={{ height: 48 }}
-                    onPress={
-                      () => {
-                        signIn(values);
-                        //signIn({});
-                      }
-
-                      // Alert.alert(
-                      //   "Sign in action",
-                      //   `Email: ${email} Password: ${password}`
-                      // )
-                    }
+                    onPress={() => {
+                      signIn(values, setSubmitting);
+                    }}
                   >
                     SIGN IN
                   </Button>

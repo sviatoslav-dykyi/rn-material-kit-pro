@@ -152,22 +152,20 @@ const MultiFamilyHouseForm = ({
         autoCapitalize="none"
         style={[
           styles.input,
-          state.active.property.number_of_residential_units
-            ? styles.inputActive
-            : null,
+          state.active.property.numberOfUnits ? styles.inputActive : null,
         ]}
         onBlur={() => {
-          toggleActive("property.number_of_residential_units");
-          handleBlur("property.number_of_residential_units");
+          toggleActive("property.numberOfUnits");
+          handleBlur("property.numberOfUnits");
         }}
-        onFocus={() => toggleActive("property.number_of_residential_units")}
-        onChangeText={handleChange("property.number_of_residential_units")}
-        value={values.property.number_of_residential_units}
+        onFocus={() => toggleActive("property.numberOfUnits")}
+        onChangeText={handleChange("property.numberOfUnits")}
+        value={values.property.numberOfUnits}
         bottomHelp
         help={
-          touched.property?.number_of_residential_units &&
-          (status?.errors?.property.number_of_residential_units ||
-            errors?.property?.number_of_residential_units)
+          touched.property?.numberOfUnits &&
+          (status?.errors?.property.numberOfUnits ||
+            errors?.property?.numberOfUnits)
         }
         icon="handyman"
         family="MaterialIcons"
@@ -250,9 +248,9 @@ const MultiFamilyHouseForm = ({
         value={values.property.annualRentIncome}
         bottomHelp
         help={
-          touched.property?.annual_net_rent_income &&
-          (status?.errors?.property.annual_net_rent_income ||
-            errors?.property?.annual_net_rent_income)
+          touched.property?.annualRentIncome &&
+          (status?.errors?.property.annualRentIncome ||
+            errors?.property?.annualRentIncome)
         }
         icon="fullscreen"
         family="MaterialIcons"

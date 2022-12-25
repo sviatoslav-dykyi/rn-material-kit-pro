@@ -132,6 +132,34 @@ export const styles = StyleSheet.create({
     justifyContent: "space-around",
     padding: 10,
   },
+  homeImageContainer: {
+    width: width * 0.9,
+    backgroundColor: "#fff",
+    padding: 10,
+    marginBottom: 10,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  homeImage: {
+    width: width * 0.4,
+    //flex: 500,
+  },
+  imageBackground: {
+    width: width * 0.9,
+  },
+  showSubtitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    paddingTop: 30,
+    paddingBottom: 7,
+    color: "#3d454d",
+  },
+  showImage: {
+    width: width * 0.9,
+    height: 200,
+  },
+  showFieldInfoBlock: { alignItems: "center", paddingTop: 12 },
+  showFieldInfoText: { fontSize: 15, paddingLeft: 8 },
 });
 
 export const styles2 = StyleSheet.create({});

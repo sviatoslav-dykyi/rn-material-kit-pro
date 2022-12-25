@@ -4,6 +4,7 @@ import { DossierTypeIds, DossierTypes } from "../../utils/constants";
 export interface Dossier {
   _id?: string;
   title?: string;
+  description?: "";
   dealType?: DealType; //*
   property: {
     propertyType: {
@@ -26,11 +27,11 @@ export interface Dossier {
     volume?: number | string;
     balconyArea?: number | string; // 1-200
     hasLift?: boolean | string;
-    isNew?: boolean;
-    hasSauna?: boolean;
-    hasPool?: boolean;
+    isNew?: boolean | string;
+    hasSauna?: boolean | string;
+    hasPool?: boolean | string;
     floorNumber?: number | string; // 1-30
-    number_of_residential_units?: number | string; // * - only for multi
+    numberOfUnits?: number | string;
     annualRentIncome?: number | string; // 5’000 - 1’000’000
     numberOfFloorsInBuilding?: number | string; // 1-30
     numberOfRooms?: number | string; // 1-20, step 0.5: 1, 1.5, 2, 2.5
@@ -57,7 +58,9 @@ export interface Dossier {
   };
   countryCode?: "DE";
   images: { filename: string; url: string }[];
-  //userDefinedFields?: { label: string; value: string };
+  userDefinedFields?: any;
+  attachments: [];
+  updatedAt?: Date | string;
 }
 
 export interface DossierType {

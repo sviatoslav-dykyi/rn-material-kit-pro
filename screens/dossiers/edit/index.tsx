@@ -17,9 +17,7 @@ import useValidation from "../../../hooks/useValidation";
 import * as Yup from "yup";
 import { useNavigation } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
-import { initCreateDossierValues } from "../utils";
 import Form from "../form";
-import { handleSignUpSubmit } from "../../signUp/utils";
 import { styles } from "../styles";
 import { Dossier } from "../types";
 import { fetchDossier, handleEditDossierSubmit } from "./utils";
@@ -27,17 +25,26 @@ import { materialTheme } from "../../../constants";
 import { GOOGLE_API_KEY, prepareDossierBeforeForm } from "../form/utils";
 
 const EditDossier = (): ReactElement => {
-  const { firstName, lastName, password, passwordConfirm, phone, email } =
-    useValidation();
+  const {
+    property,
+    firstName,
+    lastName,
+    password,
+    passwordConfirm,
+    phone,
+    email,
+  } = useValidation();
   const navigation = useNavigation();
   const route = useRoute<any>();
-  console.log("route1", route);
+  //console.log("route1", route);
   const id = route?.params?.id;
-  console.log("id", id);
+  //console.log("id", id);
 
   const [dossier, setDossier] = useState<Dossier>();
   const [isLoaing, setIsLoading] = useState(false);
   const [addressText, setAddressText] = useState("");
+  const [gog1, setGog1] = useState("");
+  const [gog2, setGog2] = useState("");
 
   const [state, setState] = useState<any>({
     active: {
@@ -82,7 +89,7 @@ const EditDossier = (): ReactElement => {
       }
     );
     const json = await response.json();
-    console.log("jsonAdd", json.results[0].formatted_address);
+    //console.log("jsonAdd", json.results[0].formatted_address);
     setAddressText(json.results[0].formatted_address);
     //console.log("jsonAdd", json.results[0].formatted_address);
   };
@@ -117,10 +124,7 @@ const EditDossier = (): ReactElement => {
         end={{ x: 0.25, y: 1.1 }}
         locations={[0.2, 1]}
         colors={["#6C24AA", "#15002B"]}
-        style={[
-          styles.signup,
-          { flex: 1, paddingTop: (theme.SIZES?.BASE || 0) * 4 },
-        ]}
+        style={[styles.signup, { flex: 1, paddingTop: 0 }]}
       >
         <Block flex middle>
           <KeyboardAvoidingView
@@ -135,6 +139,7 @@ const EditDossier = (): ReactElement => {
                 enableReinitialize
                 onSubmit={handleEditDossierSubmit()}
                 validationSchema={Yup.object().shape({
+                  //property,
                   // firstName,
                   // lastName,
                   // email,

@@ -9,3 +9,7 @@ export enum DossierTypes {
   HOUSE = "house",
   MULTI_FAMILY_HOUSE = "multi_family_house",
 }
+
+export enum ContentTypeMIME {
+  MULTIPART_FORM_DATA = "multipart/form-data; boundary=<calculated when request is sent>",
+}

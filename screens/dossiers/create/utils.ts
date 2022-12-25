@@ -8,11 +8,12 @@ export const handleCreateDossierSubmit = () => {
     dossier: Dossier,
     { setStatus, setSubmitting, setValues, setTouched }: FormikValues
   ): Promise<void> => {
-    console.log("dossier", dossier);
-    const response = await createDossier(dossier);
-    const json = await response.json();
+    setSubmitting(true);
+    //console.log("dossier", dossier);
+    // const response = await createDossier(dossier);
+    // const json = await response.json();
 
-    console.log("json", json);
+    // console.log("json", json);
     // signIn(values)
     //   .then((res) => {
     //     if ([200, 201].includes(res.status)) {
@@ -50,6 +51,7 @@ export const initCreateDossier: Dossier = {
   },
   images: [],
   userDefinedFields: [],
+  attachments: [],
 };
 
 // export const prepareDossierBeforeSubmit = (data: Dossier): Dossier => {

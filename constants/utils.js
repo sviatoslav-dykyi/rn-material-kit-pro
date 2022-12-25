@@ -9,4 +9,5 @@ export const HeaderHeight = theme.SIZES.BASE * 4 + StatusHeight;
 export const iPhoneX = () =>
   Platform.OS === "ios" && (height === 812 || width === 812);
 
-export const REACT_BASE_URL = "http://127.0.0.1:5001/api/v1";
+//export const REACT_BASE_URL = "http://127.0.0.1:5001/api/v1"; // - for mac testing
+export const REACT_BASE_URL = "http://192.168.31.44:5001/api/v1"; // - for Iphone testing

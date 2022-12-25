@@ -38,6 +38,7 @@
     "formik": "^2.2.9",
     "galio-framework": "^0.8.0",
     "lodash": "^4.17.21",
+    "moment": "^2.29.4",
     "pod-install": "^0.1.38",
     "react": "18.1.0",
     "react-native": "0.70.5",

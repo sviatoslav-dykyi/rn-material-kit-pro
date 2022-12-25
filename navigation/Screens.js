@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useReducer } from "react";
 import { Dimensions, Easing } from "react-native";
-import { Header, Icon } from "../components/";
-import { Images, materialTheme } from "../constants/";
+import { Header, Icon } from "../components";
+import { Images, materialTheme } from "../constants";
 
 import HomeScreen from "../screens/home";
 import CreateDossierScreen from "../screens/dossiers/create";
@@ -13,16 +13,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import SignInScreen from "../screens/signIn";
 import SignUpScreen from "../screens/signUp";
 import SignOutScreen from "../screens/signOut";
+import ProfileScreen from "../screens/profile";
+import ShowScreen from "../screens/dossiers/show";
 import CustomDrawerContent from "./Menu";
 import {
   createDrawerNavigator,
   useDrawerStatus,
 } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
-import { tabs } from "../constants/";
+import { tabs } from "../constants";
 import { AuthContext } from "./context-utils";
 import { signUp as signUpRequest, signIn as signInRequest } from "../api";
 import { useNavigation } from "@react-navigation/native";
+import { getToken } from "../utils/common";
 
 const { width } = Dimensions.get("screen");
 
@@ -238,23 +241,20 @@ function AppStack(props) {
       userToken: null,
     }
   );
+  console.log("Gog");
   const [profile, setProfile] = useState();
+
   useEffect(() => {
+    console.log("hallo !!!!!");
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
-      let userToken;
-
-      try {
-        userToken = await AsyncStorage.getItemAsync("userToken");
-      } catch (e) {
-        // Restoring token failed
-      }
-
+      const token = await getToken();
+      console.log("my-token", token);
       // After restoring token, we may need to validate it in production apps
 
       // This will switch to the App screen or Auth screen and this loading
       // screen will be unmounted and thrown away.
-      dispatch({ type: "RESTORE_TOKEN", token: userToken });
+      dispatch({ type: "RESTORE_TOKEN", token });
     };
 
     bootstrapAsync();
@@ -266,7 +266,8 @@ function AppStack(props) {
 
   const authContext = React.useMemo(
     () => ({
-      signIn: async (data) => {
+      signIn: async (data, setSubmitting) => {
+        setSubmitting(true);
         // const { token, user } = data;
         // console.log("token", token);
         // // In a production app, we need to send some data (usually username, password) to server and get a token
@@ -292,36 +293,58 @@ function AppStack(props) {
           }
           setProfile({ ...profile2, ...user });
           console.log("user", user);
+          //setSubmitting(false);
           dispatch({ type: "SIGN_IN", token });
           navigation.navigate("Home");
         }
-        // signIn(values)
+        setSubmitting(false);
+      },
+      signOut: async () => {
+        try {
+          dispatch({ type: "SIGN_OUT" });
+          await AsyncStorage.removeItem("token");
+          await AsyncStorage.removeItem("user");
+        } catch (e) {
+          console.log("Error: ", e);
+        }
+      },
+      signUp: async (data) => {
+        console.log("data1", data);
+        const response = await signUpRequest(data);
+        const json = await response.json();
+        if ([200, 201].includes(response.status)) {
+          const { token, user } = json;
+          try {
+            await AsyncStorage.setItem("token", token);
+            await AsyncStorage.setItem("user", JSON.stringify(user));
+          } catch (e) {
+            console.log("Error when saving token to AsyncStorage");
+          }
+          setProfile({ ...profile2, ...user });
+          dispatch({ type: "SIGN_IN", token });
+          navigation.navigate("Home");
+        }
+        // signUp(values)
         //   .then((res) => {
         //     if ([200, 201].includes(res.status)) {
-        //       setValues(initSignInValues);
+        //       setValues(initSignUpValues);
         //       setTouched({});
-
         //       navigation.navigate("Home");
+        //       //navigate(route("users"));
         //     } else {
+        //       setSubmitting(false);
+        //       // setStatus({
+        //       //   success: false,
+        //       //   errors: mapBackendValidationErrors(json.errors),
+        //       // });
         //       setSubmitting(false);
         //     }
         //     return res.json();
         //   })
         //   .then((data) => {
-        //     return data;
+        //     //console.log("data received", data);
         //   })
         //   .catch((err) => console.error("Rejected", err));
-      },
-      signOut: async () => {
-        try {
-          await AsyncStorage.removeItem(token);
-          await AsyncStorage.removeItem(user);
-        } catch (e) {
-          console.log("Error when deleting data from AsyncStorage");
-        }
-        dispatch({ type: "SIGN_OUT" });
-      },
-      signUp: async (data) => {
         // In a production app, we need to send user data to server and get a token
         // We will also need to handle errors if sign up failed
         // After getting token, we need to persist the token using `SecureStore`
@@ -503,7 +526,7 @@ function AppStack(props) {
                 ),
               }}
             />
-            <Drawer.Screen
+            {/* <Drawer.Screen
               name="Sign In"
               component={SignInScreen}
               options={{
@@ -517,8 +540,8 @@ function AppStack(props) {
                   />
                 ),
               }}
-            />
-            <Drawer.Screen
+            /> */}
+            {/* <Drawer.Screen
               name="Sign Up"
               component={SignUpScreen}
               options={{
@@ -532,7 +555,7 @@ function AppStack(props) {
                   />
                 ),
               }}
-            />
+            /> */}
             <Drawer.Screen
               name="Logout"
               component={SignOutScreen}
@@ -548,6 +571,52 @@ function AppStack(props) {
                 ),
               }}
             />
+            <Drawer.Screen
+              name="Profile"
+              component={ProfileScreen}
+              options={{
+                header: ({ navigation, scene }) => (
+                  <Header
+                    search
+                    options
+                    title="Profile"
+                    navigation={navigation}
+                    scene={scene}
+                  />
+                ),
+              }}
+            />
+            <Stack.Screen
+              name="ShowDossier"
+              headerShown={false}
+              component={ShowScreen}
+              options={{
+                header: ({ navigation, scene }) => (
+                  <Header
+                    search
+                    options
+                    title="Show"
+                    navigation={navigation}
+                    scene={scene}
+                  />
+                ),
+              }}
+            />
+            {/* <Drawer.Screen
+              name="ShowDossier"
+              component={ShowScreen}
+              options={{
+                headerShown: false,
+                drawerIcon: ({ focused }) => (
+                  <Icon
+                    size={16}
+                    name="md-person-add"
+                    family="ionicon"
+                    color={focused ? "white" : materialTheme.COLORS.MUTED}
+                  />
+                ),
+              }}
+            /> */}
           </>
         )}
       </Drawer.Navigator>

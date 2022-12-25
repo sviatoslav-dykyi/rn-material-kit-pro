@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Alert,
   Dimensions,
@@ -16,6 +16,7 @@ import useValidation from "../../hooks/useValidation";
 import * as Yup from "yup";
 import { handleSignUpSubmit, initSignUpValues } from "./utils";
 import { useNavigation } from "@react-navigation/native";
+import { AuthContext } from "../../navigation/context-utils";
 
 const { height, width } = Dimensions.get("window");
 
@@ -48,6 +49,8 @@ const SignUp = () => {
 
     setState({ active });
   };
+
+  const { signUp } = useContext(AuthContext);
 
   return (
     <LinearGradient
@@ -123,7 +126,9 @@ const SignUp = () => {
 
           <Formik
             initialValues={initSignUpValues}
-            onSubmit={handleSignUpSubmit({ navigation })}
+            onSubmit={(values) => {
+              signUp(values);
+            }}
             validationSchema={Yup.object().shape({
               firstName,
               lastName,

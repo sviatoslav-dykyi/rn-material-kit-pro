@@ -55,7 +55,14 @@ function CustomDrawerContent({
           onPress={() => navigation.navigate("Profile")}
         >
           <Block style={styles.profile}>
-            <Image source={{ uri: profile?.avatar }} style={styles.avatar} />
+            <Block row space="between">
+              <Image source={{ uri: profile?.avatar }} style={styles.avatar} />
+              <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+                <Text style={{ fontStyle: "italic", color: "#000000b2" }}>
+                  Edit
+                </Text>
+              </TouchableOpacity>
+            </Block>
             <Text h5 color={"white"}>
               {profile?.firstName} {profile?.lastName}
             </Text>
@@ -63,16 +70,12 @@ function CustomDrawerContent({
         </TouchableWithoutFeedback>
         <Block row>
           <Block middle style={styles.pro}>
-            <Text size={16} color="white">
-              {profile?.plan}
+            <Text size={12} color="white">
+              {profile?.isActivated ? "Activated" : "Not activated"}
             </Text>
           </Block>
-          <Text size={16} muted style={styles.seller}>
-            {profile?.type}
-          </Text>
-          <Text size={16} color={materialTheme.COLORS.WARNING}>
-            {profile?.rating}{" "}
-            <Icon name="shape-star" family="GalioExtra" size={14} />
+          <Text size={12} muted style={styles.seller}>
+            {profile?.role}
           </Text>
         </Block>
       </Block>
@@ -91,6 +94,11 @@ function CustomDrawerContent({
           navigation={navigation}
           focused={state.index === 9 ? true : false}
         /> */}
+        <DrawerCustomItem
+          title="Profile"
+          navigation={navigation}
+          focused={state.index === 9 ? true : false}
+        />
         <DrawerCustomItem
           title="Home"
           navigation={navigation}
@@ -136,7 +144,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
     borderRadius: 4,
     height: 19,
-    width: 38,
+    //width: 38,
   },
   seller: {
     marginRight: 16,

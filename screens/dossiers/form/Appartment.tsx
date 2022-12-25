@@ -218,6 +218,7 @@ const AppartmentForm = ({
           family="MaterialIcons"
           iconSize={18}
         />
+
         <Input
           bgColor="transparent"
           placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}

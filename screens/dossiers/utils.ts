@@ -135,7 +135,7 @@ export const dealTypes: { value: DealType; label: string }[] = [
   },
   {
     value: "",
-    label: "Sale&Rent",
+    label: "Sale & Rent",
   },
 ];
 

@@ -5,8 +5,16 @@ import React, {
   useCallback,
   useEffect,
 } from "react";
-import { Block, Button, Input, Text, theme } from "galio-framework";
+import {
+  Block,
+  Button,
+  Input,
+  Text,
+  theme,
+  Card as CardGalio,
+} from "galio-framework";
 import { materialTheme } from "../../../constants";
+import { Card, Title, Paragraph } from "react-native-paper";
 import {
   actions,
   RichEditor,
@@ -24,7 +32,7 @@ import { DossierTypeIds, DossierTypes } from "../../../utils/constants";
 import { Dossier } from "../types";
 import { styles } from "../styles";
 import AppartmentForm from "./Appartment";
-import { Dimensions, ScrollView, View } from "react-native";
+import { Dimensions, ScrollView, View, Image } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 import HouseForm from "./House";
@@ -32,6 +40,7 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import { findAddressDetail, GOOGLE_API_KEY } from "./utils";
 import { Icon } from "../../../components";
 import MultiFamilyHouseForm from "./MultiFamilyHouse";
+import { DossierImage } from "./types";
 
 const CreateDossiersForm = ({
   handleChange,
@@ -44,6 +53,7 @@ const CreateDossiersForm = ({
   setFieldValue,
   state,
   toggleActive,
+  isSubmitting,
   mode = "create",
   addressText,
 }: FormikValues): ReactElement => {
@@ -76,7 +86,7 @@ const CreateDossiersForm = ({
       const res = await DocumentPicker.getDocumentAsync({
         copyToCacheDirectory: true,
       });
-      //console.log("res", res);
+      //console.log("res123213", res);
       //this.uploadAPICall(res); //here you can call your API and send the data to that API
     } catch (err) {
       //console.log("error--");
@@ -91,6 +101,8 @@ const CreateDossiersForm = ({
     ref.current?.setAddressText(addressText);
   }, [addressText]);
 
+  console.log("inside form", values);
+
   const pickImage = async () => {
     try {
       let result: any = await ImagePicker.launchImageLibraryAsync({
@@ -100,23 +112,61 @@ const CreateDossiersForm = ({
         aspect: [4, 3],
         quality: 1,
       });
-      console.log("www");
+      //console.log("www");
       if (!result.canceled) {
         // console.log("111");
-        console.log("result", result);
-        //setImage(result.assets[0].uri);
+        //console.log("result1111", result);
+        // const response = await fetch(result.assets?.[0].uri);
+        // const blob = await response.blob();
+        // console.log("blob", blob);
+        // console.log("abraa");
+        const auxImages = result.assets.map(
+          ({
+            uri,
+            fileName,
+            width,
+            height,
+          }: {
+            uri: string;
+            fileName: string;
+            width: number;
+            height: number;
+          }) => ({
+            filename: fileName,
+            url: uri,
+            width,
+            height,
+          })
+        );
+        setFieldValue("images", [...auxImages]);
       }
-      //this.uploadAPICall(res); //here you can call your API and send the data to that API
     } catch (err) {
       console.log("error -----", err);
     }
-    // No permissions request is necessary for launching the image library
   };
 
   return (
-    <Block flex={1} center space="between" style={{ paddingBottom: 100 }}>
-      {/* <Text>{JSON.stringify(values)}</Text> */}
+    <Block flex={1} center space="between" style={{ paddingBottom: 200 }}>
+      {/* <Text>22{JSON.stringify(values.images)}</Text> */}
       {/* <Text>{JSON.stringify(addressText)}</Text> */}
+      <Button
+        size="large"
+        shadowless
+        style={{ height: 48 }}
+        color={materialTheme.COLORS.BUTTON_COLOR}
+        onPress={() => {
+          //console.log("values", values);
+          submitForm();
+        }}
+      >
+        {mode === "create" ? "CREATE" : "EDIT"}
+      </Button>
+      <Button
+        size="large"
+        color="transparent"
+        shadowless
+        onPress={() => navigation.navigate("Sign In" as never)}
+      ></Button>
       <Block center>
         <Input
           bgColor="transparent"
@@ -339,6 +389,41 @@ const CreateDossiersForm = ({
             Upload images
           </Button>
         </View>
+        <Block>
+          <Text>{JSON.stringify(values.images, null, 2)}</Text>
+          {values.images.map(
+            ({ url, width, height }: DossierImage, i: number) => (
+              <Block row space="between" style={styles.homeImageContainer}>
+                <Image
+                  key={i + " " + Math.random()}
+                  style={{
+                    width: styles.homeImage.width,
+                    height:
+                      width > height
+                        ? (height / width) * styles.homeImage.width
+                        : 130,
+                  }}
+                  source={{ uri: url }}
+                  resizeMode="contain"
+                />
+                <Button
+                  onlyIcon
+                  shadowColor={true}
+                  icon="delete"
+                  iconFamily="MaterialIcons"
+                  color="red"
+                  iconSize={30}
+                  onPress={() => {
+                    const auxImages = [...values.images];
+                    auxImages.splice(i, 1);
+                    setFieldValue("images", auxImages);
+                  }}
+                  style={{ width: 40, height: 40 }}
+                ></Button>
+              </Block>
+            )
+          )}
+        </Block>
       </Block>
       <Block flex center style={{ marginTop: 20 }}>
         <Button
@@ -347,9 +432,10 @@ const CreateDossiersForm = ({
           style={{ height: 48 }}
           color={materialTheme.COLORS.BUTTON_COLOR}
           onPress={() => {
-            console.log("values", values);
+            //console.log("values", values);
             submitForm();
           }}
+          loading={isSubmitting}
         >
           {mode === "create" ? "CREATE" : "EDIT"}
         </Button>

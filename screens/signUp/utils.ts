@@ -7,7 +7,7 @@ export const handleSignUpSubmit = ({ navigation }: any) => {
     values: any,
     { setStatus, setSubmitting, setValues, setTouched }: FormikValues
   ): Promise<void> => {
-    console.log("values", values);
+    //console.log("values", values);
 
     signUp(values)
       .then((res) => {
@@ -27,7 +27,7 @@ export const handleSignUpSubmit = ({ navigation }: any) => {
         return res.json();
       })
       .then((data) => {
-        console.log("data received", data);
+        //console.log("data received", data);
       })
       .catch((err) => console.error("Rejected", err));
   };
