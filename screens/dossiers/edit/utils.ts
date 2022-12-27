@@ -242,114 +242,37 @@ const prepareDossierBeforeSubmit = async (
       "property[numberOfUnits]",
       dossier.property?.numberOfUnits.toString()
     );
-  // formData.append("numberOfUnits", "1");
-
-  // formData.append("userDefinedFields[0][label]", "Test");
-  // formData.append("userDefinedFields[0][value]", "Yes" || "");
-  // //formData.append("logo", dossier.logo || "");
-  // // @ts-ignore
-  // //formData.append("rent", 1);
-  // const URL =
-  //   "https://storage.googleapis.com/pricehubble-production-engine-public/dossiers/images/5eec2bd9-c930-4bcf-a475-a9ada880e6ed.png";
-
-  // formData.append("countryCode", "DE");
-  // console.log("dossier.images333333", dossier.images);
-  // const image = {
-  //   uri: "https://storage.googleapis.com/pricehubble-production-engine-public/dossiers/images/5eec2bd9-c930-4bcf-a475-a9ada880e6ed.png",
-  //   type: "image/jpeg",
-  //   name: "myImage" + "-" + Date.now() + ".jpg",
-  // };
-  // formData.append("images", image);
 
   // formData.append("images", [
   //   { uri: imgU, name: "media", type: `image/jpeg` },
   // ] as any);
-  // formData.append("images", {
-  //   uri: imgU,
-  //   name: "media",
-  //   type: `image/jpeg`,
-  // } as any);
-  const tt = async () => {
-    const fetchResponse = await fetch(
-      "https://storage.googleapis.com/pricehubble-production-engine-public/dossiers/images/5eec2bd9-c930-4bcf-a475-a9ada880e6ed.png"
-    );
-    //console.log("fetchResponse", fetchResponse);
-    const blob = await fetchResponse.blob();
-    const file = new File([blob], "image.jpg", { type: blob.type });
-    //console.log("blob", blob);
 
-    // formData.append("images[]", {
-    //   uri: "https://storage.googleapis.com/pricehubble-production-engine-public/dossiers/images/5eec2bd9-c930-4bcf-a475-a9ada880e6ed.png",
-    //   name: "media",
-    //   type: `image/png`,
-    // } as any);
-    formData.append("images[]", file as any);
-    console.log("done with files2");
+  // [
+  //   {
+  //     filename: "IMG_0002.jpg",
+  //     height: 2848,
+  //     url: "file:///Users/svatoslav_dykyi/Library/Developer/CoreSimulator/Devices/498DC804-6C82-4F7A-8527-CCB85A85A539/data/Containers/Data/Application/BF22C133-E58C-4088-A097-4244E1D8284C/Library/Caches/ExponentExperienceData/%2540anonymous%252Frn-material-kit-pro-d93fccf4-4f79-48c5-aec9-0ac23d29924e/ImagePicker/A4B3ACE2-0704-4AC2-BAD5-26B0406E5C4F.jpg",
+  //     width: 4288,
+  //   },
+  //   {
+  //     filename: "IMG_0001.jpg",
+  //     height: 2848,
+  //     url: "file:///Users/svatoslav_dykyi/Library/Developer/CoreSimulator/Devices/498DC804-6C82-4F7A-8527-CCB85A85A539/data/Containers/Data/Application/BF22C133-E58C-4088-A097-4244E1D8284C/Library/Caches/ExponentExperienceData/%2540anonymous%252Frn-material-kit-pro-d93fccf4-4f79-48c5-aec9-0ac23d29924e/ImagePicker/5E52D3C3-71A4-488F-989F-62B01E4972DC.jpg",
+  //     width: 4288,
+  //   },
+  // ];
+
+  const urlToBlob = async () => {
+    dossier.images.forEach(async ({ filename, url }) => {
+      const response = await fetch(url);
+      const blob = await response.blob();
+      const file = new File([blob], filename || "image.jpg", {
+        type: blob.type,
+      });
+      formData.append("images[]", file as any);
+    });
   };
+  await urlToBlob();
 
-  await tt();
-
-  // const request = new XMLHttpRequest();
-  // request.responseType = "blob";
-  // request.onload = function () {
-  //   console.log("request.response", request.response);
-  //   //formData.append("imageFile", request.response);
-  // };
-  // request.open("GET", URL);
-  // request.send();
-  // formData.append("images", dossier.images.toString());
-  // formData.append("attachments", dossier.attachments.toString() || "");
-  //console.log("wwwwwwwww", formData);
   return formData;
 };
-
-// const testData: any = {
-//   title: "My Lambda Dossier",
-//   description: "My description",
-//   dealType: "rent",
-//   property: {
-//     location: {
-//       address: {
-//         postCode: 81700, // *
-//         city: "safsf", // *
-//         street: "dsadsad", // *
-//         houseNumber: 23,
-//       }, // *},
-//       coordinates: {
-//         latitude: 12,
-//         longitude: 33,
-//       },
-//     },
-//     propertyType: {
-//       code: "house",
-//       subcode: "house_detached",
-//     },
-//     buildingYear: "1990",
-//     livingArea: "100.00",
-//     landArea: "900.00",
-//     volume: "900.00",
-//     numberOfRooms: "3",
-//     numberOfBathrooms: "1",
-//     numberOfIndoorParkingSpaces: "0",
-//     numberOfOutdoorParkingSpaces: "0",
-//     hasPool: "true",
-//     condition: {
-//       bathrooms: "renovation_needed",
-//       kitchen: "renovation_needed",
-//       flooring: "well_maintained",
-//       windows: "new_or_recently_renovated",
-//     },
-//     quality: {
-//       bathrooms: "simple",
-//       kitchen: "normal",
-//       flooring: "high_quality",
-//       windows: "luxury",
-//     },
-//   },
-//   userDefinedFields: [{ label: "Extra garage", value: "Yes" }],
-//   logo: "cf4595d3-b56f-4b38-8f54-c29ae9ae078e.png",
-//   countryCode: "DE",
-//   imagesCaptions: ["caption1", "caption2"],
-// };
-const imgU =
-  "https://storage.googleapis.com/pricehubble-production-engine-public/dossiers/images/5eec2bd9-c930-4bcf-a475-a9ada880e6ed.png";

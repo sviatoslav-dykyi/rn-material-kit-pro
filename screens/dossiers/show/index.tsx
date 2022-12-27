@@ -20,6 +20,7 @@ import { showPageTabs } from "./utils";
 import { ShowPageTabs } from "./types";
 import Overview from "./Overview";
 import SocioEconomics from "./SocioEconomics";
+import useIsFocusedCustom from "../../../hooks/useOnFocus";
 
 const ShowDossier = (): ReactElement => {
   const route = useRoute<any>();
@@ -45,23 +46,24 @@ const ShowDossier = (): ReactElement => {
 
   return (
     <ScrollView>
-      <Block flex middle>
+      <Block>
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "position"}
           enabled
           keyboardVerticalOffset={0}
         >
           {dossier && (
-            <Block style={styles.imageBackground}>
+            <Block flex middle>
               {dossier.images.length > 0 && (
                 <Image
                   source={{ uri: dossier.images[0].url }}
                   style={[styles.showImage]}
                 />
               )}
-              <Block row right styles={styles.showTabBlock}>
+              <Block row right style={styles.showTabBlock}>
                 {showPageTabs.map(({ value, label, icon }) => (
                   <TouchableOpacity
+                    key={value}
                     disabled={tab === value}
                     style={[
                       styles.showTab,
@@ -76,8 +78,10 @@ const ShowDossier = (): ReactElement => {
                   </TouchableOpacity>
                 ))}
               </Block>
-              {tab === "overview" && <Overview dossier={dossier} />}
-              {tab === "socio-economics" && <SocioEconomics id={id} />}
+              <Block style={styles.showTabsBlock}>
+                {tab === "overview" && <Overview dossier={dossier} />}
+                {tab === "socio-economics" && <SocioEconomics id={id} />}
+              </Block>
             </Block>
           )}
         </KeyboardAvoidingView>

@@ -36,33 +36,15 @@ import { materialTheme } from "../../constants";
 import { deleteDossier } from "../../api";
 import { dealTypes, dossierTypes } from "../dossiers/utils";
 import moment from "moment";
-interface OpenMenu {
-  [key: string]: boolean;
-}
+import { useIsFocused } from "@react-navigation/native";
+import useOnFocus from "../../hooks/useOnFocus";
 
 const Home = () => {
   const [dossiers, setDossiers] = useState<Dossier[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [openMenu, setOpenMenu] = useState<OpenMenu>({});
-  let token: any;
-  let user;
-  const getToken = async () => {
-    try {
-      token = await AsyncStorage.getItem("token");
-      user = await AsyncStorage.getItem("user");
-    } catch (e) {
-      console.log("Error when reading token from AsyncStorage");
-    }
-    return token;
-  };
-
-  useEffect(() => {
-    getToken();
-    console.log(99999);
-    fetchDossiers({ setDossiers, setIsLoading });
-  }, []);
-
   const navigation = useNavigation();
+
+  useOnFocus(() => fetchDossiers({ setDossiers, setIsLoading }));
 
   const handleDelete = (_id: string) => async () => {
     const response = await deleteDossier(_id);
@@ -71,7 +53,7 @@ const Home = () => {
       fetchDossiers({ setDossiers, setIsLoading });
     }
   };
-  console.log("openMenu", openMenu);
+
   if (isLoading) {
     return (
       <View style={styles.activityIndicator}>
@@ -129,18 +111,15 @@ const Home = () => {
                         { id: _id } as never
                       );
                     }}
-                    key={index}
+                    key={_id + " " + index}
                   >
                     <Block
                       card
                       space="between"
                       style={{
                         borderRadius: 10,
-                        //overflow: "hidden",
                         marginBottom: 20,
                         backgroundSize: "100%",
-                        // borderWidth: 2,
-                        // borderColor: "red",
                         backgroundColor: "#fff",
                       }}
                     >
@@ -210,10 +189,6 @@ const Home = () => {
                                     "EditDossier" as never,
                                     { id: _id } as never
                                   );
-                                  setOpenMenu((state) => ({
-                                    ...state,
-                                    [_id!]: false,
-                                  }));
                                 }}
                                 text="Edit"
                               />
@@ -223,10 +198,6 @@ const Home = () => {
                                     "ShowDossier" as never,
                                     { id: _id } as never
                                   );
-                                  setOpenMenu((state) => ({
-                                    ...state,
-                                    [_id!]: false,
-                                  }));
                                 }}
                                 text="View"
                               />
@@ -290,10 +261,18 @@ const Home = () => {
                           style={{ alignItems: "center", paddingTop: 10 }}
                         >
                           <Icon
-                            name="location-on"
+                            name={
+                              dossierTypes.find(
+                                (el) => el.value === property.propertyType.code
+                              )?.icon
+                            }
                             color={materialTheme.COLORS.PLACEHOLDER}
                             family="MaterialIcons"
-                            icon="location-on"
+                            icon={
+                              dossierTypes.find(
+                                (el) => el.value === property.propertyType.code
+                              )?.icon
+                            }
                             iconSize={18}
                             size={20}
                             style={[]}
@@ -311,13 +290,11 @@ const Home = () => {
                           style={{ alignItems: "center", paddingTop: 10 }}
                         >
                           <Icon
-                            name="location-on"
+                            name="calendar"
                             color={materialTheme.COLORS.PLACEHOLDER}
-                            family="MaterialIcons"
-                            icon="location-on"
+                            family="entypo"
                             iconSize={18}
                             size={20}
-                            style={[]}
                           />
                           <Text style={{ fontSize: 15, paddingLeft: 6 }}>
                             Modified on {moment(updatedAt).format("DD.MM.yyyy")}

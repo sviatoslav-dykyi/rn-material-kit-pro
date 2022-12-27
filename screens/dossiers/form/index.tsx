@@ -101,8 +101,6 @@ const CreateDossiersForm = ({
     ref.current?.setAddressText(addressText);
   }, [addressText]);
 
-  console.log("inside form", values);
-
   const pickImage = async () => {
     try {
       let result: any = await ImagePicker.launchImageLibraryAsync({
@@ -112,14 +110,8 @@ const CreateDossiersForm = ({
         aspect: [4, 3],
         quality: 1,
       });
-      //console.log("www");
+
       if (!result.canceled) {
-        // console.log("111");
-        //console.log("result1111", result);
-        // const response = await fetch(result.assets?.[0].uri);
-        // const blob = await response.blob();
-        // console.log("blob", blob);
-        // console.log("abraa");
         const auxImages = result.assets.map(
           ({
             uri,
@@ -393,7 +385,12 @@ const CreateDossiersForm = ({
           <Text>{JSON.stringify(values.images, null, 2)}</Text>
           {values.images.map(
             ({ url, width, height }: DossierImage, i: number) => (
-              <Block row space="between" style={styles.homeImageContainer}>
+              <Block
+                row
+                space="between"
+                key={url + " " + i}
+                style={styles.homeImageContainer}
+              >
                 <Image
                   key={i + " " + Math.random()}
                   style={{

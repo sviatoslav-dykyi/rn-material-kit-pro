@@ -23,6 +23,7 @@ import { Dossier } from "../types";
 import { fetchDossier, handleEditDossierSubmit } from "./utils";
 import { materialTheme } from "../../../constants";
 import { GOOGLE_API_KEY, prepareDossierBeforeForm } from "../form/utils";
+import useOnFocus from "../../../hooks/useOnFocus";
 
 const EditDossier = (): ReactElement => {
   const {
@@ -36,15 +37,10 @@ const EditDossier = (): ReactElement => {
   } = useValidation();
   const navigation = useNavigation();
   const route = useRoute<any>();
-  //console.log("route1", route);
   const id = route?.params?.id;
-  //console.log("id", id);
-
   const [dossier, setDossier] = useState<Dossier>();
   const [isLoaing, setIsLoading] = useState(false);
   const [addressText, setAddressText] = useState("");
-  const [gog1, setGog1] = useState("");
-  const [gog2, setGog2] = useState("");
 
   const [state, setState] = useState<any>({
     active: {
@@ -65,9 +61,7 @@ const EditDossier = (): ReactElement => {
     },
   });
 
-  useEffect(() => {
-    fetchDossier({ setDossier, setIsLoading, id });
-  }, [id]);
+  useOnFocus(() => fetchDossier({ setDossier, setIsLoading, id }));
 
   const toggleActive = (name: string) => {
     const { active } = state;

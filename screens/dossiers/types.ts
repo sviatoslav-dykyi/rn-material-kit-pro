@@ -44,6 +44,7 @@ export interface Dossier {
       flooring?: string;
       windows?: string;
       overall?: string;
+      masonry?: string;
     };
     quality?: {
       bathrooms?: string;
@@ -51,6 +52,7 @@ export interface Dossier {
       flooring?: string;
       windows?: string;
       overall?: string;
+      masonry?: string;
     };
     gardenArea?: number | string; // 1-200
     energyLabel?: EnergyLabel;

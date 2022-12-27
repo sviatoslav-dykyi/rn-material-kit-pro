@@ -4,7 +4,7 @@ import AppLoading from "expo-app-loading";
 import { Asset } from "expo-asset";
 import { Block, GalioProvider } from "galio-framework";
 import { NavigationContainer } from "@react-navigation/native";
-
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 // Before rendering any navigation stack
 import { enableScreens } from "react-native-screens";
 enableScreens();
@@ -53,22 +53,26 @@ export default class App extends React.Component {
   render() {
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
       return (
-        <AppLoading
-          startAsync={this._loadResourcesAsync}
-          onError={this._handleLoadingError}
-          onFinish={this._handleFinishLoading}
-        />
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <AppLoading
+            startAsync={this._loadResourcesAsync}
+            onError={this._handleLoadingError}
+            onFinish={this._handleFinishLoading}
+          />
+        </GestureHandlerRootView>
       );
     } else {
       return (
-        <NavigationContainer>
-          <GalioProvider theme={materialTheme}>
-            <Block flex>
-              {Platform.OS === "ios" && <StatusBar barStyle="default" />}
-              <Screens />
-            </Block>
-          </GalioProvider>
-        </NavigationContainer>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <NavigationContainer>
+            <GalioProvider theme={materialTheme}>
+              <Block flex>
+                {Platform.OS === "ios" && <StatusBar barStyle="default" />}
+                <Screens />
+              </Block>
+            </GalioProvider>
+          </NavigationContainer>
+        </GestureHandlerRootView>
       );
     }
   }

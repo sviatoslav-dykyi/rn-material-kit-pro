@@ -158,15 +158,16 @@ export const styles = StyleSheet.create({
     width: width * 0.9,
     height: 200,
   },
-  showFieldInfoBlock: { alignItems: "center", paddingTop: 12 },
+  showFieldInfoBlock: { alignItems: "center", paddingTop: 15 },
   showFieldInfoText: { fontSize: 15, paddingLeft: 8 },
+  showTabsBlock: { width: width * 0.9 },
   showTabBlock: {
-    width: width * 0.9,
+    width: width,
   },
   showTab: {
     backgroundColor: "#38454f",
     alignItems: "center",
-    width: (width * 0.9) / 4,
+    width: width / 4,
     height: 85,
     paddingTop: 7,
     paddingBottom: 7,
@@ -177,6 +178,21 @@ export const styles = StyleSheet.create({
   showTabText: {
     textAlign: "center",
     color: "#fff",
+    fontSize: 10,
+    paddingTop: 5,
+  },
+  showRatingBlock: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  showRatingContainerStyle: {
+    flexDirection: "row-reverse",
+    wordBreak: "break-word",
+    //justifyContent: "flex-start",
+  },
+  bordered: {
+    borderColor: "red",
+    borderWidth: 2,
   },
 });
 

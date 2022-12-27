@@ -45,3 +45,6 @@ export const showPageTabs: {
     icon: "users",
   },
 ];
+
+export const SWOW_RATING_REVIEW_SIZE = 10;
+export const SHOW_RATING_SIZE = 12;

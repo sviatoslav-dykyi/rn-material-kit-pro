@@ -16,6 +16,7 @@ import { fetchCurrentUser, handleUserUpdateSubmit } from "./utils";
 import Form from "./Form";
 import { styles } from "./styles";
 import { User } from "../../types/user";
+import useOnFocus from "../../hooks/useOnFocus";
 
 const Profile = () => {
   const navigation = useNavigation();
@@ -49,9 +50,7 @@ const Profile = () => {
     setState({ active });
   };
 
-  useEffect(() => {
-    fetchCurrentUser({ setUser, setIsLoading });
-  }, []);
+  useOnFocus(() => fetchCurrentUser({ setUser, setIsLoading }));
 
   if (isLoading) {
     return (

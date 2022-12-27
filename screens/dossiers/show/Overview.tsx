@@ -1,13 +1,24 @@
 import React, { ReactElement } from "react";
-import { Text } from "react-native";
+import { Text, View } from "react-native";
 import { Block } from "galio-framework";
 import { styles } from "../styles";
 import { materialTheme } from "../../../constants";
-import { dossierTypes, energyLabels } from "../utils";
+import {
+  conditionRates,
+  dossierTypes,
+  energyLabels,
+  qualityRates,
+} from "../utils";
 import { Icon } from "../../../components";
 import Rating from "../form/Rating";
+import { AirbnbRating } from "react-native-ratings";
+import { getConditionRatingIndex, getQualityRatingIndex } from "../form/utils";
+import { SHOW_RATING_SIZE, SWOW_RATING_REVIEW_SIZE } from "./utils";
+import { Dossier } from "../types";
 
-const Overview = ({ dossier }: any): ReactElement => {
+const Overview = ({ dossier }: { dossier: Dossier }): ReactElement => {
+  const quality = dossier.property?.quality;
+  const condition = dossier.property?.condition;
   return (
     <>
       <Text style={styles.showSubtitle}>
@@ -247,12 +258,227 @@ const Overview = ({ dossier }: any): ReactElement => {
       </Block>
       <Text style={[styles.showSubtitle]}>Quality and Condition</Text>
       <Block>
-        <Rating
+        {(quality?.kitchen || condition?.kitchen) && (
+          <>
+            <Block row style={[styles.showFieldInfoBlock]}>
+              <Icon
+                name="kitchen"
+                color={materialTheme.COLORS.PLACEHOLDER}
+                family="MaterialIcons"
+                iconSize={18}
+                size={22}
+              />
+
+              <Text style={styles.showFieldInfoText}>Kitchen</Text>
+            </Block>
+            <View style={styles.showRatingBlock}>
+              {quality?.kitchen && (
+                <AirbnbRating
+                  count={qualityRates.length}
+                  ratingContainerStyle={[styles.showRatingContainerStyle]}
+                  reviews={qualityRates.map(({ label }) => label)}
+                  defaultRating={getQualityRatingIndex(
+                    dossier.property?.quality?.kitchen
+                  )}
+                  reviewSize={SWOW_RATING_REVIEW_SIZE}
+                  size={SHOW_RATING_SIZE}
+                  reviewColor={materialTheme.COLORS.BUTTON_COLOR}
+                />
+              )}
+              {condition?.kitchen && (
+                <AirbnbRating
+                  count={conditionRates.length}
+                  ratingContainerStyle={styles.showRatingContainerStyle}
+                  reviews={conditionRates.map(({ label }) => label)}
+                  defaultRating={getConditionRatingIndex(
+                    dossier.property?.condition?.kitchen
+                  )}
+                  reviewSize={SWOW_RATING_REVIEW_SIZE}
+                  size={SHOW_RATING_SIZE}
+                  reviewColor={materialTheme.COLORS.BUTTON_COLOR}
+                />
+              )}
+            </View>
+          </>
+        )}
+        {(quality?.bathrooms || condition?.bathrooms) && (
+          <>
+            <Block row style={[styles.showFieldInfoBlock]}>
+              <Icon
+                name="bathtub"
+                color={materialTheme.COLORS.PLACEHOLDER}
+                family="FontAwesome5"
+                iconSize={18}
+                size={22}
+              />
+
+              <Text style={styles.showFieldInfoText}>Bathrooms</Text>
+            </Block>
+            <View style={styles.showRatingBlock}>
+              {quality?.bathrooms && (
+                <AirbnbRating
+                  count={qualityRates.length}
+                  ratingContainerStyle={styles.showRatingContainerStyle}
+                  reviews={qualityRates.map(({ label }) => label)}
+                  defaultRating={getQualityRatingIndex(
+                    dossier.property?.quality?.bathrooms
+                  )}
+                  reviewSize={SWOW_RATING_REVIEW_SIZE}
+                  size={SHOW_RATING_SIZE}
+                  reviewColor={materialTheme.COLORS.BUTTON_COLOR}
+                />
+              )}
+              {condition?.bathrooms && (
+                <AirbnbRating
+                  count={conditionRates.length}
+                  ratingContainerStyle={styles.showRatingContainerStyle}
+                  reviews={conditionRates.map(({ label }) => label)}
+                  defaultRating={getConditionRatingIndex(
+                    dossier.property.condition?.bathrooms
+                  )}
+                  reviewSize={SWOW_RATING_REVIEW_SIZE}
+                  size={SHOW_RATING_SIZE}
+                  reviewColor={materialTheme.COLORS.BUTTON_COLOR}
+                />
+              )}
+            </View>
+          </>
+        )}
+        {(quality?.flooring || condition?.flooring) && (
+          <>
+            <Block row style={[styles.showFieldInfoBlock]}>
+              <Icon
+                name="view-day"
+                color={materialTheme.COLORS.PLACEHOLDER}
+                family="MaterialIcons"
+                iconSize={18}
+                size={22}
+              />
+
+              <Text style={styles.showFieldInfoText}>Floor</Text>
+            </Block>
+            <View style={styles.showRatingBlock}>
+              {quality?.flooring && (
+                <AirbnbRating
+                  count={qualityRates.length}
+                  ratingContainerStyle={styles.showRatingContainerStyle}
+                  reviews={qualityRates.map(({ label }) => label)}
+                  defaultRating={getQualityRatingIndex(
+                    dossier.property.quality?.flooring
+                  )}
+                  reviewSize={SWOW_RATING_REVIEW_SIZE}
+                  size={SHOW_RATING_SIZE}
+                  reviewColor={materialTheme.COLORS.BUTTON_COLOR}
+                />
+              )}
+              {condition?.flooring && (
+                <AirbnbRating
+                  count={conditionRates.length}
+                  ratingContainerStyle={styles.showRatingContainerStyle}
+                  reviews={conditionRates.map(({ label }) => label)}
+                  defaultRating={getConditionRatingIndex(
+                    dossier.property.condition?.flooring
+                  )}
+                  reviewSize={SWOW_RATING_REVIEW_SIZE}
+                  size={SHOW_RATING_SIZE}
+                  reviewColor={materialTheme.COLORS.BUTTON_COLOR}
+                />
+              )}
+            </View>
+          </>
+        )}
+        {(quality?.windows || condition?.windows) && (
+          <>
+            <Block row style={[styles.showFieldInfoBlock]}>
+              <Icon
+                name="web-asset"
+                color={materialTheme.COLORS.PLACEHOLDER}
+                family="MaterialIcons"
+                iconSize={18}
+                size={22}
+              />
+
+              <Text style={styles.showFieldInfoText}>Windows</Text>
+            </Block>
+            <View style={styles.showRatingBlock}>
+              {quality?.windows && (
+                <AirbnbRating
+                  count={qualityRates.length}
+                  ratingContainerStyle={styles.showRatingContainerStyle}
+                  reviews={qualityRates.map(({ label }) => label)}
+                  defaultRating={getQualityRatingIndex(
+                    dossier.property.quality?.windows
+                  )}
+                  reviewSize={SWOW_RATING_REVIEW_SIZE}
+                  size={SHOW_RATING_SIZE}
+                  reviewColor={materialTheme.COLORS.BUTTON_COLOR}
+                />
+              )}
+              {condition?.windows && (
+                <AirbnbRating
+                  count={conditionRates.length}
+                  ratingContainerStyle={styles.showRatingContainerStyle}
+                  reviews={conditionRates.map(({ label }) => label)}
+                  defaultRating={getConditionRatingIndex(
+                    dossier.property.condition?.windows
+                  )}
+                  reviewSize={SWOW_RATING_REVIEW_SIZE}
+                  size={SHOW_RATING_SIZE}
+                  reviewColor={materialTheme.COLORS.BUTTON_COLOR}
+                />
+              )}
+            </View>
+          </>
+        )}
+        {(quality?.masonry || condition?.masonry) && (
+          <>
+            <Block row style={[styles.showFieldInfoBlock]}>
+              <Icon
+                name="web-asset"
+                color={materialTheme.COLORS.PLACEHOLDER}
+                family="MaterialIcons"
+                iconSize={18}
+                size={22}
+              />
+
+              <Text style={styles.showFieldInfoText}>Masonry</Text>
+            </Block>
+            <View style={styles.showRatingBlock}>
+              {quality?.masonry && (
+                <AirbnbRating
+                  count={qualityRates.length}
+                  ratingContainerStyle={styles.showRatingContainerStyle}
+                  reviews={qualityRates.map(({ label }) => label)}
+                  defaultRating={getQualityRatingIndex(
+                    dossier.property.quality?.masonry
+                  )}
+                  reviewSize={SWOW_RATING_REVIEW_SIZE}
+                  size={SHOW_RATING_SIZE}
+                  reviewColor={materialTheme.COLORS.BUTTON_COLOR}
+                />
+              )}
+              {condition?.masonry && (
+                <AirbnbRating
+                  count={conditionRates.length}
+                  ratingContainerStyle={styles.showRatingContainerStyle}
+                  reviews={conditionRates.map(({ label }) => label)}
+                  defaultRating={getConditionRatingIndex(
+                    dossier.property.condition?.masonry
+                  )}
+                  reviewSize={SWOW_RATING_REVIEW_SIZE}
+                  size={SHOW_RATING_SIZE}
+                  reviewColor={materialTheme.COLORS.BUTTON_COLOR}
+                />
+              )}
+            </View>
+          </>
+        )}
+        {/* <Rating
           values={dossier}
           handleQualityRate={() => {}}
           handleConditionRate={() => {}}
           type={dossier.property.propertyType.code}
-        />
+        /> */}
       </Block>
     </>
   );
