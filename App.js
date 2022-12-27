@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Platform, StatusBar, Image } from "react-native";
-import AppLoading from "expo-app-loading";
 import { Asset } from "expo-asset";
 import { Block, GalioProvider } from "galio-framework";
 import { NavigationContainer } from "@react-navigation/native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-// Before rendering any navigation stack
 import { enableScreens } from "react-native-screens";
-enableScreens();
-
+import Entypo from "@expo/vector-icons/Entypo";
+import * as SplashScreen from "expo-splash-screen";
+import * as Font from "expo-font";
 import Screens from "./navigation/Screens";
-import { Images, materialTheme } from "./constants/";
+import { Images, materialTheme } from "./constants";
+
+enableScreens();
+SplashScreen.preventAutoHideAsync();
 
 const assetImages = [
   Images.Profile,
@@ -45,37 +47,34 @@ function cacheImages(images) {
   });
 }
 
-export default class App extends React.Component {
-  state = {
-    isLoadingComplete: false,
-  };
+const App = () => {
+  const [appIsReady, setAppIsReady] = useState(false);
 
-  render() {
-    if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
-      return (
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <AppLoading
-            startAsync={this._loadResourcesAsync}
-            onError={this._handleLoadingError}
-            onFinish={this._handleFinishLoading}
-          />
-        </GestureHandlerRootView>
-      );
-    } else {
-      return (
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <NavigationContainer>
-            <GalioProvider theme={materialTheme}>
-              <Block flex>
-                {Platform.OS === "ios" && <StatusBar barStyle="default" />}
-                <Screens />
-              </Block>
-            </GalioProvider>
-          </NavigationContainer>
-        </GestureHandlerRootView>
-      );
+  useEffect(() => {
+    async function prepare() {
+      try {
+        await _loadResourcesAsync();
+        // Pre-load fonts, make any API calls you need to do here
+        await Font.loadAsync(Entypo.font);
+        // Artificially delay for two seconds to simulate a slow loading
+        // experience. Please remove this if you copy and paste the code!
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        // Tell the application to render
+        setAppIsReady(true);
+      }
     }
-  }
+
+    prepare();
+  }, []);
+
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
 
   _loadResourcesAsync = async () => {
     return Promise.all([...cacheImages(assetImages)]);
@@ -90,4 +89,23 @@ export default class App extends React.Component {
   _handleFinishLoading = () => {
     this.setState({ isLoadingComplete: true });
   };
-}
+
+  if (!appIsReady) {
+    return null;
+  }
+
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayoutRootView}>
+      <NavigationContainer>
+        <GalioProvider theme={materialTheme}>
+          <Block flex>
+            {Platform.OS === "ios" && <StatusBar barStyle="default" />}
+            <Screens />
+          </Block>
+        </GalioProvider>
+      </NavigationContainer>
+    </GestureHandlerRootView>
+  );
+};
+
+export default App;
