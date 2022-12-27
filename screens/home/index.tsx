@@ -12,6 +12,7 @@ import {
   Platform,
   SafeAreaView,
 } from "react-native";
+
 import {
   Menu,
   MenuOptions,
