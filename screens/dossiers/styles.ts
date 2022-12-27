@@ -160,6 +160,24 @@ export const styles = StyleSheet.create({
   },
   showFieldInfoBlock: { alignItems: "center", paddingTop: 12 },
   showFieldInfoText: { fontSize: 15, paddingLeft: 8 },
+  showTabBlock: {
+    width: width * 0.9,
+  },
+  showTab: {
+    backgroundColor: "#38454f",
+    alignItems: "center",
+    width: (width * 0.9) / 4,
+    height: 85,
+    paddingTop: 7,
+    paddingBottom: 7,
+  },
+  showTabHighlighted: {
+    backgroundColor: "#3f93e2",
+  },
+  showTabText: {
+    textAlign: "center",
+    color: "#fff",
+  },
 });
 
 export const styles2 = StyleSheet.create({});

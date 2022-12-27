@@ -1,5 +1,6 @@
 import { Dossier } from "../screens/dossiers/types";
-import { User } from "../screens/profile/types";
+import { User } from "../types/user";
+
 import { http } from "../utils/http";
 
 export const signUp = async (data: any) => {
@@ -36,4 +37,8 @@ export const getMe = async () => {
 
 export const updateUser = async (data: User) => {
   return await http.patch(`users/${data.id}`);
+};
+
+export const getSocioEconomicData = async (id: string, data: any) => {
+  return await http.post(`/dossiers/socio-economics/${id}`, data);
 };

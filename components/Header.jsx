@@ -5,6 +5,7 @@ import {
   Platform,
   Dimensions,
   Keyboard,
+  View,
 } from "react-native";
 import { Button, Block, NavBar, Input, Text, theme } from "galio-framework";
 
@@ -53,6 +54,7 @@ const LogoutButton = ({ isWhite, style, signOut, navigation }) => (
   <TouchableOpacity
     style={[
       style,
+
       { display: "flex", flexDirection: "row", alignItems: "center" },
     ]}
     onPress={() => {
@@ -169,8 +171,55 @@ const Header = (props) => {
     !noShadow ? styles.shadow : null,
     transparent ? { backgroundColor: "rgba(0,0,0,0)" } : null,
   ];
+  const { signOut } = useContext(AuthContext);
   return (
     <Block style={headerStyles}>
+      {/* <View
+        style={{
+          width,
+          backgroundColor: "#fff",
+          height: 90,
+          flexDirection: "row",
+          alignItems: "flex-end",
+          paddingBottom: 5,
+        }}
+      >
+        <View
+          style={{
+            width: "100%",
+            flexDirection: "row",
+            alignItems: "center",
+            borderColor: "red",
+          }}
+        >
+          <Button
+            round
+            onlyIcon
+            iconSize={14}
+            icon="menu"
+            iconFamily="MaterialIcons"
+            color={"transparent"}
+            shadowless
+            iconColor={theme.COLORS.BLACK}
+            style={{
+              margin: 0,
+              marginLeft: 5,
+              marginRight: 15,
+            }}
+            onPress={handleLeftPress}
+          />
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>{title}</Text>
+          <View style={{ marginLeft: "auto", marginRight: 25 }}>
+            <LogoutButton
+              key="logout"
+              isWhite={white}
+              signOut={signOut}
+              navigation={navigation}
+            />
+          </View>
+        </View>
+      </View> */}
+
       <NavBar
         back={back}
         title={title}

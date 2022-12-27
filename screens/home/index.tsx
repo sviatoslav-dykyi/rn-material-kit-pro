@@ -8,9 +8,19 @@ import {
   TouchableOpacity,
   Image,
   ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
+  SafeAreaView,
 } from "react-native";
+import {
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
+  MenuProvider,
+} from "react-native-popup-menu";
 import { Button, Block, Text, Input, theme } from "galio-framework";
-import { Appbar, IconButton, Menu, Provider } from "react-native-paper";
+import { Appbar, IconButton } from "react-native-paper";
 import { Icon, Product } from "../../components";
 import capitalize from "lodash/capitalize";
 const { width } = Dimensions.get("screen");
@@ -74,8 +84,8 @@ const Home = () => {
   }
 
   return (
-    <ScrollView>
-      <Provider>
+    <MenuProvider>
+      <ScrollView>
         <Block row center>
           <Block
             left
@@ -158,68 +168,72 @@ const Home = () => {
                               width: "80%",
                             }}
                           ></Text>
-                          <Menu
-                            visible={Boolean(openMenu[_id!])}
-                            contentStyle={{
-                              borderColor: "red",
-                              borderWidth: 2,
-                            }}
-                            onDismiss={() => {
-                              setOpenMenu((state) => ({
-                                ...state,
-                                [_id!]: false,
-                              }));
-                            }}
-                            anchor={
-                              <Button
-                                onlyIcon
-                                shadowColor={true}
-                                icon="more-horiz"
-                                iconFamily="MaterialIcons"
-                                iconSize={30}
-                                onPress={() => {
+                          <Menu>
+                            <MenuTrigger
+                              children={
+                                <View
+                                  style={{
+                                    borderRadius: 7,
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    padding: 5,
+                                    paddingTop: 0,
+                                    paddingBottom: 10,
+                                    margin: 20,
+                                    marginTop: 17,
+                                    backgroundColor:
+                                      materialTheme.COLORS.BUTTON_COLOR,
+                                  }}
+                                >
+                                  <Text
+                                    style={{
+                                      color: "#fff",
+                                      fontSize: 14,
+                                      fontWeight: "bold",
+                                    }}
+                                  >
+                                    . . .
+                                  </Text>
+                                </View>
+                              }
+                            />
+                            <MenuOptions
+                              customStyles={{
+                                optionsContainer: {
+                                  marginTop: -90,
+                                },
+                              }}
+                            >
+                              <MenuOption
+                                onSelect={() => {
+                                  navigation.navigate(
+                                    "EditDossier" as never,
+                                    { id: _id } as never
+                                  );
                                   setOpenMenu((state) => ({
                                     ...state,
-                                    [_id!]: true,
+                                    [_id!]: false,
                                   }));
                                 }}
-                                style={{
-                                  width: 40,
-                                  height: 40,
+                                text="Edit"
+                              />
+                              <MenuOption
+                                onSelect={() => {
+                                  navigation.navigate(
+                                    "ShowDossier" as never,
+                                    { id: _id } as never
+                                  );
+                                  setOpenMenu((state) => ({
+                                    ...state,
+                                    [_id!]: false,
+                                  }));
                                 }}
-                              ></Button>
-                            }
-                          >
-                            <Menu.Item
-                              onPress={() => {
-                                navigation.navigate(
-                                  "EditDossier" as never,
-                                  { id: _id } as never
-                                );
-                                setOpenMenu((state) => ({
-                                  ...state,
-                                  [_id!]: false,
-                                }));
-                              }}
-                              title="Edit"
-                            />
-                            <Menu.Item
-                              title="View"
-                              onPress={() => {
-                                navigation.navigate(
-                                  "ShowDossier" as never,
-                                  { id: _id } as never
-                                );
-                                setOpenMenu((state) => ({
-                                  ...state,
-                                  [_id!]: false,
-                                }));
-                              }}
-                            />
-                            <Menu.Item
-                              title="Delete"
-                              onPress={handleDelete(_id!)}
-                            />
+                                text="View"
+                              />
+                              <MenuOption onSelect={handleDelete(_id!)}>
+                                <Text style={{ color: "red" }}>Delete</Text>
+                              </MenuOption>
+                            </MenuOptions>
                           </Menu>
                         </Block>
                       </ImageBackground>
@@ -319,8 +333,8 @@ const Home = () => {
             )
           )}
         </Block>
-      </Provider>
-    </ScrollView>
+      </ScrollView>
+    </MenuProvider>
   );
 };
 

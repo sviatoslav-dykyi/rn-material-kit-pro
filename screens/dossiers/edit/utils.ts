@@ -33,8 +33,9 @@ export const handleEditDossierSubmit = () => {
     //const response = await editDossier(auxDossier, dossier._id);
     const response = await editDossier(auxDossier, dossier._id);
     const json = await response.json();
+    console.log("json", json);
     if ([200, 201].includes(response.status)) {
-      //console.log("json445", json);
+      console.log("json445", json);
     }
 
     setSubmitting(false);
@@ -277,8 +278,13 @@ const prepareDossierBeforeSubmit = async (
     const file = new File([blob], "image.jpg", { type: blob.type });
     //console.log("blob", blob);
 
-    formData.append("images", [file] as any);
-    console.log("done with files");
+    // formData.append("images[]", {
+    //   uri: "https://storage.googleapis.com/pricehubble-production-engine-public/dossiers/images/5eec2bd9-c930-4bcf-a475-a9ada880e6ed.png",
+    //   name: "media",
+    //   type: `image/png`,
+    // } as any);
+    formData.append("images[]", file as any);
+    console.log("done with files2");
   };
 
   await tt();
