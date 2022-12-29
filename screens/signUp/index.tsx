@@ -14,14 +14,19 @@ import { materialTheme } from "../../constants";
 import { HeaderHeight } from "../../constants/utils";
 import useValidation from "../../hooks/useValidation";
 import * as Yup from "yup";
-import { handleSignUpSubmit, initSignUpValues } from "./utils";
+import {
+  initSignUpValues,
+  handleVerification,
+  handleSignUpSubmit,
+} from "./utils";
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../../navigation/context-utils";
+import ConfirmationCodeField from "../../components/confirmationCodeField/ConfirmationCodeField";
+import { Navigation } from "../../types/navigation";
 
 const { height, width } = Dimensions.get("window");
-
 const SignUp = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<Navigation>();
   const [state, setState] = useState<any>({
     phone: "-",
     email: "-",
@@ -39,8 +44,17 @@ const SignUp = () => {
     },
   });
 
+  const [verificationMode, setVerificationMode] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
+  const [verificationError, setVerificationError] = useState<string | null>(
+    null
+  );
+  const [verificationSubmitting, setVerificationSubmitting] = useState(false);
+  const [verificationEmail, setVerificationEmail] = useState("");
   const { firstName, lastName, password, passwordConfirm, phone, email } =
     useValidation();
+
+  const { signUp } = useContext(AuthContext);
 
   const toggleActive = (name: string) => {
     const { active } = state;
@@ -49,8 +63,6 @@ const SignUp = () => {
 
     setState({ active });
   };
-
-  const { signUp } = useContext(AuthContext);
 
   return (
     <LinearGradient
@@ -69,266 +81,299 @@ const SignUp = () => {
           enabled
           keyboardVerticalOffset={0}
         >
-          <Block style={{ marginBottom: height * 0.05 }}>
-            <Block
-              row
-              center
-              space="between"
-              style={{ marginVertical: (theme.SIZES?.BASE || 0) * 1.875 }}
-            >
-              <Block flex middle right>
-                <Button
-                  round
-                  onlyIcon
-                  iconSize={(theme.SIZES?.BASE || 0) * 1.625}
-                  icon="facebook"
-                  iconFamily="font-awesome"
-                  onPress={() => Alert.alert("Not implemented")}
-                  color={theme.COLORS?.FACEBOOK}
-                  shadowless
-                  iconColor={theme.COLORS?.WHITE}
-                  style={styles.social}
-                />
+          {!verificationMode ? (
+            <>
+              <Block style={{ marginBottom: height * 0.05 }}>
+                <Block
+                  row
+                  center
+                  space="between"
+                  style={{ marginVertical: (theme.SIZES?.BASE || 0) * 1.875 }}
+                >
+                  <Block flex middle right>
+                    <Button
+                      round
+                      onlyIcon
+                      iconSize={(theme.SIZES?.BASE || 0) * 1.625}
+                      icon="facebook"
+                      iconFamily="font-awesome"
+                      onPress={() => Alert.alert("Not implemented")}
+                      color={theme.COLORS?.FACEBOOK}
+                      shadowless
+                      iconColor={theme.COLORS?.WHITE}
+                      style={styles.social}
+                    />
+                  </Block>
+                  <Block flex middle center>
+                    <Button
+                      round
+                      onlyIcon
+                      iconSize={(theme.SIZES?.BASE || 0) * 1.625}
+                      icon="twitter"
+                      iconFamily="font-awesome"
+                      onPress={() => Alert.alert("Not implemented")}
+                      color={theme.COLORS?.TWITTER}
+                      shadowless
+                      iconColor={theme.COLORS?.WHITE}
+                      style={styles.social}
+                    />
+                  </Block>
+                  <Block flex middle left>
+                    <Button
+                      round
+                      onlyIcon
+                      iconSize={(theme.SIZES?.BASE || 0) * 1.625}
+                      icon="dribbble"
+                      iconFamily="font-awesome"
+                      onPress={() => Alert.alert("Not implemented")}
+                      color={theme.COLORS?.DRIBBBLE}
+                      shadowless
+                      iconColor={theme.COLORS?.WHITE}
+                      style={styles.social}
+                    />
+                  </Block>
+                </Block>
+                <Text
+                  color="#fff"
+                  center
+                  size={(theme.SIZES?.FONT || 0) * 0.875}
+                >
+                  or be classical
+                </Text>
               </Block>
-              <Block flex middle center>
-                <Button
-                  round
-                  onlyIcon
-                  iconSize={(theme.SIZES?.BASE || 0) * 1.625}
-                  icon="twitter"
-                  iconFamily="font-awesome"
-                  onPress={() => Alert.alert("Not implemented")}
-                  color={theme.COLORS?.TWITTER}
-                  shadowless
-                  iconColor={theme.COLORS?.WHITE}
-                  style={styles.social}
-                />
-              </Block>
-              <Block flex middle left>
-                <Button
-                  round
-                  onlyIcon
-                  iconSize={(theme.SIZES?.BASE || 0) * 1.625}
-                  icon="dribbble"
-                  iconFamily="font-awesome"
-                  onPress={() => Alert.alert("Not implemented")}
-                  color={theme.COLORS?.DRIBBBLE}
-                  shadowless
-                  iconColor={theme.COLORS?.WHITE}
-                  style={styles.social}
-                />
-              </Block>
-            </Block>
-            <Text color="#fff" center size={(theme.SIZES?.FONT || 0) * 0.875}>
-              or be classical
-            </Text>
-          </Block>
 
-          <Formik
-            initialValues={initSignUpValues}
-            onSubmit={(values) => {
-              signUp(values);
-            }}
-            validationSchema={Yup.object().shape({
-              firstName,
-              lastName,
-              email,
-              phone,
-              password,
-              passwordConfirm,
-            })}
-          >
-            {({
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              values,
-              submitForm,
-              touched,
-              status,
-              errors,
-            }) => (
-              <Block flex={1} center space="between">
-                <Block center>
-                  <Input
-                    bgColor="transparent"
-                    placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
-                    borderless
-                    color="white"
-                    placeholder="First name"
-                    autoCapitalize="none"
-                    style={[
-                      styles.input,
-                      state.active.firstName ? styles.inputActive : null,
-                    ]}
-                    onBlur={() => {
-                      toggleActive("firstName");
-                      handleBlur("firstName");
-                    }}
-                    onFocus={() => toggleActive("firstName")}
-                    onChangeText={handleChange("firstName")}
-                    value={values.firstName}
-                    bottomHelp
-                    help={
-                      touched.firstName &&
-                      (status?.errors.firstName || errors.firstName)
-                    }
-                  />
-                  <Input
-                    bgColor="transparent"
-                    placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
-                    borderless
-                    color="white"
-                    placeholder="Last name"
-                    autoCapitalize="none"
-                    style={[
-                      styles.input,
-                      state.active.lastName ? styles.inputActive : null,
-                    ]}
-                    onBlur={() => {
-                      toggleActive("lastName");
-                      handleBlur("lastName");
-                    }}
-                    onFocus={() => toggleActive("lastName")}
-                    onChangeText={handleChange("lastName")}
-                    value={values.lastName}
-                    bottomHelp
-                    help={
-                      touched.lastName &&
-                      (status?.errors.lastName || errors.lastName)
-                    }
-                  />
-                  <Input
-                    bgColor="transparent"
-                    placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
-                    borderless
-                    color="white"
-                    type="phone-pad"
-                    placeholder="Phone"
-                    autoCapitalize="none"
-                    style={[
-                      styles.input,
-                      state.active.phone ? styles.inputActive : null,
-                    ]}
-                    onBlur={() => {
-                      toggleActive("phone");
-                      handleBlur("phone");
-                    }}
-                    onFocus={() => toggleActive("phone")}
-                    onChangeText={handleChange("phone")}
-                    value={values.phone}
-                    bottomHelp
-                    help={
-                      touched.phone && (status?.errors.phone || errors.phone)
-                    }
-                  />
-                  <Input
-                    bgColor="transparent"
-                    placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
-                    borderless
-                    color="white"
-                    type="email-address"
-                    placeholder="Email"
-                    autoCapitalize="none"
-                    style={[
-                      styles.input,
-                      state.active.email ? styles.inputActive : null,
-                    ]}
-                    onBlur={() => {
-                      toggleActive("email");
-                      handleBlur("email");
-                    }}
-                    onFocus={() => toggleActive("email")}
-                    onChangeText={handleChange("email")}
-                    value={values.email}
-                    bottomHelp
-                    help={
-                      touched.email && (status?.errors.email || errors.email)
-                    }
-                  />
-                  <Input
-                    bgColor="transparent"
-                    placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
-                    borderless
-                    color="white"
-                    password
-                    viewPass
-                    placeholder="Password"
-                    iconColor="white"
-                    style={[
-                      styles.input,
-                      state.active.password ? styles.inputActive : null,
-                    ]}
-                    onBlur={() => {
-                      toggleActive("password");
-                      handleBlur("password");
-                    }}
-                    onFocus={() => toggleActive("password")}
-                    onChangeText={handleChange("password")}
-                    value={values.password}
-                    bottomHelp
-                    help={
-                      touched.password &&
-                      (status?.errors.password || errors.password)
-                    }
-                  />
-                  <Input
-                    bgColor="transparent"
-                    placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
-                    borderless
-                    color="white"
-                    password
-                    viewPass
-                    placeholder="Repeat Password"
-                    iconColor="white"
-                    style={[
-                      styles.input,
-                      state.active.passwordConfirm ? styles.inputActive : null,
-                    ]}
-                    onBlur={() => {
-                      toggleActive("passwordConfirm");
-                      handleBlur("passwordConfirm");
-                    }}
-                    onFocus={() => toggleActive("passwordConfirm")}
-                    onChangeText={handleChange("passwordConfirm")}
-                    value={values.passwordConfirm}
-                    bottomHelp
-                    help={
-                      touched.passwordConfirm &&
-                      (status?.errors.passwordConfirm || errors.passwordConfirm)
-                    }
-                  />
-                </Block>
-                <Block flex center style={{ marginTop: 20 }}>
-                  <Button
-                    size="large"
-                    shadowless
-                    style={{ height: 48 }}
-                    color={materialTheme.COLORS.BUTTON_COLOR}
-                    onPress={() => {
-                      submitForm();
-                    }}
-                  >
-                    SIGN UP
-                  </Button>
-                  <Button
-                    size="large"
-                    color="transparent"
-                    shadowless
-                    onPress={() => navigation.navigate("Sign In" as never)}
-                  >
-                    <Text
-                      center
-                      color={theme.COLORS?.WHITE}
-                      size={(theme.SIZES?.FONT || 0) * 0.75}
-                    >
-                      Already have an account? Sign In
-                    </Text>
-                  </Button>
-                </Block>
-              </Block>
-            )}
-          </Formik>
+              <Formik
+                initialValues={initSignUpValues}
+                onSubmit={handleSignUpSubmit({
+                  signUp,
+                  setVerificationMode,
+                  setVerificationEmail,
+                })}
+                validationSchema={Yup.object().shape({
+                  firstName,
+                  lastName,
+                  email,
+                  phone,
+                  password,
+                  passwordConfirm,
+                })}
+              >
+                {({
+                  handleChange,
+                  handleBlur,
+                  handleSubmit,
+                  isSubmitting,
+                  setSubmitting,
+                  values,
+                  submitForm,
+                  touched,
+                  status,
+                  errors,
+                }) => (
+                  <Block flex={1} center space="between">
+                    <Block center>
+                      <Input
+                        bgColor="transparent"
+                        placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
+                        borderless
+                        color="white"
+                        placeholder="First name"
+                        autoCapitalize="none"
+                        style={[
+                          styles.input,
+                          state.active.firstName ? styles.inputActive : null,
+                        ]}
+                        onBlur={() => {
+                          toggleActive("firstName");
+                          handleBlur("firstName");
+                        }}
+                        onFocus={() => toggleActive("firstName")}
+                        onChangeText={handleChange("firstName")}
+                        value={values.firstName}
+                        bottomHelp
+                        help={
+                          touched.firstName &&
+                          (status?.errors.firstName || errors.firstName)
+                        }
+                      />
+                      <Input
+                        bgColor="transparent"
+                        placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
+                        borderless
+                        color="white"
+                        placeholder="Last name"
+                        autoCapitalize="none"
+                        style={[
+                          styles.input,
+                          state.active.lastName ? styles.inputActive : null,
+                        ]}
+                        onBlur={() => {
+                          toggleActive("lastName");
+                          handleBlur("lastName");
+                        }}
+                        onFocus={() => toggleActive("lastName")}
+                        onChangeText={handleChange("lastName")}
+                        value={values.lastName}
+                        bottomHelp
+                        help={
+                          touched.lastName &&
+                          (status?.errors.lastName || errors.lastName)
+                        }
+                      />
+                      <Input
+                        bgColor="transparent"
+                        placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
+                        borderless
+                        color="white"
+                        type="phone-pad"
+                        placeholder="Phone"
+                        autoCapitalize="none"
+                        style={[
+                          styles.input,
+                          state.active.phone ? styles.inputActive : null,
+                        ]}
+                        onBlur={() => {
+                          toggleActive("phone");
+                          handleBlur("phone");
+                        }}
+                        onFocus={() => toggleActive("phone")}
+                        onChangeText={handleChange("phone")}
+                        value={values.phone}
+                        bottomHelp
+                        help={
+                          touched.phone &&
+                          (status?.errors.phone || errors.phone)
+                        }
+                      />
+                      <Input
+                        bgColor="transparent"
+                        placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
+                        borderless
+                        color="white"
+                        type="email-address"
+                        placeholder="Email"
+                        autoCapitalize="none"
+                        style={[
+                          styles.input,
+                          state.active.email ? styles.inputActive : null,
+                        ]}
+                        onBlur={() => {
+                          toggleActive("email");
+                          handleBlur("email");
+                        }}
+                        onFocus={() => toggleActive("email")}
+                        onChangeText={handleChange("email")}
+                        value={values.email}
+                        bottomHelp
+                        help={
+                          touched.email &&
+                          (status?.errors.email || errors.email)
+                        }
+                      />
+                      <Input
+                        bgColor="transparent"
+                        placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
+                        borderless
+                        color="white"
+                        password
+                        viewPass
+                        placeholder="Password"
+                        iconColor="white"
+                        style={[
+                          styles.input,
+                          state.active.password ? styles.inputActive : null,
+                        ]}
+                        onBlur={() => {
+                          toggleActive("password");
+                          handleBlur("password");
+                        }}
+                        onFocus={() => toggleActive("password")}
+                        onChangeText={handleChange("password")}
+                        value={values.password}
+                        bottomHelp
+                        help={
+                          touched.password &&
+                          (status?.errors.password || errors.password)
+                        }
+                      />
+                      <Input
+                        bgColor="transparent"
+                        placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
+                        borderless
+                        color="white"
+                        password
+                        viewPass
+                        placeholder="Repeat Password"
+                        iconColor="white"
+                        style={[
+                          styles.input,
+                          state.active.passwordConfirm
+                            ? styles.inputActive
+                            : null,
+                        ]}
+                        onBlur={() => {
+                          toggleActive("passwordConfirm");
+                          handleBlur("passwordConfirm");
+                        }}
+                        onFocus={() => toggleActive("passwordConfirm")}
+                        onChangeText={handleChange("passwordConfirm")}
+                        value={values.passwordConfirm}
+                        bottomHelp
+                        help={
+                          touched.passwordConfirm &&
+                          (status?.errors.passwordConfirm ||
+                            errors.passwordConfirm)
+                        }
+                      />
+                    </Block>
+                    <Block flex center style={{ marginTop: 20 }}>
+                      <Button
+                        size="large"
+                        shadowless
+                        style={{ height: 48 }}
+                        color={materialTheme.COLORS.BUTTON_COLOR}
+                        onPress={() => {
+                          submitForm();
+                        }}
+                        loading={isSubmitting}
+                      >
+                        SIGN UP
+                      </Button>
+                      <Button
+                        size="large"
+                        color="transparent"
+                        shadowless
+                        onPress={() => navigation?.navigate("Sign In" as never)}
+                      >
+                        <Text
+                          center
+                          color={theme.COLORS?.WHITE}
+                          size={(theme.SIZES?.FONT || 0) * 0.75}
+                        >
+                          Already have an account? Sign In
+                        </Text>
+                      </Button>
+                    </Block>
+                  </Block>
+                )}
+              </Formik>
+            </>
+          ) : (
+            <ConfirmationCodeField
+              value={verificationCode}
+              setValue={setVerificationCode}
+              error={verificationError}
+              isSubmitting={verificationSubmitting}
+              email={verificationEmail}
+              onPress={handleVerification({
+                verificationCode,
+                setVerificationMode,
+                setVerificationError,
+                setVerificationSubmitting,
+                navigation,
+              })}
+            />
+          )}
         </KeyboardAvoidingView>
       </Block>
     </LinearGradient>

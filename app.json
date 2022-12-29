@@ -39,6 +39,11 @@
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "44447cc0-1382-40a5-b14c-37ff6df6281c"
+      }
+    }
   }
 }

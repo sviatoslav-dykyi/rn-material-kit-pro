@@ -308,71 +308,36 @@ function AppStack(props) {
           console.log("Error: ", e);
         }
       },
-      signUp: async (data) => {
-        console.log("data1", data);
+      signUp: async (data, onSuccess, onError) => {
         const response = await signUpRequest(data);
         const json = await response.json();
         if ([200, 201].includes(response.status)) {
-          const { token, user } = json;
-          try {
-            await AsyncStorage.setItem("token", token);
-            await AsyncStorage.setItem("user", JSON.stringify(user));
-          } catch (e) {
-            console.log("Error when saving token to AsyncStorage");
-          }
-          setProfile({ ...profile2, ...user });
-          dispatch({ type: "SIGN_IN", token });
-          navigation.navigate("Home");
+          const {
+            user: { email },
+          } = json;
+          onSuccess(email);
+          // const { token, user } = json;
+          // try {
+          //   await AsyncStorage.setItem("token", token);
+          //   await AsyncStorage.setItem("user", JSON.stringify(user));
+          // } catch (e) {
+          //   console.log("Error when saving token to AsyncStorage");
+          // }
+          // setProfile({ ...profile2, ...user });
+          // dispatch({ type: "SIGN_IN", token });
+          // navigation.navigate("Home");
+        } else {
+          console.log("json", json);
+          onError();
         }
-        // signUp(values)
-        //   .then((res) => {
-        //     if ([200, 201].includes(res.status)) {
-        //       setValues(initSignUpValues);
-        //       setTouched({});
-        //       navigation.navigate("Home");
-        //       //navigate(route("users"));
-        //     } else {
-        //       setSubmitting(false);
-        //       // setStatus({
-        //       //   success: false,
-        //       //   errors: mapBackendValidationErrors(json.errors),
-        //       // });
-        //       setSubmitting(false);
-        //     }
-        //     return res.json();
-        //   })
-        //   .then((data) => {
-        //     //console.log("data received", data);
-        //   })
-        //   .catch((err) => console.error("Rejected", err));
-        // In a production app, we need to send user data to server and get a token
-        // We will also need to handle errors if sign up failed
-        // After getting token, we need to persist the token using `SecureStore`
-        // In the example, we'll use a dummy token
 
-        dispatch({ type: "SIGN_IN", token: "dummy-auth-token" });
+        // !!!
+
+        //dispatch({ type: "SIGN_IN", token: "dummy-auth-token" });
       },
     }),
     []
   );
-
-  // const [userData, setUserData] = useState(null);
-  // const getData = async () => {
-  //   try {
-  //     value = await AsyncStorage.getItem("user");
-  //     if (value !== null) {
-  //       console.log("value22", value);
-  //     }
-  //   } catch (e) {
-  //     // error reading value
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   //console.log("11111");
-  //   getData();
-  // });
-  // console.log("state", state);
 
   return (
     <AuthContext.Provider value={authContext}>

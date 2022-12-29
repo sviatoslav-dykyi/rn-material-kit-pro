@@ -11,5 +11,5 @@ export enum DossierTypes {
 }
 
 export enum ContentTypeMIME {
-  MULTIPART_FORM_DATA = "multipart/form-data; boundary=<calculated when request is sent>",
+  MULTIPART_FORM_DATA = "multipart/form-data;",
 }

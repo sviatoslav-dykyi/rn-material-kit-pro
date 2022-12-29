@@ -153,6 +153,7 @@ const CreateDossiersForm = ({
       >
         {mode === "create" ? "CREATE" : "EDIT"}
       </Button>
+      <Text>{JSON.stringify(values.images, null, 2)}</Text>
       <Button
         size="large"
         color="transparent"

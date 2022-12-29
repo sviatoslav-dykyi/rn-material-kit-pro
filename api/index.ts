@@ -11,6 +11,10 @@ export const signIn = async (data: any) => {
   return await http.post("auth/login", data);
 };
 
+export const confirmMail = async (code: string) => {
+  return await http.get(`/auth/confirmMail/${code}`);
+};
+
 export const createDossier = async (data: FormData) => {
   return await http.postFormData("dossiers", data);
 };

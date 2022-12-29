@@ -1,31 +1,29 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   StyleSheet,
   Dimensions,
   KeyboardAvoidingView,
   Alert,
   Platform,
-  TextInput,
 } from "react-native";
 import { Block, Button, Input, Text, theme } from "galio-framework";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import { LinearGradient } from "expo-linear-gradient";
 import { materialTheme } from "../../constants";
 import { HeaderHeight } from "../../constants/utils";
 import { Formik } from "formik";
 import useValidation from "../../hooks/useValidation";
 import * as Yup from "yup";
-import { signIn } from "../../api";
-import { initSignInValues, storeUserData } from "./utils";
-import { initSignUpValues } from "../signUp/utils";
-import { useNavigation } from "@react-navigation/native";
+import { initSignInValues } from "./utils";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { AuthContext } from "../../navigation/context-utils";
+import { Navigation } from "../../types/navigation";
 
 const { width } = Dimensions.get("window");
 
 const SignIn = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<Navigation>();
+  const route = useRoute<any>();
+  const params = route?.params;
   const [state, setState] = useState<any>({
     email: "-",
     password: "-",
@@ -119,12 +117,17 @@ const SignIn = () => {
             </Text>
           </Block>
           <Formik
-            initialValues={initSignInValues}
+            initialValues={
+              params?.email
+                ? { email: params?.email, password: "" }
+                : initSignInValues
+            }
             onSubmit={() => {}}
             validationSchema={Yup.object().shape({
               email,
               password,
             })}
+            enableReinitialize
           >
             {({
               handleChange,
@@ -219,7 +222,7 @@ const SignIn = () => {
                     size="large"
                     color="transparent"
                     shadowless
-                    onPress={() => navigation.navigate("Sign Up" as never)}
+                    onPress={() => navigation?.navigate("Sign Up")}
                   >
                     <Text
                       center
