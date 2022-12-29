@@ -10,6 +10,7 @@ import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import Screens from "./navigation/Screens";
 import { Images, materialTheme } from "./constants";
+import AuthProvider from "./context/Auth";
 
 enableScreens();
 SplashScreen.preventAutoHideAsync();
@@ -98,10 +99,12 @@ const App = () => {
     <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayoutRootView}>
       <NavigationContainer>
         <GalioProvider theme={materialTheme}>
-          <Block flex>
-            {Platform.OS === "ios" && <StatusBar barStyle="default" />}
-            <Screens />
-          </Block>
+          <AuthProvider>
+            <Block flex>
+              {Platform.OS === "ios" && <StatusBar barStyle="default" />}
+              <Screens />
+            </Block>
+          </AuthProvider>
         </GalioProvider>
       </NavigationContainer>
     </GestureHandlerRootView>

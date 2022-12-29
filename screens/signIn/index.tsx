@@ -15,8 +15,8 @@ import useValidation from "../../hooks/useValidation";
 import * as Yup from "yup";
 import { handleSignInSubmit, initSignInValues } from "./utils";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { AuthContext } from "../../navigation/context-utils";
 import { Navigation } from "../../types/navigation";
+import { AuthContext } from "../../context/Auth";
 
 const { width } = Dimensions.get("window");
 

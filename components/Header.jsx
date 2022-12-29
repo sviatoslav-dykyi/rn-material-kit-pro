@@ -12,7 +12,7 @@ import { Button, Block, NavBar, Input, Text, theme } from "galio-framework";
 import Icon from "./Icon";
 import materialTheme from "../constants/Theme";
 import Tabs from "./Tabs";
-import { AuthContext } from "../navigation/context-utils";
+import { AuthContext } from "../context/Auth";
 import { useNavigation } from "@react-navigation/native";
 
 const { height, width } = Dimensions.get("window");

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer } from "react";
+import React, { useEffect, useState, useReducer, useContext } from "react";
 import { Dimensions, Easing } from "react-native";
 import { Header, Icon } from "../components";
 import { Images, materialTheme } from "../constants";
@@ -23,7 +23,7 @@ import {
 } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 import { tabs } from "../constants";
-import { AuthContext } from "./context-utils";
+import { AuthContext } from "../context/Auth";
 import { signUp as signUpRequest, signIn as signInRequest } from "../api";
 import { useNavigation } from "@react-navigation/native";
 import { getToken } from "../utils/common";
@@ -212,315 +212,201 @@ function EditDossierStack(props) {
 }
 
 function AppStack(props) {
-  const navigation = useNavigation();
-  const [state, dispatch] = useReducer(
-    (prevState, action) => {
-      switch (action.type) {
-        case "RESTORE_TOKEN":
-          return {
-            ...prevState,
-            userToken: action.token,
-            isLoading: false,
-          };
-        case "SIGN_IN":
-          return {
-            ...prevState,
-            isSignout: false,
-            userToken: action.token,
-          };
-        case "SIGN_OUT":
-          return {
-            ...prevState,
-            isSignout: true,
-            userToken: null,
-          };
-      }
-    },
-    {
-      isLoading: true,
-      isSignout: false,
-      userToken: null,
-    }
-  );
-  console.log("Gog");
   const [profile, setProfile] = useState();
-
-  useEffect(() => {
-    console.log("hallo !!!!!");
-    // Fetch the token from storage then navigate to our appropriate place
-    const bootstrapAsync = async () => {
-      const token = await getToken();
-      console.log("my-token", token);
-      // After restoring token, we may need to validate it in production apps
-
-      // This will switch to the App screen or Auth screen and this loading
-      // screen will be unmounted and thrown away.
-      dispatch({ type: "RESTORE_TOKEN", token });
-    };
-
-    bootstrapAsync();
-  }, []);
-
-  useEffect(() => {
-    console.log("Token changed", state.userToken);
-  }, [state.userToken]);
-
-  const authContext = React.useMemo(
-    () => ({
-      signIn: async (data, onSuccess, onError) => {
-        const response = await signInRequest(data);
-        const json = await response.json();
-
-        if ([200, 201].includes(response.status)) {
-          const { token, user } = json;
-          try {
-            await AsyncStorage.setItem("token", token);
-            await AsyncStorage.setItem("user", JSON.stringify(user));
-          } catch (e) {
-            console.log("Error when saving token to AsyncStorage");
-          }
-          setProfile({ ...profile2, ...user });
-          dispatch({ type: "SIGN_IN", token });
-          navigation.navigate("Home");
-        } else {
-          const { message } = json;
-          onError && onError(message);
-        }
-      },
-      signOut: async () => {
-        try {
-          dispatch({ type: "SIGN_OUT" });
-          await AsyncStorage.removeItem("token");
-          await AsyncStorage.removeItem("user");
-        } catch (e) {
-          console.log("Error: ", e);
-        }
-      },
-      signUp: async (data, onSuccess, onError) => {
-        const response = await signUpRequest(data);
-        const json = await response.json();
-        if ([200, 201].includes(response.status)) {
-          const {
-            user: { email },
-          } = json;
-          onSuccess && onSuccess(email);
-          // const { token, user } = json;
-          // try {
-          //   await AsyncStorage.setItem("token", token);
-          //   await AsyncStorage.setItem("user", JSON.stringify(user));
-          // } catch (e) {
-          //   console.log("Error when saving token to AsyncStorage");
-          // }
-          // setProfile({ ...profile2, ...user });
-          // dispatch({ type: "SIGN_IN", token });
-          // navigation.navigate("Home");
-        } else {
-          const { message } = json;
-          onError && onError(message);
-        }
-
-        // !!!
-
-        //dispatch({ type: "SIGN_IN", token: "dummy-auth-token" });
-      },
-    }),
-    []
-  );
+  const { state } = useContext(AuthContext);
 
   return (
-    <AuthContext.Provider value={authContext}>
-      <Drawer.Navigator
-        style={{ flex: 1 }}
-        drawerContent={(props) => (
-          <CustomDrawerContent {...props} profile={profile} />
-        )}
-        drawerStyle={{
-          backgroundColor: "white",
-          width: width * 0.8,
-        }}
-        screenOptions={{
-          activeTintColor: "white",
-          inactiveTintColor: "#000",
-          activeBackgroundColor: materialTheme.COLORS.ACTIVE,
-          inactiveBackgroundColor: "transparent",
-          itemStyle: {
-            width: width * 0.74,
-            paddingHorizontal: 12,
-            // paddingVertical: 4,
-            justifyContent: "center",
-            alignContent: "center",
-            // alignItems: 'center',
-            overflow: "hidden",
-          },
-          labelStyle: {
-            fontSize: 18,
-            fontWeight: "normal",
-          },
-        }}
-        initialRouteName="Home"
-      >
-        {state.userToken == null ? (
-          <>
-            <Drawer.Screen
-              name="Sign In"
-              component={SignInScreen}
-              options={{
-                headerShown: false,
-                drawerIcon: ({ focused }) => (
-                  <Icon
-                    size={16}
-                    name="ios-log-in"
-                    family="ionicon"
-                    color={focused ? "white" : materialTheme.COLORS.MUTED}
-                  />
-                ),
-              }}
-            />
-            <Drawer.Screen
-              name="Sign Up"
-              component={SignUpScreen}
-              options={{
-                headerShown: false,
-                drawerIcon: ({ focused }) => (
-                  <Icon
-                    size={16}
-                    name="md-person-add"
-                    family="ionicon"
-                    color={focused ? "white" : materialTheme.COLORS.MUTED}
-                  />
-                ),
-              }}
-            />
-            <Drawer.Screen
-              name="Forgot Password"
-              component={ForgotPasswordScreen}
-              options={{
-                headerShown: false,
-                drawerIcon: ({ focused }) => (
-                  <Icon
-                    size={16}
-                    name="ios-log-in"
-                    family="ionicon"
-                    color={focused ? "white" : materialTheme.COLORS.MUTED}
-                  />
-                ),
-              }}
-            />
-            <Drawer.Screen
-              name="Reset Password"
-              component={ResetPasswordScreen}
-              options={{
-                headerShown: false,
-                drawerIcon: ({ focused }) => (
-                  <Icon
-                    size={16}
-                    name="ios-log-in"
-                    family="ionicon"
-                    color={focused ? "white" : materialTheme.COLORS.MUTED}
-                  />
-                ),
-              }}
-            />
-          </>
-        ) : (
-          <>
-            <Stack.Screen
-              name="Home"
-              headerShown={false}
-              component={HomeScreen}
-              options={{
-                header: ({ navigation, scene }) => (
-                  <Header
-                    search
-                    options
-                    title="Home"
-                    navigation={navigation}
-                    scene={scene}
-                  />
-                ),
-              }}
-            />
-            <Stack.Screen
-              name="CreateDossier"
-              headerShown={false}
-              component={CreateDossierScreen}
-              options={{
-                header: ({ navigation, scene }) => (
-                  <Header
-                    search
-                    options
-                    title="Create"
-                    navigation={navigation}
-                    scene={scene}
-                  />
-                ),
-              }}
-            />
-            <Stack.Screen
-              name="EditDossier"
-              headerShown={false}
-              component={EditDossierScreen}
-              options={{
-                header: ({ navigation, scene }) => (
-                  <Header
-                    search
-                    options
-                    title="Edit"
-                    navigation={navigation}
-                    scene={scene}
-                  />
-                ),
-              }}
-            />
-            <Drawer.Screen
-              name="Logout"
-              component={SignOutScreen}
-              options={{
-                headerShown: false,
-                drawerIcon: ({ focused }) => (
-                  <Icon
-                    size={16}
-                    name="md-person-add"
-                    family="ionicon"
-                    color={focused ? "white" : materialTheme.COLORS.MUTED}
-                  />
-                ),
-              }}
-            />
-            <Drawer.Screen
-              name="Profile"
-              component={ProfileScreen}
-              options={{
-                header: ({ navigation, scene }) => (
-                  <Header
-                    search
-                    options
-                    title="Profile"
-                    navigation={navigation}
-                    scene={scene}
-                  />
-                ),
-              }}
-            />
-            <Stack.Screen
-              name="ShowDossier"
-              headerShown={false}
-              component={ShowScreen}
-              options={{
-                header: ({ navigation, scene }) => (
-                  <Header
-                    search
-                    options
-                    title="Show"
-                    navigation={navigation}
-                    scene={scene}
-                  />
-                ),
-              }}
-            />
-          </>
-        )}
-      </Drawer.Navigator>
-    </AuthContext.Provider>
+    <Drawer.Navigator
+      style={{ flex: 1 }}
+      drawerContent={(props) => (
+        <CustomDrawerContent {...props} profile={profile} />
+      )}
+      drawerStyle={{
+        backgroundColor: "white",
+        width: width * 0.8,
+      }}
+      screenOptions={{
+        activeTintColor: "white",
+        inactiveTintColor: "#000",
+        activeBackgroundColor: materialTheme.COLORS.ACTIVE,
+        inactiveBackgroundColor: "transparent",
+        itemStyle: {
+          width: width * 0.74,
+          paddingHorizontal: 12,
+          // paddingVertical: 4,
+          justifyContent: "center",
+          alignContent: "center",
+          // alignItems: 'center',
+          overflow: "hidden",
+        },
+        labelStyle: {
+          fontSize: 18,
+          fontWeight: "normal",
+        },
+      }}
+      initialRouteName="Home"
+    >
+      {state.userToken == null ? (
+        <>
+          <Drawer.Screen
+            name="Sign In"
+            component={SignInScreen}
+            options={{
+              headerShown: false,
+              drawerIcon: ({ focused }) => (
+                <Icon
+                  size={16}
+                  name="ios-log-in"
+                  family="ionicon"
+                  color={focused ? "white" : materialTheme.COLORS.MUTED}
+                />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="Sign Up"
+            component={SignUpScreen}
+            options={{
+              headerShown: false,
+              drawerIcon: ({ focused }) => (
+                <Icon
+                  size={16}
+                  name="md-person-add"
+                  family="ionicon"
+                  color={focused ? "white" : materialTheme.COLORS.MUTED}
+                />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="Forgot Password"
+            component={ForgotPasswordScreen}
+            options={{
+              headerShown: false,
+              drawerIcon: ({ focused }) => (
+                <Icon
+                  size={16}
+                  name="ios-log-in"
+                  family="ionicon"
+                  color={focused ? "white" : materialTheme.COLORS.MUTED}
+                />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="Reset Password"
+            component={ResetPasswordScreen}
+            options={{
+              headerShown: false,
+              drawerIcon: ({ focused }) => (
+                <Icon
+                  size={16}
+                  name="ios-log-in"
+                  family="ionicon"
+                  color={focused ? "white" : materialTheme.COLORS.MUTED}
+                />
+              ),
+            }}
+          />
+        </>
+      ) : (
+        <>
+          <Stack.Screen
+            name="Home"
+            headerShown={false}
+            component={HomeScreen}
+            options={{
+              header: ({ navigation, scene }) => (
+                <Header
+                  search
+                  options
+                  title="Home"
+                  navigation={navigation}
+                  scene={scene}
+                />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="CreateDossier"
+            headerShown={false}
+            component={CreateDossierScreen}
+            options={{
+              header: ({ navigation, scene }) => (
+                <Header
+                  search
+                  options
+                  title="Create"
+                  navigation={navigation}
+                  scene={scene}
+                />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="EditDossier"
+            headerShown={false}
+            component={EditDossierScreen}
+            options={{
+              header: ({ navigation, scene }) => (
+                <Header
+                  search
+                  options
+                  title="Edit"
+                  navigation={navigation}
+                  scene={scene}
+                />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="Logout"
+            component={SignOutScreen}
+            options={{
+              headerShown: false,
+              drawerIcon: ({ focused }) => (
+                <Icon
+                  size={16}
+                  name="md-person-add"
+                  family="ionicon"
+                  color={focused ? "white" : materialTheme.COLORS.MUTED}
+                />
+              ),
+            }}
+          />
+          <Drawer.Screen
+            name="Profile"
+            component={ProfileScreen}
+            options={{
+              header: ({ navigation, scene }) => (
+                <Header
+                  search
+                  options
+                  title="Profile"
+                  navigation={navigation}
+                  scene={scene}
+                />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="ShowDossier"
+            headerShown={false}
+            component={ShowScreen}
+            options={{
+              header: ({ navigation, scene }) => (
+                <Header
+                  search
+                  options
+                  title="Show"
+                  navigation={navigation}
+                  scene={scene}
+                />
+              ),
+            }}
+          />
+        </>
+      )}
+    </Drawer.Navigator>
   );
 }

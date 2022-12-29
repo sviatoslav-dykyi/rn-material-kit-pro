@@ -19,10 +19,10 @@ import {
   handleSignUpSubmit,
 } from "./utils";
 import { useNavigation } from "@react-navigation/native";
-import { AuthContext } from "../../navigation/context-utils";
 import ConfirmationCodeField from "../../components/confirmationCodeField/ConfirmationCodeField";
 import { Navigation } from "../../types/navigation";
 import useOnFocus from "../../hooks/useOnFocus";
+import { AuthContext } from "../../context/Auth";
 
 const { width } = Dimensions.get("window");
 const SignUp = () => {
