@@ -57,6 +57,8 @@ const ConfirmationCodeField = ({
   error,
   isSubmitting,
   email,
+  confirmButtonTitle = "VERIFY",
+  title = "Verification",
 }: {
   value: string;
   setValue: Dispatch<SetStateAction<string>>;
@@ -64,6 +66,8 @@ const ConfirmationCodeField = ({
   error?: string | null;
   isSubmitting?: boolean;
   email: string;
+  confirmButtonTitle?: string;
+  title?: string;
 }) => {
   const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
@@ -117,15 +121,15 @@ const ConfirmationCodeField = ({
 
   return (
     <SafeAreaView style={styles.root}>
-      <Text style={styles.title}>Verification</Text>
+      <Text style={styles.title}>{title}</Text>
       <Image style={styles.icon} source={source} />
 
       {!error ? (
         <Text style={styles.subTitle}>
-          {"Please enter the verification code \n"}
+          {"Please enter the  code \n"}
           we send to{" "}
           <Text style={{ textDecorationLine: "underline", color: "#777" }}>
-            {email ?? "your email address"}
+            {email || "your email address"}
           </Text>
         </Text>
       ) : (
@@ -151,9 +155,8 @@ const ConfirmationCodeField = ({
           color={materialTheme.COLORS.BUTTON_COLOR}
           onPress={onPress}
           loading={isSubmitting}
-          disabled={value.length !== CELL_COUNT}
         >
-          VERIFY
+          {confirmButtonTitle}
         </Button>
         <Button
           size="large"

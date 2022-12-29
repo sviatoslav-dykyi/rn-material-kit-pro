@@ -1,4 +1,5 @@
 import { Dossier } from "../screens/dossiers/types";
+import { ForgotPassword, ResetPassword } from "../screens/forgotPassword/types";
 import { User } from "../types/user";
 
 import { http } from "../utils/http";
@@ -12,7 +13,15 @@ export const signIn = async (data: any) => {
 };
 
 export const confirmMail = async (code: string) => {
-  return await http.get(`/auth/confirmMail/${code}`);
+  return await http.get(`auth/confirmMail/${code}`);
+};
+
+export const resetPassword = async (code: string, data: ResetPassword) => {
+  return await http.patch(`auth/resetpassword/${code}`, data);
+};
+
+export const forgotPassword = async (data: ForgotPassword) => {
+  return await http.patch("/auth/forgotpassword", data);
 };
 
 export const createDossier = async (data: FormData) => {

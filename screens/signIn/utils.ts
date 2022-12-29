@@ -1,19 +1,4 @@
 import { FormikValues } from "formik";
-import { signUp, signIn } from "../../api";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AuthContext } from "../../navigation/context-utils";
-import { useContext } from "react";
-
-export const storeUserData = async (data: any) => {
-  try {
-    //console.log("zz");
-    const jsonValue = JSON.stringify(data);
-    await AsyncStorage.setItem("user", jsonValue);
-    //console.log(await AsyncStorage.getItem("user"));
-  } catch (e) {
-    // saving error
-  }
-};
 
 export const initSignInValues = {
   email: "admin@gmail.com",
@@ -25,7 +10,34 @@ export const initSignInValues = {
 //   password: "",
 // };
 
-const touchedInitState = {
-  email: false,
-  password: false,
+export const handleSignInSubmit = ({
+  signIn,
+}: {
+  signIn: (data: any, onSuccess: any, onError: any) => Promise<void>;
+}) => {
+  return async (
+    values: any,
+    { setStatus, setSubmitting }: FormikValues
+  ): Promise<void> => {
+    setSubmitting(true);
+    await signIn(
+      values,
+      () => {
+        setStatus({
+          success: true,
+          errors: {},
+        });
+        setSubmitting(false);
+      },
+      (message: string) => {
+        setStatus({
+          success: false,
+          errors: {
+            password: message,
+          },
+        });
+        setSubmitting(false);
+      }
+    );
+  };
 };

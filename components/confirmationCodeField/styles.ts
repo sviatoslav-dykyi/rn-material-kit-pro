@@ -42,8 +42,7 @@ const styles = StyleSheet.create({
 
   root: {
     width: width,
-    borderColor: "red",
-    borderWidth: 2,
+
     minHeight: 800,
     padding: 20,
     display: "flex",

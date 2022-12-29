@@ -62,29 +62,23 @@ export const handleSignUpSubmit = ({
     await signUp(
       values,
       (email: string) => {
+        setStatus({
+          success: true,
+          errors: {},
+        });
         setSubmitting(false);
         setVerificationMode(true);
         setVerificationEmail(email);
       },
-      () => {
+      (message: string) => {
+        setStatus({
+          success: false,
+          errors: {
+            passwordConfirm: message,
+          },
+        });
         setSubmitting(false);
       }
     );
-    // signIn(values)
-    //   .then((res) => {
-    //     if ([200, 201].includes(res.status)) {
-    //       setValues(initSignInValues);
-    //       setTouched({});
-
-    //       navigation.navigate("Home");
-    //     } else {
-    //       setSubmitting(false);
-    //     }
-    //     return res.json();
-    //   })
-    //   .then((data) => {
-    //     return data;
-    //   })
-    //   .catch((err) => console.error("Rejected", err));
   };
 };

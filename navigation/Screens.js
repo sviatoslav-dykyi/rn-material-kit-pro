@@ -6,12 +6,13 @@ import { Images, materialTheme } from "../constants";
 import HomeScreen from "../screens/home";
 import CreateDossierScreen from "../screens/dossiers/create";
 import EditDossierScreen from "../screens/dossiers/edit";
-import OnboardingScreen from "../screens/Onboarding";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // screens
 
 import SignInScreen from "../screens/signIn";
 import SignUpScreen from "../screens/signUp";
+import ForgotPasswordScreen from "../screens/forgotPassword";
+import ResetPasswordScreen from "../screens/resetPassword";
 import SignOutScreen from "../screens/signOut";
 import ProfileScreen from "../screens/profile";
 import ShowScreen from "../screens/dossiers/show";
@@ -266,20 +267,7 @@ function AppStack(props) {
 
   const authContext = React.useMemo(
     () => ({
-      signIn: async (data, setSubmitting) => {
-        setSubmitting(true);
-        // const { token, user } = data;
-        // console.log("token", token);
-        // // In a production app, we need to send some data (usually username, password) to server and get a token
-        // // We will also need to handle errors if sign in failed
-        // // After getting token, we need to persist the token using `SecureStore`
-        // // In the example, we'll use a dummy token
-        // console.log("new token", token);
-        // try {
-        //   await AsyncStorage.setItem("token", token);
-        // } catch (e) {
-        //   console.log("Error when saving token to AsyncStorage");
-        // }
+      signIn: async (data, onSuccess, onError) => {
         const response = await signInRequest(data);
         const json = await response.json();
 
@@ -292,12 +280,12 @@ function AppStack(props) {
             console.log("Error when saving token to AsyncStorage");
           }
           setProfile({ ...profile2, ...user });
-          console.log("user", user);
-          //setSubmitting(false);
           dispatch({ type: "SIGN_IN", token });
           navigation.navigate("Home");
+        } else {
+          const { message } = json;
+          onError && onError(message);
         }
-        setSubmitting(false);
       },
       signOut: async () => {
         try {
@@ -315,7 +303,7 @@ function AppStack(props) {
           const {
             user: { email },
           } = json;
-          onSuccess(email);
+          onSuccess && onSuccess(email);
           // const { token, user } = json;
           // try {
           //   await AsyncStorage.setItem("token", token);
@@ -327,8 +315,8 @@ function AppStack(props) {
           // dispatch({ type: "SIGN_IN", token });
           // navigation.navigate("Home");
         } else {
-          console.log("json", json);
-          onError();
+          const { message } = json;
+          onError && onError(message);
         }
 
         // !!!
@@ -371,43 +359,6 @@ function AppStack(props) {
         }}
         initialRouteName="Home"
       >
-        {/* {state.userToken == null ? (
-          <>
-            <Drawer.Screen
-              name="CreateDossier"
-              component={CreateDossierStack}
-              options={{
-                headerShown: false,
-                drawerIcon: ({ focused }) => (
-                  <Icon
-                    size={16}
-                    name="shop"
-                    family="GalioExtra"
-                    color={focused ? "white" : materialTheme.COLORS.MUTED}
-                  />
-                ),
-              }}
-            />
-          </>
-        ) : (
-          <>
-            <Drawer.Screen
-              name="CreateDossier"
-              component={CreateDossierStack}
-              options={{
-                headerShown: false,
-                drawerIcon: ({ focused }) => (
-                  <Icon
-                    size={16}
-                    name="shop"
-                    family="GalioExtra"
-                    color={focused ? "white" : materialTheme.COLORS.MUTED}
-                  />
-                ),
-              }}
-            />
-          </>
-        )} */}
         {state.userToken == null ? (
           <>
             <Drawer.Screen
@@ -434,6 +385,36 @@ function AppStack(props) {
                   <Icon
                     size={16}
                     name="md-person-add"
+                    family="ionicon"
+                    color={focused ? "white" : materialTheme.COLORS.MUTED}
+                  />
+                ),
+              }}
+            />
+            <Drawer.Screen
+              name="Forgot Password"
+              component={ForgotPasswordScreen}
+              options={{
+                headerShown: false,
+                drawerIcon: ({ focused }) => (
+                  <Icon
+                    size={16}
+                    name="ios-log-in"
+                    family="ionicon"
+                    color={focused ? "white" : materialTheme.COLORS.MUTED}
+                  />
+                ),
+              }}
+            />
+            <Drawer.Screen
+              name="Reset Password"
+              component={ResetPasswordScreen}
+              options={{
+                headerShown: false,
+                drawerIcon: ({ focused }) => (
+                  <Icon
+                    size={16}
+                    name="ios-log-in"
                     family="ionicon"
                     color={focused ? "white" : materialTheme.COLORS.MUTED}
                   />
@@ -491,36 +472,6 @@ function AppStack(props) {
                 ),
               }}
             />
-            {/* <Drawer.Screen
-              name="Sign In"
-              component={SignInScreen}
-              options={{
-                headerShown: false,
-                drawerIcon: ({ focused }) => (
-                  <Icon
-                    size={16}
-                    name="ios-log-in"
-                    family="ionicon"
-                    color={focused ? "white" : materialTheme.COLORS.MUTED}
-                  />
-                ),
-              }}
-            /> */}
-            {/* <Drawer.Screen
-              name="Sign Up"
-              component={SignUpScreen}
-              options={{
-                headerShown: false,
-                drawerIcon: ({ focused }) => (
-                  <Icon
-                    size={16}
-                    name="md-person-add"
-                    family="ionicon"
-                    color={focused ? "white" : materialTheme.COLORS.MUTED}
-                  />
-                ),
-              }}
-            /> */}
             <Drawer.Screen
               name="Logout"
               component={SignOutScreen}
@@ -567,21 +518,6 @@ function AppStack(props) {
                 ),
               }}
             />
-            {/* <Drawer.Screen
-              name="ShowDossier"
-              component={ShowScreen}
-              options={{
-                headerShown: false,
-                drawerIcon: ({ focused }) => (
-                  <Icon
-                    size={16}
-                    name="md-person-add"
-                    family="ionicon"
-                    color={focused ? "white" : materialTheme.COLORS.MUTED}
-                  />
-                ),
-              }}
-            /> */}
           </>
         )}
       </Drawer.Navigator>

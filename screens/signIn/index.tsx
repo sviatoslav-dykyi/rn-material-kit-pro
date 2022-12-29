@@ -13,7 +13,7 @@ import { HeaderHeight } from "../../constants/utils";
 import { Formik } from "formik";
 import useValidation from "../../hooks/useValidation";
 import * as Yup from "yup";
-import { initSignInValues } from "./utils";
+import { handleSignInSubmit, initSignInValues } from "./utils";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { AuthContext } from "../../navigation/context-utils";
 import { Navigation } from "../../types/navigation";
@@ -122,7 +122,9 @@ const SignIn = () => {
                 ? { email: params?.email, password: "" }
                 : initSignInValues
             }
-            onSubmit={() => {}}
+            onSubmit={handleSignInSubmit({
+              signIn,
+            })}
             validationSchema={Yup.object().shape({
               email,
               password,
@@ -137,6 +139,7 @@ const SignIn = () => {
               errors,
               status,
               isSubmitting,
+              submitForm,
               setSubmitting,
             }) => (
               <Block flex>
@@ -196,7 +199,7 @@ const SignIn = () => {
                   <Text
                     color={theme.COLORS?.WHITE}
                     size={(theme.SIZES?.FONT || 0) * 0.75}
-                    onPress={() => Alert.alert("Not implemented")}
+                    onPress={() => navigation?.navigate("Forgot Password")}
                     style={{
                       alignSelf: "flex-end",
                       lineHeight: (theme.SIZES?.FONT || 0) * 2,
@@ -212,8 +215,9 @@ const SignIn = () => {
                     color={materialTheme.COLORS.BUTTON_COLOR}
                     style={{ height: 48 }}
                     onPress={() => {
-                      signIn(values, setSubmitting);
+                      submitForm();
                     }}
+                    loading={isSubmitting}
                   >
                     SIGN IN
                   </Button>

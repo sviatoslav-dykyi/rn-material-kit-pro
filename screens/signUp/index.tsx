@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import {
-  Alert,
   Dimensions,
   StyleSheet,
   KeyboardAvoidingView,
@@ -23,8 +22,9 @@ import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../../navigation/context-utils";
 import ConfirmationCodeField from "../../components/confirmationCodeField/ConfirmationCodeField";
 import { Navigation } from "../../types/navigation";
+import useOnFocus from "../../hooks/useOnFocus";
 
-const { height, width } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 const SignUp = () => {
   const navigation = useNavigation<Navigation>();
   const [state, setState] = useState<any>({
@@ -54,13 +54,13 @@ const SignUp = () => {
   const { firstName, lastName, password, passwordConfirm, phone, email } =
     useValidation();
 
+  useOnFocus(() => setVerificationMode(false));
+
   const { signUp } = useContext(AuthContext);
 
   const toggleActive = (name: string) => {
     const { active } = state;
-
     active[name] = !active[name];
-
     setState({ active });
   };
 
@@ -83,65 +83,6 @@ const SignUp = () => {
         >
           {!verificationMode ? (
             <>
-              <Block style={{ marginBottom: height * 0.05 }}>
-                <Block
-                  row
-                  center
-                  space="between"
-                  style={{ marginVertical: (theme.SIZES?.BASE || 0) * 1.875 }}
-                >
-                  <Block flex middle right>
-                    <Button
-                      round
-                      onlyIcon
-                      iconSize={(theme.SIZES?.BASE || 0) * 1.625}
-                      icon="facebook"
-                      iconFamily="font-awesome"
-                      onPress={() => Alert.alert("Not implemented")}
-                      color={theme.COLORS?.FACEBOOK}
-                      shadowless
-                      iconColor={theme.COLORS?.WHITE}
-                      style={styles.social}
-                    />
-                  </Block>
-                  <Block flex middle center>
-                    <Button
-                      round
-                      onlyIcon
-                      iconSize={(theme.SIZES?.BASE || 0) * 1.625}
-                      icon="twitter"
-                      iconFamily="font-awesome"
-                      onPress={() => Alert.alert("Not implemented")}
-                      color={theme.COLORS?.TWITTER}
-                      shadowless
-                      iconColor={theme.COLORS?.WHITE}
-                      style={styles.social}
-                    />
-                  </Block>
-                  <Block flex middle left>
-                    <Button
-                      round
-                      onlyIcon
-                      iconSize={(theme.SIZES?.BASE || 0) * 1.625}
-                      icon="dribbble"
-                      iconFamily="font-awesome"
-                      onPress={() => Alert.alert("Not implemented")}
-                      color={theme.COLORS?.DRIBBBLE}
-                      shadowless
-                      iconColor={theme.COLORS?.WHITE}
-                      style={styles.social}
-                    />
-                  </Block>
-                </Block>
-                <Text
-                  color="#fff"
-                  center
-                  size={(theme.SIZES?.FONT || 0) * 0.875}
-                >
-                  or be classical
-                </Text>
-              </Block>
-
               <Formik
                 initialValues={initSignUpValues}
                 onSubmit={handleSignUpSubmit({
@@ -161,16 +102,19 @@ const SignUp = () => {
                 {({
                   handleChange,
                   handleBlur,
-                  handleSubmit,
                   isSubmitting,
-                  setSubmitting,
                   values,
                   submitForm,
                   touched,
                   status,
                   errors,
                 }) => (
-                  <Block flex={1} center space="between">
+                  <Block
+                    flex={1}
+                    center
+                    space="between"
+                    style={{ paddingTop: "30%" }}
+                  >
                     <Block center>
                       <Input
                         bgColor="transparent"
