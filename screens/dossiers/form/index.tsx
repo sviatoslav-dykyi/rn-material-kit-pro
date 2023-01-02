@@ -47,6 +47,7 @@ import { findAddressDetail, GOOGLE_API_KEY } from "./utils";
 import { Icon } from "../../../components";
 import MultiFamilyHouseForm from "./MultiFamilyHouse";
 import { DossierImage } from "./types";
+import useOnFocus from "../../../hooks/useOnFocus";
 
 const CreateDossiersForm = ({
   handleChange,
@@ -57,6 +58,7 @@ const CreateDossiersForm = ({
   status,
   errors,
   setFieldValue,
+  resetForm,
   state,
   toggleActive,
   isSubmitting,
@@ -67,6 +69,10 @@ const CreateDossiersForm = ({
   const RichText = useRef(null);
   const [height, setHeight] = useState(MIN_HEIGHT_RICH_CONTAINER);
   const [image, setImage] = useState(null);
+
+  useOnFocus(() => {
+    if (mode === "create") resetForm();
+  });
 
   const handleEditorTextChange = (newText: string) =>
     setFieldValue("description", newText);
