@@ -56,6 +56,7 @@ export const styles = StyleSheet.create({
   pickerLabelText: {
     paddingTop: 2,
     color: materialTheme.COLORS.PLACEHOLDER,
+    fontSize: 12,
   },
   pickerLabelIcon: {
     paddingLeft: 17,
@@ -193,6 +194,20 @@ export const styles = StyleSheet.create({
   bordered: {
     borderColor: "red",
     borderWidth: 2,
+  },
+  inputPaper: {
+    width: width * 0.9,
+    backgroundColor: "transparent",
+  },
+  inputPaperLabel: {
+    color: materialTheme.COLORS.PLACEHOLDER,
+  },
+  inputPaperUnderlineStyle: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#fff",
+  },
+  inputPaperIcon: {
+    marginBottom: -15,
   },
 });
 

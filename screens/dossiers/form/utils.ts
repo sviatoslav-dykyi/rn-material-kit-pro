@@ -88,6 +88,24 @@ export const prepareDossierBeforeForm = (data: Dossier): Dossier => {
         data.property.numberOfOutdoorParkingSpaces?.toString() ?? "",
       numberOfRooms: data.property.numberOfRooms?.toString() ?? "",
       renovationYear: data.property.renovationYear?.toString() ?? "",
+      condition: {
+        ...data.property.condition,
+        bathrooms: data.property.condition?.bathrooms?.toString() ?? "",
+        kitchen: data.property.condition?.kitchen?.toString() ?? "",
+        flooring: data.property.condition?.flooring?.toString() ?? "",
+        windows: data.property.condition?.windows?.toString() ?? "",
+        overall: data.property.condition?.overall?.toString() ?? "",
+        masonry: data.property.condition?.masonry?.toString() ?? "",
+      },
+      quality: {
+        ...data.property.quality,
+        bathrooms: data.property.quality?.bathrooms?.toString() ?? "",
+        kitchen: data.property.quality?.kitchen?.toString() ?? "",
+        flooring: data.property.quality?.flooring?.toString() ?? "",
+        windows: data.property.quality?.windows?.toString() ?? "",
+        overall: data.property.quality?.overall?.toString() ?? "",
+        masonry: data.property.quality?.masonry?.toString() ?? "",
+      },
     },
   };
 };

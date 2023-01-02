@@ -14,7 +14,13 @@ import {
   Card as CardGalio,
 } from "galio-framework";
 import { materialTheme } from "../../../constants";
-import { Card, Title, Paragraph } from "react-native-paper";
+import {
+  Card,
+  Title,
+  Paragraph,
+  TextInput,
+  HelperText,
+} from "react-native-paper";
 import {
   actions,
   RichEditor,
@@ -161,7 +167,7 @@ const CreateDossiersForm = ({
         onPress={() => navigation.navigate("Sign In" as never)}
       ></Button>
       <Block center>
-        <Input
+        {/* <Input
           bgColor="transparent"
           placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
           borderless
@@ -181,12 +187,28 @@ const CreateDossiersForm = ({
           icon="article"
           family="MaterialIcons"
           iconSize={18}
-          //label={values.title ? undefined : "Title"}
+        /> */}
+        <TextInput
+          style={[styles.inputPaper]}
+          textColor="white"
+          autoCapitalize="none"
+          label={<Text style={styles.inputPaperLabel}>Title</Text>}
+          underlineStyle={styles.inputPaperUnderlineStyle}
+          value={values.title}
+          onChangeText={handleChange("title")}
+          left={<TextInput.Icon size={20} icon="eye" color={() => "white"} />}
         />
+
+        <HelperText
+          type="error"
+          visible={touched.title && (status?.errors.title || errors.title)}
+        >
+          {touched.title && (status?.errors.title || errors.title)}
+        </HelperText>
         <Block row style={styles.googlePlacesLabelContainer}>
           <Icon
             name="location-on"
-            color={materialTheme.COLORS.PLACEHOLDER}
+            color="#fff"
             family="MaterialIcons"
             icon="location-on"
             iconSize={18}

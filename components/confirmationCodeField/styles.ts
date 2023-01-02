@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 0,
     height: CELL_SIZE,
     width: CELL_SIZE,
-    lineHeight: CELL_SIZE - 5,
+    lineHeight: CELL_SIZE - 10,
     ...Platform.select({ web: { lineHeight: 65 } }),
     fontSize: 30,
     textAlign: "center",

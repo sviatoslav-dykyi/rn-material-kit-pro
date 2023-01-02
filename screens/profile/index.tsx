@@ -17,6 +17,7 @@ import Form from "./Form";
 import { styles } from "./styles";
 import { User } from "../../types/user";
 import useOnFocus from "../../hooks/useOnFocus";
+import DismissKeyboardHOC from "../../hoc/DismissKeyboard";
 
 const Profile = () => {
   const navigation = useNavigation();
@@ -74,32 +75,34 @@ const Profile = () => {
         { flex: 1, paddingTop: (theme.SIZES?.BASE || 0) * 4 },
       ]}
     >
-      <Block flex middle>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "position"}
-          enabled
-          keyboardVerticalOffset={0}
-          style={{ paddingTop: 50 }}
-        >
-          {user && (
-            <Formik
-              initialValues={user}
-              onSubmit={handleUserUpdateSubmit({ navigation })}
-              validationSchema={Yup.object().shape({
-                firstName,
-                lastName,
-                email,
-                phone,
-                passwordConfirm,
-              })}
-            >
-              {(props) => (
-                <Form {...props} state={state} toggleActive={toggleActive} />
-              )}
-            </Formik>
-          )}
-        </KeyboardAvoidingView>
-      </Block>
+      <DismissKeyboardHOC>
+        <Block flex middle>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "position"}
+            enabled
+            keyboardVerticalOffset={0}
+            style={{ paddingTop: 50 }}
+          >
+            {user && (
+              <Formik
+                initialValues={user}
+                onSubmit={handleUserUpdateSubmit({ navigation })}
+                validationSchema={Yup.object().shape({
+                  firstName,
+                  lastName,
+                  email,
+                  phone,
+                  passwordConfirm,
+                })}
+              >
+                {(props) => (
+                  <Form {...props} state={state} toggleActive={toggleActive} />
+                )}
+              </Formik>
+            )}
+          </KeyboardAvoidingView>
+        </Block>
+      </DismissKeyboardHOC>
     </LinearGradient>
   );
 };

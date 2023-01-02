@@ -16,26 +16,14 @@ import * as Yup from "yup";
 import { useNavigation } from "@react-navigation/native";
 import { Navigation } from "../../types/navigation";
 import { handleForgotPasswordSubmit, initForgotPasswordValues } from "./utils";
+import DismissKeyboardHOC from "../../hoc/DismissKeyboard";
+import { HelperText, TextInput } from "react-native-paper";
 
 const { width } = Dimensions.get("window");
 
 const ForgotPassword = (): ReactElement => {
   const navigation = useNavigation<Navigation>();
-  const [state, setState] = useState<any>({
-    email: "-",
-    active: {
-      email: false,
-    },
-  });
-  const [toggle, setToggle] = useState(false);
   const { email } = useValidation();
-
-  const toggleActive = (name: string) => {
-    const { active } = state;
-    active[name] = !active[name];
-
-    setState({ active });
-  };
 
   return (
     <LinearGradient
@@ -48,99 +36,95 @@ const ForgotPassword = (): ReactElement => {
         { flex: 1, paddingTop: (theme.SIZES?.BASE || 0) * 4 },
       ]}
     >
-      <Block flex middle>
-        <KeyboardAvoidingView behavior="padding" enabled>
-          {true && (
-            <Block style={{ paddingTop: "50%" }}>
-              <Formik
-                initialValues={initForgotPasswordValues}
-                onSubmit={handleForgotPasswordSubmit({ navigation })}
-                validationSchema={Yup.object().shape({
-                  email,
-                })}
-                enableReinitialize
-              >
-                {({
-                  handleChange,
-                  handleBlur,
-                  values,
-                  touched,
-                  errors,
-                  status,
-                  isSubmitting,
-                  submitForm,
-                  resetForm,
-                }) => (
-                  <Block flex>
-                    <Block center>
-                      <Input
-                        borderless
-                        autoFocus
-                        color="white"
-                        placeholder="Email"
-                        type="email-address"
-                        autoCapitalize="none"
-                        bgColor="transparent"
-                        placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
-                        style={[
-                          styles.input,
-                          state.active.email ? styles.inputActive : null,
-                        ]}
-                        onBlur={() => {
-                          toggleActive("email");
-                          handleBlur("email");
-                        }}
-                        onFocus={() => toggleActive("email")}
-                        onChangeText={handleChange("email")}
-                        value={values.email}
-                        bottomHelp
-                        help={
-                          touched.email
-                            ? status?.errors.email || errors.email
-                            : ""
-                        }
-                      />
-                    </Block>
-                    <Block center flex style={{ marginTop: 20 }}>
-                      <Button
-                        size="large"
-                        shadowless
-                        color={materialTheme.COLORS.BUTTON_COLOR}
-                        style={{ height: 48 }}
-                        loading={isSubmitting}
-                        onPress={() => {
-                          submitForm();
-                        }}
-                      >
-                        SEND LINK
-                      </Button>
-
-                      <Button
-                        size="large"
-                        color="transparent"
-                        shadowless
-                        onPress={() => {
-                          resetForm();
-                          navigation?.navigate("Sign Up");
-                        }}
-                      >
-                        <Text
-                          center
-                          color={theme.COLORS?.WHITE}
-                          size={(theme.SIZES?.FONT || 0) * 0.75}
-                          style={{ marginTop: 20 }}
+      <DismissKeyboardHOC>
+        <Block flex middle>
+          <KeyboardAvoidingView behavior="padding" enabled>
+            {true && (
+              <Block style={{ paddingTop: "50%" }}>
+                <Formik
+                  initialValues={initForgotPasswordValues}
+                  onSubmit={handleForgotPasswordSubmit({ navigation })}
+                  validationSchema={Yup.object().shape({
+                    email,
+                  })}
+                  enableReinitialize
+                >
+                  {({
+                    handleChange,
+                    values,
+                    touched,
+                    errors,
+                    status,
+                    isSubmitting,
+                    submitForm,
+                    resetForm,
+                  }) => (
+                    <Block flex>
+                      <Block center>
+                        <TextInput
+                          autoFocus
+                          style={[styles.inputPaper]}
+                          textColor="white"
+                          autoCapitalize="none"
+                          label={
+                            <Text style={styles.inputPaperLabel}>Email</Text>
+                          }
+                          underlineStyle={styles.inputPaperUnderlineStyle}
+                          value={values.email}
+                          onChangeText={handleChange("email")}
+                        />
+                        <HelperText
+                          type="error"
+                          visible={
+                            touched.email &&
+                            (status?.errors.email || errors.email)
+                          }
                         >
-                          {"Don't have an account? Sign Up"}
-                        </Text>
-                      </Button>
+                          {touched.email &&
+                            (status?.errors.email || errors.email)}
+                        </HelperText>
+                      </Block>
+                      <Block center flex style={{ marginTop: 20 }}>
+                        <Button
+                          size="large"
+                          shadowless
+                          color={materialTheme.COLORS.BUTTON_COLOR}
+                          style={{ height: 48 }}
+                          loading={isSubmitting}
+                          onPress={() => {
+                            submitForm();
+                          }}
+                        >
+                          SEND LINK
+                        </Button>
+
+                        <Button
+                          size="large"
+                          color="transparent"
+                          shadowless
+                          onPress={() => {
+                            resetForm();
+                            navigation?.navigate("Sign Up");
+                          }}
+                        >
+                          <Text
+                            center
+                            color={theme.COLORS?.WHITE}
+                            size={(theme.SIZES?.FONT || 0) * 0.75}
+                            style={{ marginTop: 20 }}
+                          >
+                            {"Don't have an account? Sign Up"}
+                          </Text>
+                        </Button>
+                      </Block>
                     </Block>
-                  </Block>
-                )}
-              </Formik>
-            </Block>
-          )}
-        </KeyboardAvoidingView>
-      </Block>
+                  )}
+                </Formik>
+              </Block>
+            )}
+          </KeyboardAvoidingView>
+        </Block>
+      </DismissKeyboardHOC>
     </LinearGradient>
   );
 };
@@ -172,5 +156,16 @@ const styles = StyleSheet.create({
   },
   inputActive: {
     borderBottomColor: "white",
+  },
+  inputPaper: {
+    width: width * 0.9,
+    backgroundColor: "transparent",
+  },
+  inputPaperLabel: {
+    color: materialTheme.COLORS.PLACEHOLDER,
+  },
+  inputPaperUnderlineStyle: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#fff",
   },
 });

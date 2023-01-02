@@ -58,6 +58,7 @@ export const handleSignUpSubmit = ({
     values: any,
     { setStatus, setSubmitting }: FormikValues
   ): Promise<void> => {
+    console.log("submitted");
     setSubmitting(true);
     await signUp(
       values,
@@ -71,6 +72,7 @@ export const handleSignUpSubmit = ({
         setVerificationEmail(email);
       },
       (message: string) => {
+        console.log("inside2");
         setStatus({
           success: false,
           errors: {

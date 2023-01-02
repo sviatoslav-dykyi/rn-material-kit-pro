@@ -46,6 +46,7 @@ import { AirbnbRating } from "react-native-ratings";
 import { Dossier } from "../types";
 import { styles } from "../styles";
 import { useEvent } from "react-native-reanimated";
+import { HelperText, TextInput } from "react-native-paper";
 
 const AppartmentForm = ({
   handleChange,
@@ -131,7 +132,7 @@ const AppartmentForm = ({
           >
             <Icon
               name="business"
-              color={materialTheme.COLORS.PLACEHOLDER}
+              color={"#fff"}
               family="MaterialIcons"
               size={20}
               style={styles.pickerLabelIcon}
@@ -161,7 +162,7 @@ const AppartmentForm = ({
           <Block row style={[styles.pickerLabel, { marginTop: 15 }]}>
             <Icon
               name="vpn-key"
-              color={materialTheme.COLORS.PLACEHOLDER}
+              color={"#fff"}
               family="MaterialIcons"
               size={20}
               style={styles.pickerLabelIcon}
@@ -218,8 +219,33 @@ const AppartmentForm = ({
           family="MaterialIcons"
           iconSize={18}
         />
+        <TextInput
+          style={[styles.inputPaper]}
+          textColor="white"
+          autoCapitalize="none"
+          label={<Text style={styles.inputPaperLabel}>Building year</Text>}
+          underlineStyle={styles.inputPaperUnderlineStyle}
+          value={values.property.buildingYear}
+          onChangeText={handleChange("property.buildingYear")}
+          left={
+            <TextInput.Icon size={20} icon="abacus" color={() => "white"} />
+          }
+        />
+        <Text>222</Text>
+        <HelperText
+          type="error"
+          visible={
+            touched?.property?.buildingYear &&
+            (status?.errors.property.buildingYear ||
+              errors.property.buildingYear)
+          }
+        >
+          {touched?.property?.buildingYear &&
+            (status?.errors.property.buildingYear ||
+              errors.property.buildingYear)}
+        </HelperText>
 
-        <Input
+        {/* <Input
           bgColor="transparent"
           placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
           borderless
@@ -247,7 +273,30 @@ const AppartmentForm = ({
           icon="handyman"
           family="MaterialIcons"
           iconSize={18}
+        /> */}
+        <TextInput
+          style={[styles.inputPaper]}
+          textColor="white"
+          autoCapitalize="none"
+          label={<Text style={styles.inputPaperLabel}>Renovation year</Text>}
+          underlineStyle={styles.inputPaperUnderlineStyle}
+          value={values.property.renovationYear}
+          onChangeText={handleChange("property.renovationYear")}
+          left={<TextInput.Icon size={20} icon="eye" color={() => "white"} />}
         />
+
+        <HelperText
+          type="error"
+          visible={
+            touched.property?.renovationYear &&
+            (status?.errors.property.renovationYear ||
+              errors.property?.renovationYear)
+          }
+        >
+          {touched.property?.renovationYear &&
+            (status?.errors.property.renovationYear ||
+              errors.property.renovationYear)}
+        </HelperText>
         <Input
           bgColor="transparent"
           placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}

@@ -6,6 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 import { getToken } from "../utils/common";
 import { ActionMap } from "../types/auth";
 import { Navigation } from "../types/navigation";
+import { User } from "../types/user";
 
 const profile2 = {
   avatar: Images.Profile,
@@ -40,6 +41,7 @@ export const RESTORE_TOKEN = "RESTORE_TOKEN";
 export type AuthActionTypes = {
   [SIGN_IN]: {
     token: string | null;
+    user: User | null;
   };
   [SIGN_OUT]: undefined;
   [RESTORE_TOKEN]: {
@@ -62,6 +64,7 @@ const AuthReducer = (
         ...prevState,
         isSignout: false,
         userToken: action.payload.token,
+        user: action.payload.user,
       };
     case "SIGN_OUT":
       return {
@@ -125,6 +128,7 @@ const AuthProvider = ({ children }: Props) => {
             type: "SIGN_IN",
             payload: {
               token,
+              user,
             },
           });
           navigation?.navigate("Home");

@@ -127,34 +127,6 @@ function NewCollectionStack(props) {
   );
 }
 
-function HomeStack(props) {
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        mode: "card",
-        headerShown: "screen",
-      }}
-    >
-      <Stack.Screen
-        name="Home2"
-        headerShown={false}
-        component={HomeScreen}
-        options={{
-          header: ({ navigation, scene }) => (
-            <Header
-              search
-              options
-              title="Home3"
-              navigation={navigation}
-              scene={scene}
-            />
-          ),
-        }}
-      />
-    </Stack.Navigator>
-  );
-}
-
 function CreateDossierStack(props) {
   return (
     <Stack.Navigator
@@ -219,7 +191,7 @@ function AppStack(props) {
     <Drawer.Navigator
       style={{ flex: 1 }}
       drawerContent={(props) => (
-        <CustomDrawerContent {...props} profile={profile} />
+        <CustomDrawerContent {...props} profile={state?.user} />
       )}
       drawerStyle={{
         backgroundColor: "white",
@@ -334,6 +306,7 @@ function AppStack(props) {
             options={{
               header: ({ navigation, scene }) => (
                 <Header
+                  back
                   search
                   options
                   title="Create"
@@ -350,6 +323,7 @@ function AppStack(props) {
             options={{
               header: ({ navigation, scene }) => (
                 <Header
+                  back
                   search
                   options
                   title="Edit"

@@ -18,29 +18,22 @@ import { Navigation } from "../../types/navigation";
 import ConfirmationCodeField from "../../components/confirmationCodeField/ConfirmationCodeField";
 import { initVerificationState } from "../forgotPassword/utils";
 import { handleResetPasswordSubmit, initResetPasswordValues } from "./utils";
+import DismissKeyboardHOC from "../../hoc/DismissKeyboard";
+import { HelperText, TextInput } from "react-native-paper";
 
 const { width } = Dimensions.get("window");
 
 const ResetPassword = (): ReactElement => {
   const navigation = useNavigation<Navigation>();
-  const [state, setState] = useState<any>({
-    password: "-",
-    passwordConfirm: "-",
-    active: {
-      password: false,
-      passwordConfirm: false,
-    },
+  const [secureTextEntry, setSecureTextEntry] = useState({
+    password: true,
+    passwordConfirm: true,
   });
+
   const [verification, setVerification] = useState(initVerificationState);
   const [code, setCode] = useState("");
   const { password, passwordConfirm } = useValidation();
 
-  const toggleActive = (name: string) => {
-    const { active } = state;
-    active[name] = !active[name];
-
-    setState({ active });
-  };
   return (
     <LinearGradient
       start={{ x: 0, y: 0 }}
@@ -52,109 +45,186 @@ const ResetPassword = (): ReactElement => {
         { flex: 1, paddingTop: (theme.SIZES?.BASE || 0) * 4 },
       ]}
     >
-      <Block flex middle>
-        <KeyboardAvoidingView enabled>
-          <Block
-            style={{
-              paddingTop: "50%",
-            }}
-          >
-            <Formik
-              initialValues={initResetPasswordValues}
-              onSubmit={handleResetPasswordSubmit({ code, navigation })}
-              validationSchema={Yup.object().shape({
-                password,
-                passwordConfirm,
-              })}
-              enableReinitialize
+      <DismissKeyboardHOC>
+        <Block flex middle>
+          <KeyboardAvoidingView enabled>
+            <Block
+              style={{
+                paddingTop: "50%",
+              }}
             >
-              {({
-                handleChange,
-                handleBlur,
-                values,
-                touched,
-                errors,
-                status,
-                isSubmitting,
-                submitForm,
-              }) => (
-                <Block center>
-                  <Input
-                    autoFocus
-                    password
-                    viewPass
-                    borderless
-                    color="white"
-                    iconColor="white"
-                    placeholder="New password"
-                    bgColor="transparent"
-                    placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
-                    style={[
-                      styles.input,
-                      state.active.password ? styles.inputActive : null,
-                    ]}
-                    onBlur={() => {
-                      toggleActive("password");
-                      handleBlur("password");
-                    }}
-                    onFocus={() => toggleActive("password")}
-                    onChangeText={handleChange("password")}
-                    value={values.password}
-                    bottomHelp
-                    help={
-                      touched.password
-                        ? status?.errors.password || errors.password
-                        : ""
-                    }
-                  />
-
-                  <Input
-                    bgColor="transparent"
-                    placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
-                    borderless
-                    color="white"
-                    password
-                    viewPass
-                    placeholder="Repeat new password"
-                    iconColor="white"
-                    style={[
-                      styles.input,
-                      state.active.passwordConfirm ? styles.inputActive : null,
-                    ]}
-                    onBlur={() => {
-                      toggleActive("passwordConfirm");
-                      handleBlur("passwordConfirm");
-                    }}
-                    onFocus={() => toggleActive("passwordConfirm")}
-                    onChangeText={handleChange("passwordConfirm")}
-                    value={values.passwordConfirm}
-                    bottomHelp
-                    help={
-                      touched.passwordConfirm &&
-                      (status?.errors.passwordConfirm || errors.passwordConfirm)
-                    }
-                  />
-                  <Block>
-                    <ConfirmationCodeField
-                      value={code}
-                      setValue={setCode}
-                      error={verification.error}
-                      isSubmitting={isSubmitting}
-                      email={verification.email}
-                      confirmButtonTitle="RESET PASSWORD"
-                      onPress={() => {
-                        console.log("111");
-                        submitForm();
+              <Formik
+                initialValues={initResetPasswordValues}
+                onSubmit={handleResetPasswordSubmit({ code, navigation })}
+                validationSchema={Yup.object().shape({
+                  password,
+                  passwordConfirm,
+                })}
+                enableReinitialize
+              >
+                {({
+                  handleChange,
+                  values,
+                  touched,
+                  errors,
+                  status,
+                  isSubmitting,
+                  submitForm,
+                }) => (
+                  <Block center>
+                    {/* <Input
+                      autoFocus
+                      password
+                      viewPass
+                      borderless
+                      color="white"
+                      iconColor="white"
+                      placeholder="New password"
+                      bgColor="transparent"
+                      placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
+                      style={[
+                        styles.input,
+                        state.active.password ? styles.inputActive : null,
+                      ]}
+                      onBlur={() => {
+                        toggleActive("password");
+                        handleBlur("password");
                       }}
-                      title={" "}
+                      onFocus={() => toggleActive("password")}
+                      onChangeText={handleChange("password")}
+                      value={values.password}
+                      bottomHelp
+                      help={
+                        touched.password
+                          ? status?.errors.password || errors.password
+                          : ""
+                      }
                     />
+
+                    <Input
+                      bgColor="transparent"
+                      placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
+                      borderless
+                      color="white"
+                      password
+                      viewPass
+                      placeholder="Repeat new password"
+                      iconColor="white"
+                      style={[
+                        styles.input,
+                        state.active.passwordConfirm
+                          ? styles.inputActive
+                          : null,
+                      ]}
+                      onBlur={() => {
+                        toggleActive("passwordConfirm");
+                        handleBlur("passwordConfirm");
+                      }}
+                      onFocus={() => toggleActive("passwordConfirm")}
+                      onChangeText={handleChange("passwordConfirm")}
+                      value={values.passwordConfirm}
+                      bottomHelp
+                      help={
+                        touched.passwordConfirm &&
+                        (status?.errors.passwordConfirm ||
+                          errors.passwordConfirm)
+                      }
+                    /> */}
+                    <TextInput
+                      autoFocus
+                      secureTextEntry={secureTextEntry.password}
+                      style={[styles.inputPaper]}
+                      textColor="white"
+                      autoCapitalize="none"
+                      label={
+                        <Text style={styles.inputPaperLabel}>Password</Text>
+                      }
+                      underlineStyle={styles.inputPaperUnderlineStyle}
+                      value={values.password}
+                      onChangeText={handleChange("password")}
+                      right={
+                        <TextInput.Icon
+                          icon="eye"
+                          color={() => "white"}
+                          onPress={() => {
+                            setSecureTextEntry((prevState) => ({
+                              ...prevState,
+                              password: !prevState.password,
+                            }));
+                          }}
+                        />
+                      }
+                    />
+                    <HelperText
+                      type="error"
+                      visible={
+                        touched.password &&
+                        (status?.errors.password || errors.password)
+                      }
+                    >
+                      {touched.password &&
+                        (status?.errors.password || errors.password)}
+                    </HelperText>
+                    <TextInput
+                      secureTextEntry={secureTextEntry.passwordConfirm}
+                      style={[styles.inputPaper]}
+                      textColor="white"
+                      autoCapitalize="none"
+                      label={
+                        <Text style={styles.inputPaperLabel}>
+                          Repeat Password
+                        </Text>
+                      }
+                      underlineStyle={styles.inputPaperUnderlineStyle}
+                      value={values.passwordConfirm}
+                      onChangeText={handleChange("passwordConfirm")}
+                      right={
+                        <TextInput.Icon
+                          icon="eye"
+                          color={() => "white"}
+                          onPress={() => {
+                            setSecureTextEntry((prevState) => ({
+                              ...prevState,
+                              passwordConfirm: !prevState.passwordConfirm,
+                            }));
+                          }}
+                        />
+                      }
+                    />
+                    <HelperText
+                      type="error"
+                      visible={
+                        touched.passwordConfirm &&
+                        (status?.errors.passwordConfirm ||
+                          errors.passwordConfirm)
+                      }
+                    >
+                      {touched.passwordConfirm &&
+                        (status?.errors.passwordConfirm ||
+                          errors.passwordConfirm)}
+                    </HelperText>
+                    <Block>
+                      <ConfirmationCodeField
+                        value={code}
+                        setValue={setCode}
+                        error={verification.error}
+                        isSubmitting={isSubmitting}
+                        email={verification.email}
+                        confirmButtonTitle="RESET PASSWORD"
+                        onPress={() => {
+                          console.log("111");
+                          submitForm();
+                        }}
+                        title={" "}
+                      />
+                    </Block>
                   </Block>
-                </Block>
-              )}
-            </Formik>
-          </Block>
-        </KeyboardAvoidingView>
-      </Block>
+                )}
+              </Formik>
+            </Block>
+          </KeyboardAvoidingView>
+        </Block>
+      </DismissKeyboardHOC>
     </LinearGradient>
   );
 };
@@ -184,6 +254,17 @@ const styles = StyleSheet.create({
   },
   inputActive: {
     borderBottomColor: "white",
+  },
+  inputPaper: {
+    width: width * 0.9,
+    backgroundColor: "transparent",
+  },
+  inputPaperLabel: {
+    color: materialTheme.COLORS.PLACEHOLDER,
+  },
+  inputPaperUnderlineStyle: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#fff",
   },
 });
 

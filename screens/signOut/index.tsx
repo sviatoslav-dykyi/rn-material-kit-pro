@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { AuthContext } from "../../navigation/context-utils";
+import { AuthContext } from "../../context/Auth";
 
 const SignOut = () => {
   const { signOut } = useContext(AuthContext);

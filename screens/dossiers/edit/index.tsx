@@ -24,6 +24,7 @@ import { fetchDossier, handleEditDossierSubmit } from "./utils";
 import { materialTheme } from "../../../constants";
 import { GOOGLE_API_KEY, prepareDossierBeforeForm } from "../form/utils";
 import useOnFocus from "../../../hooks/useOnFocus";
+import DismissKeyboardHOC from "../../../hoc/DismissKeyboard";
 
 const EditDossier = (): ReactElement => {
   const {
@@ -120,41 +121,43 @@ const EditDossier = (): ReactElement => {
         colors={["#6C24AA", "#15002B"]}
         style={[styles.signup, { flex: 1, paddingTop: 0 }]}
       >
-        <Block flex middle>
-          <KeyboardAvoidingView
-            //behavior={Platform.OS === "ios" ? "padding" : "position"}
-            enabled
-            keyboardVerticalOffset={0}
-          >
-            {dossier && (
-              <Formik
-                initialValues={prepareDossierBeforeForm(dossier)}
-                //onSubmit={() => {}}
-                enableReinitialize
-                onSubmit={handleEditDossierSubmit()}
-                validationSchema={Yup.object().shape({
-                  //property,
-                  // firstName,
-                  // lastName,
-                  // email,
-                  // phone,
-                  // password,
-                  // passwordConfirm,
-                })}
-              >
-                {(props) => (
-                  <Form
-                    {...props}
-                    state={state}
-                    toggleActive={toggleActive}
-                    mode="edit"
-                    addressText={addressText}
-                  ></Form>
-                )}
-              </Formik>
-            )}
-          </KeyboardAvoidingView>
-        </Block>
+        <DismissKeyboardHOC>
+          <Block flex middle>
+            <KeyboardAvoidingView
+              //behavior={Platform.OS === "ios" ? "padding" : "position"}
+              enabled
+              keyboardVerticalOffset={0}
+            >
+              {dossier && (
+                <Formik
+                  initialValues={prepareDossierBeforeForm(dossier)}
+                  //onSubmit={() => {}}
+                  enableReinitialize
+                  onSubmit={handleEditDossierSubmit()}
+                  validationSchema={Yup.object().shape({
+                    //property,
+                    // firstName,
+                    // lastName,
+                    // email,
+                    // phone,
+                    // password,
+                    // passwordConfirm,
+                  })}
+                >
+                  {(props) => (
+                    <Form
+                      {...props}
+                      state={state}
+                      toggleActive={toggleActive}
+                      mode="edit"
+                      addressText={addressText}
+                    ></Form>
+                  )}
+                </Formik>
+              )}
+            </KeyboardAvoidingView>
+          </Block>
+        </DismissKeyboardHOC>
       </LinearGradient>
     </ScrollView>
   );

@@ -21,6 +21,7 @@ import { DossierTypes } from "../../../utils/constants";
 import { handleCreateDossierSubmit, initCreateDossier } from "./utils";
 
 import { prepareDossierBeforeForm } from "../form/utils";
+import DismissKeyboardHOC from "../../../hoc/DismissKeyboard";
 const CreateDossier = (): ReactElement => {
   const { firstName, lastName, password, passwordConfirm, phone, email } =
     useValidation();
@@ -63,34 +64,36 @@ const CreateDossier = (): ReactElement => {
           { flex: 1, paddingTop: (theme.SIZES?.BASE || 0) * 4 },
         ]}
       >
-        <Block flex middle>
-          <KeyboardAvoidingView
-            //behavior={Platform.OS === "ios" ? "padding" : "position"}
-            enabled
-            keyboardVerticalOffset={0}
-          >
-            <Formik
-              initialValues={prepareDossierBeforeForm(initCreateDossier)}
-              onSubmit={handleCreateDossierSubmit()}
-              validationSchema={Yup.object().shape({
-                // firstName,
-                // lastName,
-                // email,
-                // phone,
-                // password,
-                // passwordConfirm,
-              })}
+        <DismissKeyboardHOC>
+          <Block flex middle>
+            <KeyboardAvoidingView
+              //behavior={Platform.OS === "ios" ? "padding" : "position"}
+              enabled
+              keyboardVerticalOffset={0}
             >
-              {(props) => (
-                <Form
-                  {...props}
-                  state={state}
-                  toggleActive={toggleActive}
-                ></Form>
-              )}
-            </Formik>
-          </KeyboardAvoidingView>
-        </Block>
+              <Formik
+                initialValues={prepareDossierBeforeForm(initCreateDossier)}
+                onSubmit={handleCreateDossierSubmit()}
+                validationSchema={Yup.object().shape({
+                  // firstName,
+                  // lastName,
+                  // email,
+                  // phone,
+                  // password,
+                  // passwordConfirm,
+                })}
+              >
+                {(props) => (
+                  <Form
+                    {...props}
+                    state={state}
+                    toggleActive={toggleActive}
+                  ></Form>
+                )}
+              </Formik>
+            </KeyboardAvoidingView>
+          </Block>
+        </DismissKeyboardHOC>
       </LinearGradient>
     </ScrollView>
   );

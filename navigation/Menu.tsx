@@ -13,7 +13,6 @@ import { useSafeArea } from "react-native-safe-area-context";
 
 import { Icon, Drawer as DrawerCustomItem } from "../components";
 import { Images, materialTheme } from "../constants";
-import { AuthContext } from "./context-utils";
 
 const { width } = Dimensions.get("screen");
 
@@ -44,7 +43,7 @@ function CustomDrawerContent({
     "Settings",
     "Components",
   ];
-
+  console.log("profile in Menu", profile);
   return (
     <Block
       style={styles.container}
@@ -64,7 +63,7 @@ function CustomDrawerContent({
               </TouchableOpacity>
             </Block>
             <Text h5 color={"white"}>
-              {profile?.firstName} {profile?.lastName}
+              {profile?.fullName}
             </Text>
           </Block>
         </TouchableWithoutFeedback>
