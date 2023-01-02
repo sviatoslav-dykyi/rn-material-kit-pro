@@ -147,7 +147,7 @@ const CreateDossiersForm = ({
     <Block flex={1} center space="between" style={{ paddingBottom: 200 }}>
       {/* <Text>22{JSON.stringify(values.images)}</Text> */}
       {/* <Text>{JSON.stringify(addressText)}</Text> */}
-      <Button
+      {/* <Button
         size="large"
         shadowless
         style={{ height: 48 }}
@@ -159,7 +159,7 @@ const CreateDossiersForm = ({
       >
         {mode === "create" ? "CREATE" : "EDIT"}
       </Button>
-      <Text>{JSON.stringify(values.images, null, 2)}</Text>
+      <Text>{JSON.stringify(values.images, null, 2)}</Text> */}
       <Button
         size="large"
         color="transparent"
@@ -196,7 +196,13 @@ const CreateDossiersForm = ({
           underlineStyle={styles.inputPaperUnderlineStyle}
           value={values.title}
           onChangeText={handleChange("title")}
-          left={<TextInput.Icon size={20} icon="eye" color={() => "white"} />}
+          left={
+            <TextInput.Icon
+              size={20}
+              icon="clipboard-text-outline"
+              color={() => "white"}
+            />
+          }
         />
 
         <HelperText
@@ -325,6 +331,7 @@ const CreateDossiersForm = ({
             }}
           />
         )}
+        {/* <Text>2222222==={values.property.propertyType.code}</Text> */}
         {values.property.propertyType.code ===
           DossierTypes.MULTI_FAMILY_HOUSE && (
           <MultiFamilyHouseForm
@@ -405,7 +412,6 @@ const CreateDossiersForm = ({
           </Button>
         </View>
         <Block>
-          <Text>{JSON.stringify(values.images, null, 2)}</Text>
           {values.images.map(
             ({ url, width, height }: DossierImage, i: number) => (
               <Block

@@ -34,8 +34,9 @@ export const handleCreateDossierSubmit = () => {
 };
 
 export const initCreateDossier: Dossier = {
+  title: "",
   property: {
-    buildingYear: 1850,
+    buildingYear: "",
     location: {
       address: {
         city: "",

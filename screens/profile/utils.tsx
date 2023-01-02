@@ -8,9 +8,14 @@ export const handleUserUpdateSubmit = ({ navigation }: any) => {
     { setSubmitting, setTouched }: FormikValues
   ): Promise<void> => {
     setSubmitting(true);
-    const response = await updateUser(user);
+
+    const id = user.id;
+    const rr = { firstName: "Adminn", id };
+    console.log("rr", rr);
+    const response = await updateUser(rr as any);
     const json = await response.json();
     if ([200, 201].includes(response.status)) {
+      console.log("json55", json);
       setTouched({});
       setSubmitting(false);
       return navigation.navigate("Home");

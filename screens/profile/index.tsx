@@ -18,6 +18,7 @@ import { styles } from "./styles";
 import { User } from "../../types/user";
 import useOnFocus from "../../hooks/useOnFocus";
 import DismissKeyboardHOC from "../../hoc/DismissKeyboard";
+import pick from "lodash/pick";
 
 const Profile = () => {
   const navigation = useNavigation();
@@ -85,7 +86,13 @@ const Profile = () => {
           >
             {user && (
               <Formik
-                initialValues={user}
+                initialValues={pick(user, [
+                  "firstName",
+                  "lastName",
+                  "phone",
+                  "email",
+                  "id",
+                ])}
                 onSubmit={handleUserUpdateSubmit({ navigation })}
                 validationSchema={Yup.object().shape({
                   firstName,

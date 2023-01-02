@@ -44,6 +44,7 @@ import { Dossier } from "../types";
 import { styles } from "../styles";
 import DropDownPicker from "react-native-dropdown-picker";
 import Rating from "./Rating";
+import { HelperText, TextInput } from "react-native-paper";
 
 const HouseForm = ({
   handleChange,
@@ -125,16 +126,14 @@ const HouseForm = ({
       >
         <Icon
           name="business"
-          color={materialTheme.COLORS.PLACEHOLDER}
+          color={"#fff"}
           family="MaterialIcons"
           size={20}
           style={styles.pickerLabelIcon}
         />
         <Text style={styles.pickerLabelText}>Subtype:</Text>
       </Block>
-      <Block
-        style={[styles.dropDownPickerBlock, { zIndex: openSubtype ? 3 : 1 }]}
-      >
+      <Block style={[styles.dropDownPickerBlock, { zIndex: 1111111111 }]}>
         <DropDownPicker
           listMode="SCROLLVIEW"
           open={openSubtype}
@@ -146,12 +145,13 @@ const HouseForm = ({
           theme="DARK"
           multiple={false}
           containerProps={styles.dropDownPickerContainer as any}
+          maxHeight={500}
         />
       </Block>
       <Block row style={[styles.pickerLabel, { marginTop: 15 }]}>
         <Icon
           name="vpn-key"
-          color={materialTheme.COLORS.PLACEHOLDER}
+          color={"#fff"}
           family="MaterialIcons"
           size={20}
           style={styles.pickerLabelIcon}
@@ -174,7 +174,7 @@ const HouseForm = ({
           containerProps={styles.dropDownPickerContainer as any}
         />
       </Block>
-      <Input
+      {/* <Input
         bgColor="transparent"
         placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
         borderless
@@ -202,8 +202,37 @@ const HouseForm = ({
         icon="build"
         family="MaterialIcons"
         iconSize={18}
+      /> */}
+      <TextInput
+        style={[styles.inputPaper]}
+        textColor="white"
+        autoCapitalize="none"
+        label={<Text style={styles.inputPaperLabel}>Building year</Text>}
+        underlineStyle={styles.inputPaperUnderlineStyle}
+        value={values.property.buildingYear}
+        onChangeText={handleChange("property.buildingYear")}
+        left={
+          <TextInput.Icon
+            size={20}
+            icon="wrench-outline"
+            color={() => "white"}
+          />
+        }
       />
-      <Input
+
+      <HelperText
+        type="error"
+        visible={
+          touched?.property?.buildingYear &&
+          (status?.errors.property.buildingYear ||
+            errors?.property?.buildingYear)
+        }
+      >
+        {touched?.property?.buildingYear &&
+          (status?.errors.property.buildingYear ||
+            errors?.property?.buildingYear)}
+      </HelperText>
+      {/* <Input
         bgColor="transparent"
         placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
         borderless
@@ -231,8 +260,33 @@ const HouseForm = ({
         icon="handyman"
         family="MaterialIcons"
         iconSize={18}
+      /> */}
+      <TextInput
+        style={[styles.inputPaper]}
+        textColor="white"
+        autoCapitalize="none"
+        label={<Text style={styles.inputPaperLabel}>Renovation year</Text>}
+        underlineStyle={styles.inputPaperUnderlineStyle}
+        value={values.property.renovationYear}
+        onChangeText={handleChange("property.renovationYear")}
+        left={
+          <TextInput.Icon size={20} icon="wrench-clock" color={() => "white"} />
+        }
       />
-      <Input
+
+      <HelperText
+        type="error"
+        visible={
+          touched.property?.renovationYear &&
+          (status?.errors.property.renovationYear ||
+            errors.property?.renovationYear)
+        }
+      >
+        {touched.property?.renovationYear &&
+          (status?.errors.property.renovationYear ||
+            errors?.property?.renovationYear)}
+      </HelperText>
+      {/* <Input
         bgColor="transparent"
         placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
         borderless
@@ -259,8 +313,31 @@ const HouseForm = ({
         icon="roofing"
         family="MaterialIcons"
         iconSize={18}
+      /> */}
+      <TextInput
+        style={[styles.inputPaper]}
+        textColor="white"
+        autoCapitalize="none"
+        label={<Text style={styles.inputPaperLabel}>Net living area (m²)</Text>}
+        underlineStyle={styles.inputPaperUnderlineStyle}
+        value={values.property.livingArea}
+        onChangeText={handleChange("property.livingArea")}
+        left={
+          <TextInput.Icon size={20} icon="dots-square" color={() => "white"} />
+        }
       />
-      <Input
+
+      <HelperText
+        type="error"
+        visible={
+          touched.property?.livingArea &&
+          (status?.errors.property.livingArea || errors.property?.livingArea)
+        }
+      >
+        {touched.property?.livingArea &&
+          (status?.errors.property.livingArea || errors.property?.livingArea)}
+      </HelperText>
+      {/* <Input
         bgColor="transparent"
         placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
         borderless
@@ -287,11 +364,38 @@ const HouseForm = ({
         icon="fullscreen"
         family="MaterialIcons"
         iconSize={18}
+      /> */}
+      <TextInput
+        style={[styles.inputPaper]}
+        textColor="white"
+        autoCapitalize="none"
+        label={<Text style={styles.inputPaperLabel}>Land area (m²)</Text>}
+        underlineStyle={styles.inputPaperUnderlineStyle}
+        value={values.property.landArea}
+        onChangeText={handleChange("property.landArea")}
+        left={
+          <TextInput.Icon
+            size={20}
+            icon="image-filter-hdr"
+            color={() => "white"}
+          />
+        }
       />
+
+      <HelperText
+        type="error"
+        visible={
+          touched.property?.landArea &&
+          (status?.errors.property.landArea || errors.property?.landArea)
+        }
+      >
+        {touched.property?.landArea &&
+          (status?.errors.property.landArea || errors.property?.landArea)}
+      </HelperText>
       <Block row style={[styles.pickerLabel, { marginTop: 15 }]}>
         <Icon
           name="battery-charging-full"
-          color={materialTheme.COLORS.PLACEHOLDER}
+          color={"#fff"}
           family="MaterialIcons"
           size={20}
           style={styles.pickerLabelIcon}
@@ -312,10 +416,10 @@ const HouseForm = ({
           theme="DARK"
           multiple={false}
           containerProps={styles.dropDownPickerContainer as any}
-          maxHeight={1500}
+          maxHeight={500}
         />
       </Block>
-      <Input
+      {/* <Input
         bgColor="transparent"
         placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
         borderless
@@ -345,8 +449,33 @@ const HouseForm = ({
         icon="stairs"
         family="MaterialIcons"
         iconSize={18}
+      /> */}
+      <TextInput
+        style={[styles.inputPaper]}
+        textColor="white"
+        autoCapitalize="none"
+        label={<Text style={styles.inputPaperLabel}>Number of floors</Text>}
+        underlineStyle={styles.inputPaperUnderlineStyle}
+        value={values.property.numberOfFloorsInBuilding}
+        onChangeText={handleChange("property.numberOfFloorsInBuilding")}
+        left={
+          <TextInput.Icon size={20} icon="stairs-box" color={() => "white"} />
+        }
       />
-      <Input
+
+      <HelperText
+        type="error"
+        visible={
+          touched.property?.numberOfFloorsInBuilding &&
+          (status?.errors.property.numberOfFloorsInBuilding ||
+            errors.property?.numberOfFloorsInBuilding)
+        }
+      >
+        {touched.property?.numberOfFloorsInBuilding &&
+          (status?.errors.property.numberOfFloorsInBuilding ||
+            errors.property?.numberOfFloorsInBuilding)}
+      </HelperText>
+      {/* <Input
         bgColor="transparent"
         placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
         borderless
@@ -374,8 +503,33 @@ const HouseForm = ({
         icon="meeting-room"
         family="MaterialIcons"
         iconSize={18}
+      /> */}
+      <TextInput
+        style={[styles.inputPaper]}
+        textColor="white"
+        autoCapitalize="none"
+        label={<Text style={styles.inputPaperLabel}>Number of rooms</Text>}
+        underlineStyle={styles.inputPaperUnderlineStyle}
+        value={values.property.numberOfRooms}
+        onChangeText={handleChange("property.numberOfRooms")}
+        left={
+          <TextInput.Icon size={20} icon="floor-plan" color={() => "white"} />
+        }
       />
-      <Input
+
+      <HelperText
+        type="error"
+        visible={
+          touched.property?.numberOfRooms &&
+          (status?.errors.property.numberOfRooms ||
+            errors.property?.numberOfRooms)
+        }
+      >
+        {touched.property?.numberOfRooms &&
+          (status?.errors.property.numberOfRooms ||
+            errors.property?.numberOfRooms)}
+      </HelperText>
+      {/* <Input
         bgColor="transparent"
         placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
         borderless
@@ -403,8 +557,37 @@ const HouseForm = ({
         icon="bathtub"
         family="MaterialIcons"
         iconSize={18}
+      /> */}
+      <TextInput
+        style={[styles.inputPaper]}
+        textColor="white"
+        autoCapitalize="none"
+        label={<Text style={styles.inputPaperLabel}>Number of bathrooms</Text>}
+        underlineStyle={styles.inputPaperUnderlineStyle}
+        value={values.property.numberOfBathrooms}
+        onChangeText={handleChange("property.numberOfBathrooms")}
+        left={
+          <TextInput.Icon
+            size={20}
+            icon="bathtub-outline"
+            color={() => "white"}
+          />
+        }
       />
-      <Input
+
+      <HelperText
+        type="error"
+        visible={
+          touched.property?.numberOfBathrooms &&
+          (status?.errors.property.numberOfBathrooms ||
+            errors.property?.numberOfBathrooms)
+        }
+      >
+        {touched.property?.numberOfBathrooms &&
+          (status?.errors.property.numberOfBathrooms ||
+            errors.property?.numberOfBathrooms)}
+      </HelperText>
+      {/* <Input
         bgColor="transparent"
         placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
         borderless
@@ -432,9 +615,32 @@ const HouseForm = ({
         icon="deck"
         family="MaterialIcons"
         iconSize={18}
+      /> */}
+      <TextInput
+        style={[styles.inputPaper]}
+        textColor="white"
+        autoCapitalize="none"
+        label={
+          <Text style={styles.inputPaperLabel}>Balcony / Terrace (m²)</Text>
+        }
+        underlineStyle={styles.inputPaperUnderlineStyle}
+        value={values.property.balconyArea}
+        onChangeText={handleChange("property.balconyArea")}
+        left={<TextInput.Icon size={20} icon="balcony" color={() => "white"} />}
       />
 
-      <Input
+      <HelperText
+        type="error"
+        visible={
+          touched.property?.balconyArea &&
+          (status?.errors.property.balconyArea || errors.property?.balconyArea)
+        }
+      >
+        {touched.property?.balconyArea &&
+          (status?.errors.property.balconyArea || errors.property?.balconyArea)}
+      </HelperText>
+
+      {/* <Input
         bgColor="transparent"
         placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
         borderless
@@ -461,8 +667,35 @@ const HouseForm = ({
         icon="directions-car"
         family="MaterialIcons"
         iconSize={18}
+      /> */}
+      <TextInput
+        style={[styles.inputPaper]}
+        textColor="white"
+        autoCapitalize="none"
+        label={<Text style={styles.inputPaperLabel}>Garage spaces</Text>}
+        underlineStyle={styles.inputPaperUnderlineStyle}
+        value={values.garage_spaces}
+        onChangeText={handleChange("garage_spaces")}
+        left={
+          <TextInput.Icon
+            size={20}
+            icon="garage-variant-lock"
+            color={() => "white"}
+          />
+        }
       />
-      <Input
+
+      <HelperText
+        type="error"
+        visible={
+          touched?.garage_spaces &&
+          (status?.errors.garage_spaces || errors.garage_spaces)
+        }
+      >
+        {touched?.property?.garage_spaces &&
+          (status?.errors.garage_spaces || errors.garage_spaces)}
+      </HelperText>
+      {/* <Input
         bgColor="transparent"
         placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
         borderless
@@ -492,9 +725,43 @@ const HouseForm = ({
         icon="local-parking"
         family="MaterialIcons"
         iconSize={18}
+      /> */}
+      <TextInput
+        style={[styles.inputPaper]}
+        textColor="white"
+        autoCapitalize="none"
+        label={
+          <Text style={styles.inputPaperLabel}>Outdoor parking spaces</Text>
+        }
+        underlineStyle={styles.inputPaperUnderlineStyle}
+        value={values.property.numberOfOutdoorParkingSpaces}
+        onChangeText={handleChange("property.numberOfOutdoorParkingSpaces")}
+        left={
+          <TextInput.Icon
+            size={20}
+            icon="car-brake-parking"
+            color={() => "white"}
+          />
+        }
       />
+
+      <HelperText
+        type="error"
+        visible={
+          touched?.property?.numberOfOutdoorParkingSpaces &&
+          (status?.errors.property.numberOfOutdoorParkingSpaces ||
+            errors.property?.numberOfOutdoorParkingSpaces)
+        }
+      >
+        {touched?.property?.numberOfOutdoorParkingSpaces &&
+          (status?.errors.property.numberOfOutdoorParkingSpaces ||
+            errors.property?.numberOfOutdoorParkingSpaces)}
+      </HelperText>
       <Block
-        style={[styles.checkboxBlock, { justifyContent: "space-between" }]}
+        style={[
+          styles.checkboxBlock,
+          { justifyContent: "space-between", paddingLeft: 15 },
+        ]}
         row
       >
         <BouncyCheckbox

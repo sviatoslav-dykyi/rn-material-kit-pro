@@ -354,6 +354,7 @@ function AppStack(props) {
             options={{
               header: ({ navigation, scene }) => (
                 <Header
+                  back
                   search
                   options
                   title="Profile"
@@ -370,6 +371,7 @@ function AppStack(props) {
             options={{
               header: ({ navigation, scene }) => (
                 <Header
+                  back
                   search
                   options
                   title="Show"

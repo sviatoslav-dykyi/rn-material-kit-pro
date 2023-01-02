@@ -1,5 +1,6 @@
 import { Dossier } from "../screens/dossiers/types";
-import { ForgotPassword, ResetPassword } from "../screens/forgotPassword/types";
+import { ForgotPassword, ResetPassword } from "../types/auth";
+
 import { User } from "../types/user";
 
 import { http } from "../utils/http";

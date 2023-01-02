@@ -38,8 +38,12 @@ export const handleEditDossierSubmit = () => {
     // const resp1 = await FileSystem.downloadAsync(imageUrl2, gifFileUri("1"));
     // console.log("resp1", resp1);
 
+    const firstImageObj = dossier.images[0];
+    console.log("firstImageObj", firstImageObj);
+    //return;
+
     const url = imageRx;
-    const outputDir = `${FileSystem.documentDirectory}${"some-title1"}.jpg`;
+    const outputDir = `${FileSystem.documentDirectory}${"some-title22222"}.jpg`;
 
     const downloadResumable = FileSystem.createDownloadResumable(
       url,
@@ -428,6 +432,7 @@ const upload = async (url: string, pathToImage: string) => {
     console.log("***** 'Fetch' section *****");
     const response = await FileSystem.uploadAsync(url, pathToImage, options);
 
+    console.log("response after fetch", response);
     //setLoading(false);
 
     if (response.status >= 200 && response.status < 300) {

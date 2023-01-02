@@ -22,9 +22,18 @@ import { handleCreateDossierSubmit, initCreateDossier } from "./utils";
 
 import { prepareDossierBeforeForm } from "../form/utils";
 import DismissKeyboardHOC from "../../../hoc/DismissKeyboard";
+import useOnFocus from "../../../hooks/useOnFocus";
 const CreateDossier = (): ReactElement => {
-  const { firstName, lastName, password, passwordConfirm, phone, email } =
-    useValidation();
+  const {
+    property,
+    firstName,
+    lastName,
+    password,
+    passwordConfirm,
+    phone,
+    email,
+  } = useValidation();
+  const [createDossierInit, setCreateDossierInit] = useState(initCreateDossier);
   const navigation = useNavigation();
 
   const [state, setState] = useState<any>({
@@ -44,6 +53,11 @@ const CreateDossier = (): ReactElement => {
         renovationYear: false,
       },
     },
+  });
+
+  useOnFocus(() => {
+    console.log("Here create");
+    setCreateDossierInit(initCreateDossier);
   });
 
   const toggleActive = (name: string) => {
@@ -72,9 +86,10 @@ const CreateDossier = (): ReactElement => {
               keyboardVerticalOffset={0}
             >
               <Formik
-                initialValues={prepareDossierBeforeForm(initCreateDossier)}
+                initialValues={prepareDossierBeforeForm(createDossierInit)}
                 onSubmit={handleCreateDossierSubmit()}
                 validationSchema={Yup.object().shape({
+                  property,
                   // firstName,
                   // lastName,
                   // email,
@@ -82,12 +97,14 @@ const CreateDossier = (): ReactElement => {
                   // password,
                   // passwordConfirm,
                 })}
+                enableReinitialize
               >
                 {(props) => (
                   <Form
                     {...props}
                     state={state}
                     toggleActive={toggleActive}
+                    addressText={""}
                   ></Form>
                 )}
               </Formik>

@@ -17,7 +17,7 @@ export const handleResetPasswordSubmit = ({
 }) => {
   return async (
     values: ResetPassword,
-    { setStatus, setSubmitting }: FormikValues
+    { setStatus, setSubmitting, setValues }: FormikValues
   ): Promise<void> => {
     setSubmitting(true);
     const response = await resetPassword(code, values);
@@ -31,6 +31,7 @@ export const handleResetPasswordSubmit = ({
         errors: {},
       });
       setSubmitting(false);
+      setValues(initResetPasswordValues);
       navigation?.navigate("Sign In", { email });
     } else {
       const { message } = json;
@@ -41,6 +42,7 @@ export const handleResetPasswordSubmit = ({
         },
       });
       setSubmitting(false);
+      setValues(initResetPasswordValues);
     }
   };
 };

@@ -111,6 +111,10 @@ const Home = () => {
                 }}
                 key={_id + " " + index}
               >
+                {/* <Text>
+                  {JSON.stringify(images)}==22=={images?.[0]?.url}
+                </Text> */}
+
                 <Block
                   card
                   space="between"

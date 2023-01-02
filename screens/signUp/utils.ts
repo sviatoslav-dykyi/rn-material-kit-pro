@@ -3,13 +3,22 @@ import { Dispatch, SetStateAction, useContext } from "react";
 import { confirmMail } from "../../api";
 import { Navigation } from "../../types/navigation";
 
+// export const initSignUpValues = {
+//   phone: "+493482932441",
+//   email: "zainіііi@gmail.com",
+//   password: "pass1234",
+//   passwordConfirm: "pass1234",
+//   firstName: "muhammadu",
+//   lastName: "zaini",
+// };
+
 export const initSignUpValues = {
-  phone: "+493482932441",
-  email: "zainіііi@gmail.com",
-  password: "pass1234",
-  passwordConfirm: "pass1234",
-  firstName: "muhammadu",
-  lastName: "zaini",
+  phone: "",
+  email: "",
+  password: "",
+  passwordConfirm: "",
+  firstName: "",
+  lastName: "",
 };
 
 export const handleVerification =

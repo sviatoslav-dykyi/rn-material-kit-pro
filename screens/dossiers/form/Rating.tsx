@@ -27,7 +27,7 @@ const Rating = ({
           <Block style={styles.checkboxBlock} row>
             <Icon
               name="countertops"
-              color={materialTheme.COLORS.PLACEHOLDER}
+              color="#fff"
               family="MaterialIcons"
               size={20}
               style={styles.pickerLabelIcon}
@@ -69,7 +69,7 @@ const Rating = ({
           <Block style={styles.checkboxBlock} row>
             <Icon
               name="hot-tub"
-              color={materialTheme.COLORS.PLACEHOLDER}
+              color="#fff"
               family="MaterialIcons"
               size={20}
               style={styles.pickerLabelIcon}
@@ -111,7 +111,7 @@ const Rating = ({
           <Block style={styles.checkboxBlock} row>
             <Icon
               name="view-day"
-              color={materialTheme.COLORS.PLACEHOLDER}
+              color="#fff"
               family="MaterialIcons"
               size={20}
               style={styles.pickerLabelIcon}
@@ -151,7 +151,7 @@ const Rating = ({
           <Block style={styles.checkboxBlock} row>
             <Icon
               name="web-asset"
-              color={materialTheme.COLORS.PLACEHOLDER}
+              color="#fff"
               family="MaterialIcons"
               size={20}
               style={styles.pickerLabelIcon}
@@ -196,7 +196,7 @@ const Rating = ({
           <Block style={styles.checkboxBlock} row>
             <Icon
               name="wb-shade"
-              color={materialTheme.COLORS.PLACEHOLDER}
+              color="#fff"
               family="MaterialIcons"
               size={20}
               style={styles.pickerLabelIcon}
@@ -237,7 +237,7 @@ const Rating = ({
           <Block style={styles.checkboxBlock} row>
             <Icon
               name="hot-tub"
-              color={materialTheme.COLORS.PLACEHOLDER}
+              color="#fff"
               family="MaterialIcons"
               size={20}
               style={styles.pickerLabelIcon}

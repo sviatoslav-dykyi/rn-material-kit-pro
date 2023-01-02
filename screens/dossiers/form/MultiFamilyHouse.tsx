@@ -43,6 +43,7 @@ import { Rating, AirbnbRating } from "react-native-ratings";
 import { Dossier } from "../types";
 import { styles } from "../styles";
 import DropDownPicker from "react-native-dropdown-picker";
+import { HelperText, TextInput } from "react-native-paper";
 
 const MultiFamilyHouseForm = ({
   handleChange,
@@ -113,7 +114,7 @@ const MultiFamilyHouseForm = ({
 
   return (
     <TouchableOpacity activeOpacity={1} onPress={handleCloseDropdownPickers}>
-      <Input
+      {/* <Input
         bgColor="transparent"
         placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
         borderless
@@ -141,14 +142,43 @@ const MultiFamilyHouseForm = ({
         icon="build"
         family="MaterialIcons"
         iconSize={18}
+      /> */}
+      <TextInput
+        style={[styles.inputPaper]}
+        textColor="white"
+        autoCapitalize="none"
+        label={<Text style={styles.inputPaperLabel}>Building year</Text>}
+        underlineStyle={styles.inputPaperUnderlineStyle}
+        value={values.property.buildingYear}
+        onChangeText={handleChange("property.buildingYear")}
+        left={
+          <TextInput.Icon
+            size={20}
+            icon="wrench-outline"
+            color={() => "white"}
+          />
+        }
       />
-      <Input
+
+      <HelperText
+        type="error"
+        visible={
+          touched?.property?.buildingYear &&
+          (status?.errors.property.buildingYear ||
+            errors?.property?.buildingYear)
+        }
+      >
+        {touched?.property?.buildingYear &&
+          (status?.errors.property.buildingYear ||
+            errors?.property?.buildingYear)}
+      </HelperText>
+      {/* <Input
         bgColor="transparent"
         placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
         borderless
         type="decimal-pad"
         color="white"
-        placeholder="Renovation year"
+        placeholder="Number of residential units"
         autoCapitalize="none"
         style={[
           styles.input,
@@ -170,8 +200,41 @@ const MultiFamilyHouseForm = ({
         icon="handyman"
         family="MaterialIcons"
         iconSize={18}
+      /> */}
+      <TextInput
+        style={[styles.inputPaper]}
+        textColor="white"
+        autoCapitalize="none"
+        label={
+          <Text style={styles.inputPaperLabel}>
+            Number of residential units
+          </Text>
+        }
+        underlineStyle={styles.inputPaperUnderlineStyle}
+        value={values.property.numberOfUnits}
+        onChangeText={handleChange("property.numberOfUnits")}
+        left={
+          <TextInput.Icon
+            size={20}
+            icon="wrench-outline"
+            color={() => "white"}
+          />
+        }
       />
-      <Input
+
+      <HelperText
+        type="error"
+        visible={
+          touched?.property?.numberOfUnits &&
+          (status?.errors.property.numberOfUnits ||
+            errors?.property?.numberOfUnits)
+        }
+      >
+        {touched?.property?.numberOfUnits &&
+          (status?.errors.property.numberOfUnits ||
+            errors?.property?.numberOfUnits)}
+      </HelperText>
+      {/* <Input
         bgColor="transparent"
         placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
         borderless
@@ -198,8 +261,31 @@ const MultiFamilyHouseForm = ({
         icon="roofing"
         family="MaterialIcons"
         iconSize={18}
+      /> */}
+      <TextInput
+        style={[styles.inputPaper]}
+        textColor="white"
+        autoCapitalize="none"
+        label={<Text style={styles.inputPaperLabel}>Net living area (m²)</Text>}
+        underlineStyle={styles.inputPaperUnderlineStyle}
+        value={values.property.livingArea}
+        onChangeText={handleChange("property.livingArea")}
+        left={
+          <TextInput.Icon size={20} icon="dots-square" color={() => "white"} />
+        }
       />
-      <Input
+
+      <HelperText
+        type="error"
+        visible={
+          touched.property?.livingArea &&
+          (status?.errors.property.livingArea || errors.property?.livingArea)
+        }
+      >
+        {touched.property?.livingArea &&
+          (status?.errors.property.livingArea || errors.property?.livingArea)}
+      </HelperText>
+      {/* <Input
         bgColor="transparent"
         placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
         borderless
@@ -226,8 +312,35 @@ const MultiFamilyHouseForm = ({
         icon="fullscreen"
         family="MaterialIcons"
         iconSize={18}
+      /> */}
+      <TextInput
+        style={[styles.inputPaper]}
+        textColor="white"
+        autoCapitalize="none"
+        label={<Text style={styles.inputPaperLabel}>Land area (m²)</Text>}
+        underlineStyle={styles.inputPaperUnderlineStyle}
+        value={values.property.landArea}
+        onChangeText={handleChange("property.landArea")}
+        left={
+          <TextInput.Icon
+            size={20}
+            icon="image-filter-hdr"
+            color={() => "white"}
+          />
+        }
       />
-      <Input
+
+      <HelperText
+        type="error"
+        visible={
+          touched.property?.landArea &&
+          (status?.errors.property.landArea || errors.property?.landArea)
+        }
+      >
+        {touched.property?.landArea &&
+          (status?.errors.property.landArea || errors.property?.landArea)}
+      </HelperText>
+      {/* <Input
         bgColor="transparent"
         placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
         borderless
@@ -255,7 +368,36 @@ const MultiFamilyHouseForm = ({
         icon="fullscreen"
         family="MaterialIcons"
         iconSize={18}
+      /> */}
+      <TextInput
+        style={[styles.inputPaper]}
+        textColor="white"
+        autoCapitalize="none"
+        label={
+          <Text style={styles.inputPaperLabel}>
+            Annual net rent income (EUR)
+          </Text>
+        }
+        underlineStyle={styles.inputPaperUnderlineStyle}
+        value={values.property.annualRentIncome}
+        onChangeText={handleChange("property.annualRentIncome")}
+        left={
+          <TextInput.Icon size={20} icon="currency-eur" color={() => "white"} />
+        }
       />
+
+      <HelperText
+        type="error"
+        visible={
+          touched.property?.annualRentIncome &&
+          (status?.errors.property.annualRentIncome ||
+            errors.property?.annualRentIncome)
+        }
+      >
+        {touched.property?.annualRentIncome &&
+          (status?.errors.property.annualRentIncome ||
+            errors.property.annualRentIncome)}
+      </HelperText>
       <Block style={styles.checkboxBlock} row>
         <Icon
           name="view-day"

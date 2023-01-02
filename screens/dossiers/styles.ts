@@ -57,6 +57,7 @@ export const styles = StyleSheet.create({
     paddingTop: 2,
     color: materialTheme.COLORS.PLACEHOLDER,
     fontSize: 12,
+    paddingBottom: 10,
   },
   pickerLabelIcon: {
     paddingLeft: 17,
@@ -73,8 +74,6 @@ export const styles = StyleSheet.create({
   },
   ratingBlock: {
     width: width * 0.9,
-    borderBottomColor: materialTheme.COLORS.BUTTON_COLOR,
-    borderBottomWidth: 1,
   },
   ratingBlockTitle: {
     color: materialTheme.COLORS.PLACEHOLDER,
