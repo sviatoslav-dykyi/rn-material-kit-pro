@@ -1,4 +1,4 @@
-import { getDossiers } from "../../api";
+import { getDossiers } from "../../api/dossier";
 
 export const fetchDossiers = async ({ setDossiers, setIsLoading }: any) => {
   setIsLoading(true);

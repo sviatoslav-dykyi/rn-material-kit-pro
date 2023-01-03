@@ -145,9 +145,11 @@ const Home = () => {
                       }}
                     >
                       <Text
-                        style={{
-                          width: "80%",
-                        }}
+                        style={
+                          {
+                            //width: "80%",
+                          }
+                        }
                       ></Text>
                       <Menu>
                         <MenuTrigger
@@ -233,7 +235,8 @@ const Home = () => {
                           fontSize: 15,
                           paddingLeft: 10,
                           color: "#38454f",
-                          width: "80%",
+                          flex: 1,
+                          flexWrap: "wrap",
                         }}
                       >
                         {title}

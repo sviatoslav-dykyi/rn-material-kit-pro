@@ -1,5 +1,4 @@
 import { FormikValues } from "formik";
-import { createDossier, editDossier, getDossierById } from "../../../api";
 import { removeEmptyString } from "../form/utils";
 import * as FileSystem from "expo-file-system";
 import { Dossier } from "../types";
@@ -8,6 +7,7 @@ import {
   FileSystemUploadType,
 } from "expo-file-system";
 import { getToken } from "../../../utils/common";
+import { getDossierById } from "../../../api/dossier";
 
 export const fetchDossier = async ({ setDossier, setIsLoading, id }: any) => {
   setIsLoading(true);

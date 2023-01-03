@@ -1,14 +1,14 @@
 import { FormikValues } from "formik";
 
-// export const initSignInValues = {
-//   email: "admin@gmail.com",
-//   password: "pass1234",
-// };
-
 export const initSignInValues = {
-  email: "",
-  password: "",
+  email: "admin@gmail.com",
+  password: "pass1234",
 };
+
+// export const initSignInValues = {
+//   email: "",
+//   password: "",
+// };
 
 export const handleSignInSubmit = ({
   signIn,

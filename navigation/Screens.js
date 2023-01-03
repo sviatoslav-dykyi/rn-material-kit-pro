@@ -186,7 +186,7 @@ function EditDossierStack(props) {
 function AppStack(props) {
   const [profile, setProfile] = useState();
   const { state } = useContext(AuthContext);
-
+  console.log("state in App stack", state);
   return (
     <Drawer.Navigator
       style={{ flex: 1 }}

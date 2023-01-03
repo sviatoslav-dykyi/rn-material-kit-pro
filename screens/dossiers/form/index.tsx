@@ -172,7 +172,7 @@ const CreateDossiersForm = ({
         shadowless
         onPress={() => navigation.navigate("Sign In" as never)}
       ></Button>
-      <Block center>
+      <Block center style={[]}>
         {/* <Input
           bgColor="transparent"
           placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
@@ -229,12 +229,12 @@ const CreateDossiersForm = ({
           />
           <Text style={styles.pickerLabelText}>Address:</Text>
         </Block>
-        <ScrollView
+        {/* <ScrollView
           horizontal={false}
           style={[styles.disableScrollingWarning, { marginBottom: -15 }]}
         >
           <ScrollView horizontal={true} style={styles.disableScrollingWarning}>
-            <View style={styles.googlePlacesContainer}>
+            <View style={[styles.googlePlacesContainer]}>
               <GooglePlacesAutocomplete
                 ref={ref}
                 placeholder="Search"
@@ -283,8 +283,71 @@ const CreateDossiersForm = ({
               />
             </View>
           </ScrollView>
+        </ScrollView> */}
+        <ScrollView
+          horizontal={true}
+          nestedScrollEnabled={true}
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
+          style={[
+            styles.googlePlacesContainer,
+            {
+              top: 135,
+              position: "absolute",
+              flex: 1,
+            },
+          ]}
+        >
+          <GooglePlacesAutocomplete
+            ref={ref}
+            placeholder="Search"
+            onPress={(_, details = null) => {
+              if (!details) return;
+              const { geometry, address_components } = details;
+              const latitude = geometry.location.lat;
+              const longitude = geometry.location.lng;
+              const postCode = findAddressDetail(
+                address_components,
+                "postal_code"
+              );
+              const city = findAddressDetail(
+                address_components,
+                "administrative_area_level_1"
+              );
+              const street = findAddressDetail(address_components, "route");
+              const houseNumber = findAddressDetail(
+                address_components,
+                "street_number"
+              );
+              const location = {
+                address: {
+                  postCode,
+                  city,
+                  street,
+                  houseNumber,
+                },
+                coordinates: {
+                  latitude,
+                  longitude,
+                },
+              };
+              console.log("location", location);
+              setFieldValue("property.location", location);
+            }}
+            styles={{
+              borderColor: "red",
+              borderWidth: 2,
+              height: 200,
+            }}
+            fetchDetails
+            query={{
+              key: GOOGLE_API_KEY,
+              language: "en",
+            }}
+          />
         </ScrollView>
-        <Block row style={styles.typesBlock}>
+
+        <Block row style={[styles.typesBlock, { marginTop: 70 }]}>
           {dossierTypes.map(({ value, label, icon }) => (
             <Button
               key={value}

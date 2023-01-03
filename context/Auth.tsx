@@ -37,6 +37,7 @@ export const AuthContext = React.createContext<any>(null);
 export const SIGN_IN = "SIGN_IN";
 export const SIGN_OUT = "SIGN_OUT";
 export const RESTORE_TOKEN = "RESTORE_TOKEN";
+export const UPDATE_USER = "UPDATE_USER";
 
 export type AuthActionTypes = {
   [SIGN_IN]: {
@@ -46,6 +47,9 @@ export type AuthActionTypes = {
   [SIGN_OUT]: undefined;
   [RESTORE_TOKEN]: {
     token: string | null;
+  };
+  [UPDATE_USER]: {
+    user: User | null;
   };
 };
 
@@ -58,6 +62,11 @@ const AuthReducer = (
       return {
         ...prevState,
         userToken: action.payload.token,
+      };
+    case "UPDATE_USER":
+      return {
+        ...prevState,
+        user: action.payload.user,
       };
     case "SIGN_IN":
       return {
@@ -111,6 +120,7 @@ const AuthProvider = ({ children }: Props) => {
   const authContext = React.useMemo(
     () => ({
       state,
+      dispatch,
       signIn: async (data: any, onSuccess: any, onError: any) => {
         const response = await signInRequest(data);
         const json = await response.json();
@@ -163,7 +173,7 @@ const AuthProvider = ({ children }: Props) => {
         //dispatch({ type: "SIGN_IN", token: "dummy-auth-token" });
       },
     }),
-    [state]
+    [state, dispatch]
   );
 
   return (

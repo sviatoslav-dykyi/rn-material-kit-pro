@@ -2,22 +2,24 @@ import { FormikValues } from "formik";
 import { getMe, updateUser } from "../../api";
 import { User } from "../../types/user";
 
-export const handleUserUpdateSubmit = ({ navigation }: any) => {
+export const handleUserUpdateSubmit = ({ navigation, dispatch }: any) => {
   return async (
     user: User,
     { setSubmitting, setTouched }: FormikValues
   ): Promise<void> => {
     setSubmitting(true);
-
-    const id = user.id;
-    const rr = { firstName: "Adminn", id };
-    console.log("rr", rr);
-    const response = await updateUser(rr as any);
+    const response = await updateUser(user);
     const json = await response.json();
     if ([200, 201].includes(response.status)) {
-      console.log("json55", json);
+      const { user } = json;
       setTouched({});
       setSubmitting(false);
+      dispatch({
+        type: "UPDATE_USER",
+        payload: {
+          user,
+        },
+      });
       return navigation.navigate("Home");
     }
     setSubmitting(false);

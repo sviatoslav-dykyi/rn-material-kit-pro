@@ -62,7 +62,7 @@ export const http = {
       body,
     });
   },
-  patch: async (endpoint: string, body = {}) => {
+  patch: async (endpoint: string, body: any) => {
     const token = await getToken();
     return fetch(`${REACT_BASE_URL}/${endpoint}`, {
       method: "PATCH",

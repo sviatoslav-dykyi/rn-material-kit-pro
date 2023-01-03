@@ -146,6 +146,8 @@ export const styles = StyleSheet.create({
   },
   imageBackground: {
     width: width * 0.9,
+    // borderWidth: 2,
+    // borderColor: "red",
   },
   showSubtitle: {
     fontSize: 20,

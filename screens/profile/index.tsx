@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
   Platform,
@@ -19,6 +19,7 @@ import { User } from "../../types/user";
 import useOnFocus from "../../hooks/useOnFocus";
 import DismissKeyboardHOC from "../../hoc/DismissKeyboard";
 import pick from "lodash/pick";
+import { AuthContext } from "../../context/Auth";
 
 const Profile = () => {
   const navigation = useNavigation();
@@ -53,6 +54,8 @@ const Profile = () => {
   };
 
   useOnFocus(() => fetchCurrentUser({ setUser, setIsLoading }));
+
+  const { dispatch } = useContext(AuthContext);
 
   if (isLoading) {
     return (
@@ -93,7 +96,7 @@ const Profile = () => {
                   "email",
                   "id",
                 ])}
-                onSubmit={handleUserUpdateSubmit({ navigation })}
+                onSubmit={handleUserUpdateSubmit({ navigation, dispatch })}
                 validationSchema={Yup.object().shape({
                   firstName,
                   lastName,

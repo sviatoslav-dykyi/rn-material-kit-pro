@@ -132,6 +132,7 @@ const SignIn = () => {
                 isSubmitting,
                 submitForm,
                 setSubmitting,
+                resetForm,
               }) => (
                 <Block flex>
                   <Block center>
@@ -190,7 +191,10 @@ const SignIn = () => {
                     <Text
                       color={theme.COLORS?.WHITE}
                       size={(theme.SIZES?.FONT || 0) * 0.75}
-                      onPress={() => navigation?.navigate("Forgot Password")}
+                      onPress={() => {
+                        resetForm();
+                        navigation?.navigate("Forgot Password");
+                      }}
                       style={{
                         alignSelf: "flex-end",
                         lineHeight: (theme.SIZES?.FONT || 0) * 2,
@@ -217,7 +221,10 @@ const SignIn = () => {
                       size="large"
                       color="transparent"
                       shadowless
-                      onPress={() => navigation?.navigate("Sign Up")}
+                      onPress={() => {
+                        resetForm();
+                        navigation?.navigate("Sign Up");
+                      }}
                     >
                       <Text
                         center
