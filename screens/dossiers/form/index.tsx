@@ -35,19 +35,36 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { FormikValues } from "formik";
 import { DossierTypeIds, DossierTypes } from "../../../utils/constants";
-import { Dossier } from "../types";
+import { Dossier, DossierImage, DossierImageError } from "../types";
 import { styles } from "../styles";
 import AppartmentForm from "./Appartment";
-import { Dimensions, ScrollView, View, Image } from "react-native";
+import {
+  Dimensions,
+  ScrollView,
+  View,
+  Image,
+  ActivityIndicator,
+  Alert,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
 import HouseForm from "./House";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { findAddressDetail, GOOGLE_API_KEY } from "./utils";
+import {
+  GooglePlacesAutocomplete,
+  GooglePlacesAutocompleteRef,
+} from "react-native-google-places-autocomplete";
+import {
+  findAddressDetail,
+  GOOGLE_API_KEY,
+  onGoogleAutocompleteChange,
+  pickImage,
+} from "./utils";
 import { Icon } from "../../../components";
 import MultiFamilyHouseForm from "./MultiFamilyHouse";
-import { DossierImage } from "./types";
 import useOnFocus from "../../../hooks/useOnFocus";
+import { upload } from "../edit/utils";
+import { REACT_BASE_URL } from "../../../constants/utils";
+import { ImagePickerResult } from "expo-image-picker";
 
 const CreateDossiersForm = ({
   handleChange,
@@ -59,20 +76,23 @@ const CreateDossiersForm = ({
   errors,
   setFieldValue,
   resetForm,
-  state,
-  toggleActive,
+  setTouched,
   isSubmitting,
   mode = "create",
   addressText,
 }: FormikValues): ReactElement => {
-  const navigation = useNavigation();
   const RichText = useRef(null);
-  const [height, setHeight] = useState(MIN_HEIGHT_RICH_CONTAINER);
-  const [image, setImage] = useState(null);
 
-  useOnFocus(() => {
-    if (mode === "create") resetForm();
-  });
+  const [height, setHeight] = useState(MIN_HEIGHT_RICH_CONTAINER);
+  const [imageIsLoading, setImageIsLoading] = useState(false);
+  const [imageErrors, setImageErrors] = useState<string[]>([]);
+
+  // useOnFocus(() => {
+  //   if (mode === "create") {
+  //     ref.current?.setAddressText("");
+  //     resetForm();
+  //   }
+  // });
 
   const handleEditorTextChange = (newText: string) =>
     setFieldValue("description", newText);
@@ -87,8 +107,9 @@ const CreateDossiersForm = ({
   const handleQualityRate = (field: keyof Dossier) => (rating: number) =>
     setFieldValue(field, qualityRates[rating - 1].value);
 
-  const handleConditionRate = (field: string) => (rating: number) =>
+  const handleConditionRate = (field: string) => (rating: number) => {
     setFieldValue(field, conditionRates[rating - 1].value);
+  };
 
   const hanleButtonTypePress = (code: DossierTypes) => () =>
     setFieldValue("property.propertyType.code", code);
@@ -105,73 +126,36 @@ const CreateDossiersForm = ({
     }
   };
 
-  const ref = useRef(null);
+  const ref = useRef<GooglePlacesAutocompleteRef | null>(null);
 
   useEffect(() => {
-    //console.log("addressText", addressText);
-    // @ts-ignore
     ref.current?.setAddressText(addressText);
   }, [addressText]);
 
-  const pickImage = async () => {
-    try {
-      let result: any = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsMultipleSelection: true,
-        allowsEditing: false,
-        aspect: [4, 3],
-        quality: 1,
-      });
-
-      if (!result.canceled) {
-        const auxImages = result.assets.map(
-          ({
-            uri,
-            fileName,
-            width,
-            height,
-          }: {
-            uri: string;
-            fileName: string;
-            width: number;
-            height: number;
-          }) => ({
-            filename: fileName,
-            url: uri,
-            width,
-            height,
-          })
-        );
-        setFieldValue("images", [...auxImages]);
-      }
-    } catch (err) {
-      console.log("error -----", err);
-    }
-  };
-
   return (
     <Block flex={1} center space="between" style={{ paddingBottom: 200 }}>
-      {/* <Text>22{JSON.stringify(values.images)}</Text> */}
-      {/* <Text>{JSON.stringify(addressText)}</Text> */}
-      {/* <Button
+      {/* <Text>errors={JSON.stringify(errors)}</Text>
+      <Text>touched={JSON.stringify(touched)}</Text> */}
+      {/* <Text>
+        values.property.hasLift={JSON.stringify(errors)}
+      </Text>
+      <Text>
+        {JSON.stringify(values.property.propertyType, values.dealType)}
+        {JSON.stringify(values)}
+      </Text> */}
+      <Button
         size="large"
         shadowless
         style={{ height: 48 }}
         color={materialTheme.COLORS.BUTTON_COLOR}
         onPress={() => {
-          //console.log("values", values);
           submitForm();
         }}
+        loading={isSubmitting}
       >
         {mode === "create" ? "CREATE" : "EDIT"}
       </Button>
-      <Text>{JSON.stringify(values.images, null, 2)}</Text> */}
-      <Button
-        size="large"
-        color="transparent"
-        shadowless
-        onPress={() => navigation.navigate("Sign In" as never)}
-      ></Button>
+
       <Block center style={[]}>
         {/* <Input
           bgColor="transparent"
@@ -210,13 +194,17 @@ const CreateDossiersForm = ({
             />
           }
         />
-
         <HelperText
           type="error"
           visible={touched.title && (status?.errors.title || errors.title)}
         >
           {touched.title && (status?.errors.title || errors.title)}
         </HelperText>
+        {/* city: Yup.number().required("City is not correct"),
+          street: Yup.number().required("Street is not correct"),
+          houseNumber: Yup.number().required("House number is not correct"), */}
+
+        {/* <Text>{JSON.stringify(values.property.location.address)}</Text> */}
         <Block row style={styles.googlePlacesLabelContainer}>
           <Icon
             name="location-on"
@@ -227,7 +215,7 @@ const CreateDossiersForm = ({
             size={20}
             style={styles.pickerLabelIcon}
           />
-          <Text style={styles.pickerLabelText}>Address:</Text>
+          <Text style={styles.pickerLabelText}>Address*</Text>
         </Block>
         {/* <ScrollView
           horizontal={false}
@@ -301,39 +289,11 @@ const CreateDossiersForm = ({
           <GooglePlacesAutocomplete
             ref={ref}
             placeholder="Search"
-            onPress={(_, details = null) => {
-              if (!details) return;
-              const { geometry, address_components } = details;
-              const latitude = geometry.location.lat;
-              const longitude = geometry.location.lng;
-              const postCode = findAddressDetail(
-                address_components,
-                "postal_code"
-              );
-              const city = findAddressDetail(
-                address_components,
-                "administrative_area_level_1"
-              );
-              const street = findAddressDetail(address_components, "route");
-              const houseNumber = findAddressDetail(
-                address_components,
-                "street_number"
-              );
-              const location = {
-                address: {
-                  postCode,
-                  city,
-                  street,
-                  houseNumber,
-                },
-                coordinates: {
-                  latitude,
-                  longitude,
-                },
-              };
-              console.log("location", location);
-              setFieldValue("property.location", location);
-            }}
+            onPress={onGoogleAutocompleteChange({
+              setFieldValue,
+              setTouched,
+              touched,
+            })}
             styles={{
               borderColor: "red",
               borderWidth: 2,
@@ -346,14 +306,34 @@ const CreateDossiersForm = ({
             }}
           />
         </ScrollView>
+        <HelperText
+          style={{ marginTop: 50 }}
+          type="error"
+          visible={
+            touched.property?.location?.address.postCode &&
+            Object.values(errors.property?.location?.address || []).filter(
+              (el) => el
+            ).length
+          }
+        >
+          {touched.property?.location?.address.postCode && (
+            <>
+              Address is not correct (
+              {Object.values(errors.property?.location?.address || [])?.map(
+                (el, _, arr) => `${el}${el !== arr[arr.length - 1] ? ", " : ""}`
+              )}
+              )
+            </>
+          )}
+        </HelperText>
 
-        <Block row style={[styles.typesBlock, { marginTop: 70 }]}>
+        <Block row style={[styles.typesBlock, { marginTop: 20 }]}>
           {dossierTypes.map(({ value, label, icon }) => (
             <Button
               key={value}
               style={[
                 styles.typesButtons,
-                values.property.propertyType.code == value && styles.selected,
+                values.property?.propertyType?.code == value && styles.selected,
                 { height: 65 },
               ]}
               size={"small"}
@@ -376,10 +356,9 @@ const CreateDossiersForm = ({
               status,
               errors,
               setFieldValue,
-              state,
-              toggleActive,
               handleQualityRate,
               handleConditionRate,
+              mode,
             }}
           />
         )}
@@ -393,14 +372,12 @@ const CreateDossiersForm = ({
               status,
               errors,
               setFieldValue,
-              state,
-              toggleActive,
               handleQualityRate,
               handleConditionRate,
+              mode,
             }}
           />
         )}
-        {/* <Text>2222222==={values.property.propertyType.code}</Text> */}
         {values.property.propertyType.code ===
           DossierTypes.MULTI_FAMILY_HOUSE && (
           <MultiFamilyHouseForm
@@ -412,10 +389,9 @@ const CreateDossiersForm = ({
               status,
               errors,
               setFieldValue,
-              state,
-              toggleActive,
               handleQualityRate,
               handleConditionRate,
+              mode,
             }}
           />
         )}
@@ -429,6 +405,7 @@ const CreateDossiersForm = ({
         >
           <RichEditor
             disabled={false}
+            initialContentHTML={values.description}
             containerStyle={[
               {
                 flexBasis: height,
@@ -458,9 +435,7 @@ const CreateDossiersForm = ({
             }}
           />
         </Block>
-        <View
-          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-        >
+        <Block flex row>
           <Button
             uppercase
             onPress={pickDocument}
@@ -472,55 +447,87 @@ const CreateDossiersForm = ({
           </Button>
           <Button
             uppercase
-            onPress={pickImage}
+            onPress={pickImage({
+              setImageIsLoading,
+              setImageErrors,
+              setFieldValue,
+              values,
+            })}
             icon={"picture"}
             iconFamily="AntDesign"
             iconSize={19}
           >
             Upload images
           </Button>
-        </View>
+        </Block>
         <Block>
-          {values.images.map(
-            ({ url, width, height }: DossierImage, i: number) => (
-              <Block
-                row
-                space="between"
-                key={url + " " + i}
-                style={styles.homeImageContainer}
-              >
-                <Image
-                  key={i + " " + Math.random()}
-                  style={{
-                    width: styles.homeImage.width,
-                    height:
-                      width > height
-                        ? (height / width) * styles.homeImage.width
-                        : 130,
-                  }}
-                  source={{ uri: url }}
-                  resizeMode="contain"
-                />
-                <Button
-                  onlyIcon
-                  shadowColor={true}
-                  icon="delete"
-                  iconFamily="MaterialIcons"
-                  color="red"
-                  iconSize={30}
-                  onPress={() => {
-                    const auxImages = [...values.images];
-                    auxImages.splice(i, 1);
-                    setFieldValue("images", auxImages);
-                  }}
-                  style={{ width: 40, height: 40 }}
-                ></Button>
-              </Block>
-            )
-          )}
+          {values.images?.map(({ url }: DossierImage, i: number) => (
+            <Block
+              row
+              space="between"
+              key={url + " " + i}
+              style={styles.homeImageContainer}
+            >
+              <Image
+                key={i + " " + Math.random()}
+                style={{
+                  width: styles.homeImage.width,
+                  height: 100,
+                  // height:
+                  //   width > height
+                  //     ? (height / width) * styles.homeImage.width
+                  //     : 130,
+                }}
+                source={{ uri: url }}
+                resizeMode="contain"
+              />
+              <Button
+                onlyIcon
+                shadowColor={true}
+                icon="delete"
+                iconFamily="MaterialIcons"
+                color="red"
+                iconSize={30}
+                onPress={() => {
+                  const auxImages = [...values.images];
+                  auxImages.splice(i, 1);
+                  setFieldValue("images", auxImages);
+                }}
+                style={{ width: 40, height: 40 }}
+              ></Button>
+            </Block>
+          ))}
+        </Block>
+        {imageIsLoading && (
+          <Block style={styles.activityIndicator}>
+            <ActivityIndicator
+              size="large"
+              color={materialTheme.COLORS.BUTTON_COLOR}
+            />
+          </Block>
+        )}
+        {imageErrors.map((error) => (
+          <View>
+            <Text style={{ color: "red" }}>{error}</Text>
+          </View>
+        ))}
+        <Block flex={10}>
+          <Button
+            size="large"
+            shadowless
+            style={{ height: 48 }}
+            color={materialTheme.COLORS.BUTTON_COLOR}
+            onPress={() => {
+              //console.log("values", values);
+              submitForm();
+            }}
+            loading={isSubmitting}
+          >
+            {mode === "create" ? "CREATE" : "EDIT"}
+          </Button>
         </Block>
       </Block>
-      <Block flex center style={{ marginTop: 20 }}>
+      {/* <Block flex center style={{ marginTop: 20 }}>
         <Button
           size="large"
           shadowless
@@ -548,7 +555,7 @@ const CreateDossiersForm = ({
             Already have an account? Sign In
           </Text>
         </Button>
-      </Block>
+      </Block> */}
     </Block>
   );
 };

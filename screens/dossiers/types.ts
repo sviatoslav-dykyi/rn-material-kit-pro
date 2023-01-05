@@ -3,6 +3,7 @@ import { DossierTypeIds, DossierTypes } from "../../utils/constants";
 
 export interface Dossier {
   _id?: string;
+  id?: string;
   title?: string;
   description?: "";
   dealType?: DealType; //*
@@ -59,10 +60,21 @@ export interface Dossier {
     garage_spaces?: number | string; // 1-6
   };
   countryCode?: "DE";
-  images: { filename: string; url: string }[];
+  images: DossierImage[];
   userDefinedFields?: any;
   attachments: [];
   updatedAt?: Date | string;
+}
+
+export interface DossierImage {
+  filename: string;
+  url: string;
+  caption?: string;
+}
+
+export interface DossierImageError {
+  error: { isOperational: boolean; status: string; statusCode: number };
+  message: string;
 }
 
 export interface DossierType {

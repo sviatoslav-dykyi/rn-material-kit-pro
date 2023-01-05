@@ -45,11 +45,13 @@ import { styles } from "../styles";
 import DropDownPicker from "react-native-dropdown-picker";
 import Rating from "./Rating";
 import { HelperText, TextInput } from "react-native-paper";
+import useOnFocus from "../../../hooks/useOnFocus";
 
 const HouseForm = ({
   handleChange,
   handleBlur,
   values,
+  setTouched,
   touched,
   status,
   errors,
@@ -58,6 +60,7 @@ const HouseForm = ({
   toggleActive,
   handleQualityRate,
   handleConditionRate,
+  mode,
 }: FormikValues): ReactElement => {
   const [openSubtype, setOpenSubtype] = useState(false);
   const [openDealtype, setOpenDealtype] = useState(false);
@@ -68,7 +71,17 @@ const HouseForm = ({
   const [itemsSubtype, setItemsSubtype] = useState(houseSubtypes);
   const [itemsDealtype, setItemsDealtype] = useState(dealTypes);
   const [itemsEnergyLabel, setItemsEnergyLabel] = useState(energyLabels);
+
+  // useOnFocus(() => {
+  //   if (mode === "create") resetDropDownValues();
+  // });
+
   useEffect(() => {
+    // if (dealtype)
+    //   setTouched({
+    //     ...touched,
+    //     dealType: true,
+    //   });
     setFieldValue("dealType", dealtype);
   }, [dealtype]);
 
@@ -100,6 +113,12 @@ const HouseForm = ({
       setOpenEnergyLabel(true);
     }
   }, [openEnergyLabel]);
+
+  // const resetDropDownValues = (): void => {
+  //   setDealtype("");
+  //   setSubtype("");
+  //   setEnergyLabel("");
+  // };
 
   const handleCloseSubtype = (): void => setOpenSubtype(false);
 
@@ -156,7 +175,7 @@ const HouseForm = ({
           size={20}
           style={styles.pickerLabelIcon}
         />
-        <Text style={styles.pickerLabelText}>Deal type:</Text>
+        <Text style={styles.pickerLabelText}>Deal type*</Text>
       </Block>
       <Block
         style={[styles.dropDownPickerBlock, { zIndex: openSubtype ? 3 : 1 }]}
@@ -207,7 +226,7 @@ const HouseForm = ({
         style={[styles.inputPaper]}
         textColor="white"
         autoCapitalize="none"
-        label={<Text style={styles.inputPaperLabel}>Building year</Text>}
+        label={<Text style={styles.inputPaperLabel}>Building year*</Text>}
         underlineStyle={styles.inputPaperUnderlineStyle}
         value={values.property.buildingYear}
         onChangeText={handleChange("property.buildingYear")}
@@ -318,7 +337,9 @@ const HouseForm = ({
         style={[styles.inputPaper]}
         textColor="white"
         autoCapitalize="none"
-        label={<Text style={styles.inputPaperLabel}>Net living area (m²)</Text>}
+        label={
+          <Text style={styles.inputPaperLabel}>Net living area (m²)*</Text>
+        }
         underlineStyle={styles.inputPaperUnderlineStyle}
         value={values.property.livingArea}
         onChangeText={handleChange("property.livingArea")}
@@ -369,7 +390,7 @@ const HouseForm = ({
         style={[styles.inputPaper]}
         textColor="white"
         autoCapitalize="none"
-        label={<Text style={styles.inputPaperLabel}>Land area (m²)</Text>}
+        label={<Text style={styles.inputPaperLabel}>Land area (m²)*</Text>}
         underlineStyle={styles.inputPaperUnderlineStyle}
         value={values.property.landArea}
         onChangeText={handleChange("property.landArea")}
@@ -384,13 +405,9 @@ const HouseForm = ({
 
       <HelperText
         type="error"
-        visible={
-          touched.property?.landArea &&
-          (status?.errors.property.landArea || errors.property?.landArea)
-        }
+        visible={status?.errors.property.landArea || errors.property?.landArea}
       >
-        {touched.property?.landArea &&
-          (status?.errors.property.landArea || errors.property?.landArea)}
+        {status?.errors.property.landArea || errors.property?.landArea}
       </HelperText>
       <Block row style={[styles.pickerLabel, { marginTop: 15 }]}>
         <Icon
@@ -674,8 +691,8 @@ const HouseForm = ({
         autoCapitalize="none"
         label={<Text style={styles.inputPaperLabel}>Garage spaces</Text>}
         underlineStyle={styles.inputPaperUnderlineStyle}
-        value={values.garage_spaces}
-        onChangeText={handleChange("garage_spaces")}
+        value={values.numberOfIndoorParkingSpaces}
+        onChangeText={handleChange("numberOfIndoorParkingSpaces")}
         left={
           <TextInput.Icon
             size={20}
@@ -688,12 +705,14 @@ const HouseForm = ({
       <HelperText
         type="error"
         visible={
-          touched?.garage_spaces &&
-          (status?.errors.garage_spaces || errors.garage_spaces)
+          touched?.numberOfIndoorParkingSpaces &&
+          (status?.errors.numberOfIndoorParkingSpaces ||
+            errors.numberOfIndoorParkingSpaces)
         }
       >
-        {touched?.property?.garage_spaces &&
-          (status?.errors.garage_spaces || errors.garage_spaces)}
+        {touched?.property?.numberOfIndoorParkingSpaces &&
+          (status?.errors.numberOfIndoorParkingSpaces ||
+            errors.numberOfIndoorParkingSpaces)}
       </HelperText>
       {/* <Input
         bgColor="transparent"

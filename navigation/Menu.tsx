@@ -43,7 +43,7 @@ function CustomDrawerContent({
     "Settings",
     "Components",
   ];
-  console.log("profile in Menu", profile);
+  //console.log("profile in Menu", profile);
   return (
     <Block
       style={styles.container}

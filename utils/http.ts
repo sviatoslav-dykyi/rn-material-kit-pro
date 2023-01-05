@@ -50,16 +50,16 @@ export const http = {
       },
     });
   },
-  put: async (endpoint: string, body: FormData) => {
+  put: async (endpoint: string, body = {}) => {
     const token = await getToken();
     return fetch(`${REACT_BASE_URL}/${endpoint}`, {
       method: "PUT",
       mode: "cors",
       headers: {
-        "Content-Type": ContentTypeMIME.MULTIPART_FORM_DATA,
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body,
+      body: JSON.stringify(body),
     });
   },
   patch: async (endpoint: string, body: any) => {

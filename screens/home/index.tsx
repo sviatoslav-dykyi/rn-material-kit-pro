@@ -33,11 +33,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { styles } from "../dossiers/styles";
 import { materialTheme } from "../../constants";
-import { deleteDossier } from "../../api";
 import { dealTypes, dossierTypes } from "../dossiers/utils";
 import moment from "moment";
 import { useIsFocused } from "@react-navigation/native";
 import useOnFocus from "../../hooks/useOnFocus";
+import { deleteDossier } from "../../api/dossier";
 
 const Home = () => {
   const [dossiers, setDossiers] = useState<Dossier[]>([]);

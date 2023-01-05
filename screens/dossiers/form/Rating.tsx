@@ -39,14 +39,12 @@ const Rating = ({
             <AirbnbRating
               count={qualityRates.length}
               ratingContainerStyle={styles.ratingContainerStyle}
-              onFinishRating={handleQualityRate(
-                values.property.quality.kitchen
-              )}
+              onFinishRating={handleQualityRate("property.quality.kitchen")}
               reviews={qualityRates.map(
                 ({ label, description }) => `${label}: ${description}`
               )}
               defaultRating={getQualityRatingIndex(
-                values.property.quality.kitchen
+                values.property.quality?.kitchen
               )}
               reviewSize={RATING_REVIEW_SIZE}
               size={RATING_SIZE}
@@ -55,12 +53,10 @@ const Rating = ({
             <AirbnbRating
               count={conditionRates.length}
               ratingContainerStyle={styles.ratingContainerStyle}
-              onFinishRating={handleConditionRate(
-                values.property.condition.kitchen
-              )}
+              onFinishRating={handleConditionRate("property.condition.kitchen")}
               reviews={conditionRates.map(({ label }) => label)}
               defaultRating={getConditionRatingIndex(
-                values.property.condition.kitchen
+                values.property.condition?.kitchen
               )}
               reviewSize={RATING_REVIEW_SIZE}
               size={RATING_SIZE}
@@ -83,12 +79,10 @@ const Rating = ({
             <AirbnbRating
               count={qualityRates.length}
               ratingContainerStyle={styles.ratingContainerStyle}
-              onFinishRating={handleQualityRate(
-                values.property.quality.bathrooms
-              )}
+              onFinishRating={handleQualityRate("property.quality.bathrooms")}
               reviews={qualityRates.map(({ label, description }) => label)}
               defaultRating={getQualityRatingIndex(
-                values.property.quality.bathrooms
+                values.property.quality?.bathrooms
               )}
               reviewSize={RATING_REVIEW_SIZE}
               size={RATING_SIZE}
@@ -98,11 +92,11 @@ const Rating = ({
               count={conditionRates.length}
               ratingContainerStyle={styles.ratingContainerStyle}
               onFinishRating={handleConditionRate(
-                values.property.condition.bathrooms
+                "property.condition.bathrooms"
               )}
               reviews={conditionRates.map(({ label }) => label)}
               defaultRating={getConditionRatingIndex(
-                values.property.condition.bathrooms
+                values.property.condition?.bathrooms
               )}
               reviewSize={RATING_REVIEW_SIZE}
               size={RATING_SIZE}
@@ -123,12 +117,10 @@ const Rating = ({
             <AirbnbRating
               count={qualityRates.length}
               ratingContainerStyle={styles.ratingContainerStyle}
-              onFinishRating={handleQualityRate(
-                values.property.quality.flooring
-              )}
+              onFinishRating={handleQualityRate("property.quality.flooring")}
               reviews={qualityRates.map(({ label }) => label)}
               defaultRating={getQualityRatingIndex(
-                values.property.quality.flooring
+                values.property.quality?.flooring
               )}
               reviewSize={RATING_REVIEW_SIZE}
               size={RATING_SIZE}
@@ -138,11 +130,11 @@ const Rating = ({
               count={conditionRates.length}
               ratingContainerStyle={styles.ratingContainerStyle}
               onFinishRating={handleConditionRate(
-                values.property.condition.flooring
+                "property.condition.flooring"
               )}
               reviews={conditionRates.map(({ label }) => label)}
               defaultRating={getConditionRatingIndex(
-                values.property.condition.flooring
+                values.property.condition?.flooring
               )}
               reviewSize={RATING_REVIEW_SIZE}
               size={RATING_SIZE}
@@ -164,12 +156,10 @@ const Rating = ({
             <AirbnbRating
               count={qualityRates.length}
               ratingContainerStyle={styles.ratingContainerStyle}
-              onFinishRating={handleQualityRate(
-                values.property.quality.windows
-              )}
+              onFinishRating={handleQualityRate("property.quality.windows")}
               reviews={qualityRates.map(({ label }) => label)}
               defaultRating={getQualityRatingIndex(
-                values.property.quality.windows
+                values.property.quality?.windows
               )}
               reviewSize={RATING_REVIEW_SIZE}
               size={RATING_SIZE}
@@ -178,12 +168,10 @@ const Rating = ({
             <AirbnbRating
               count={conditionRates.length}
               ratingContainerStyle={styles.ratingContainerStyle}
-              onFinishRating={handleConditionRate(
-                values.property.condition.windows
-              )}
+              onFinishRating={handleConditionRate("property.condition.windows")}
               reviews={conditionRates.map(({ label }) => label)}
               defaultRating={getConditionRatingIndex(
-                values.property.condition.windows
+                values.property.condition?.windows
               )}
               reviewSize={RATING_REVIEW_SIZE}
               size={RATING_SIZE}
@@ -209,9 +197,7 @@ const Rating = ({
             <AirbnbRating
               count={qualityRates.length}
               ratingContainerStyle={styles.ratingContainerStyle}
-              onFinishRating={handleQualityRate(
-                values.property.quality.masonry
-              )}
+              onFinishRating={handleQualityRate("property.quality.masonry")}
               reviews={qualityRates.map(({ label, description }) => label)}
               defaultRating={defaultRating}
               reviewSize={RATING_REVIEW_SIZE}
@@ -221,9 +207,7 @@ const Rating = ({
             <AirbnbRating
               count={conditionRates.length}
               ratingContainerStyle={styles.ratingContainerStyle}
-              onFinishRating={handleConditionRate(
-                values.property.condition.masonry
-              )}
+              onFinishRating={handleConditionRate("property.condition.masonry")}
               reviews={conditionRates.map(({ label }) => label)}
               defaultRating={defaultRating}
               reviewSize={RATING_REVIEW_SIZE}
@@ -250,12 +234,10 @@ const Rating = ({
             <AirbnbRating
               count={qualityRates.length}
               ratingContainerStyle={styles.ratingContainerStyle}
-              onFinishRating={handleQualityRate(
-                values.property.quality.overall
-              )}
+              onFinishRating={handleQualityRate("property.quality.overall")}
               reviews={qualityRates.map(({ label, description }) => label)}
               defaultRating={getQualityRatingIndex(
-                values.property.quality.overall
+                values.property.quality?.overall
               )}
               reviewSize={RATING_REVIEW_SIZE}
               size={RATING_SIZE}
@@ -264,12 +246,10 @@ const Rating = ({
             <AirbnbRating
               count={conditionRates.length}
               ratingContainerStyle={styles.ratingContainerStyle}
-              onFinishRating={handleConditionRate(
-                values.property.condition.overall
-              )}
+              onFinishRating={handleConditionRate("property.condition.overall")}
               reviews={conditionRates.map(({ label }) => label)}
               defaultRating={getConditionRatingIndex(
-                values.property.condition.overall
+                values.property.condition?.overall
               )}
               reviewSize={RATING_REVIEW_SIZE}
               size={RATING_SIZE}

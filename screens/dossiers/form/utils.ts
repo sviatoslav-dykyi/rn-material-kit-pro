@@ -1,11 +1,17 @@
 import {
   AddressComponent,
+  GooglePlaceData,
+  GooglePlaceDetail,
   PlaceType,
 } from "react-native-google-places-autocomplete";
 import { DossierTypes } from "../../../utils/constants";
 import { Dossier } from "../types";
 import { conditionRates, qualityRates } from "../utils";
 import omit from "lodash/omit";
+import * as ImagePicker from "expo-image-picker";
+import { upload } from "../edit/utils";
+import { REACT_BASE_URL } from "../../../constants/utils";
+import { PickImageProps } from "./types";
 
 export const findAddressDetail = (
   arr: AddressComponent[],
@@ -78,6 +84,7 @@ export const prepareDossierBeforeForm = (data: Dossier): Dossier => {
       buildingYear: data.property.buildingYear.toString() ?? "",
       floorNumber: data.property.floorNumber?.toString() ?? "",
       gardenArea: data.property.gardenArea?.toString() ?? "",
+      garage_spaces: data.property.garage_spaces?.toString() ?? "",
       livingArea: data.property.livingArea?.toString() ?? "",
       numberOfBathrooms: data.property.numberOfBathrooms?.toString() ?? "",
       numberOfFloorsInBuilding:
@@ -199,3 +206,95 @@ export const GOOGLE_API_KEY = "AIzaSyC1jikr2uE40MmY83vnuDzFCYFhZWYAolg";
 //   },
 // ],
 // }
+
+export const pickImage =
+  ({
+    setImageIsLoading,
+    setImageErrors,
+    setFieldValue,
+    values,
+  }: PickImageProps) =>
+  async () => {
+    try {
+      setImageIsLoading(true);
+      setImageErrors([]);
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsMultipleSelection: true,
+        allowsEditing: false,
+        aspect: [4, 3],
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        const imagePromises = result.assets.map(({ uri }) =>
+          upload(`${REACT_BASE_URL}/dossiers/images`, uri)
+        );
+        Promise.all(imagePromises)
+          .then((result) => {
+            const errors = result.filter((el) => el.error);
+            const success = result.filter((el) => !el.error);
+            setImageErrors([...errors.map(({ message }) => message)]);
+            setFieldValue("images", [
+              ...values.images,
+              ...success.map((el) => ({ ...el, caption: el.filename })),
+            ]);
+            return setImageIsLoading(false);
+          })
+          .catch((error) => {
+            console.log("error :", error);
+            setImageIsLoading(false);
+          });
+      }
+    } catch (err) {
+      console.log(err);
+      setImageIsLoading(false);
+    }
+  };
+
+export const onGoogleAutocompleteChange =
+  ({
+    setFieldValue,
+    setTouched,
+    touched,
+  }: {
+    setFieldValue: (
+      field: string,
+      value: any,
+      shouldValidate?: boolean
+    ) => void;
+    setTouched: any;
+    touched: any;
+  }) =>
+  (_: GooglePlaceData, details = null as GooglePlaceDetail | null) => {
+    if (!details) return;
+    setTouched({
+      ...touched,
+      property: { location: { address: { postCode: true } } },
+    });
+    const { geometry, address_components } = details;
+    const latitude = geometry.location.lat;
+    const longitude = geometry.location.lng;
+    console.log("address_components", address_components);
+    const postCode = findAddressDetail(address_components, "postal_code");
+    const city = findAddressDetail(
+      address_components,
+      "administrative_area_level_1"
+    );
+    const street = findAddressDetail(address_components, "route");
+    const houseNumber = findAddressDetail(address_components, "street_number");
+    const location = {
+      address: {
+        postCode,
+        city,
+        street,
+        houseNumber,
+      },
+      coordinates: {
+        latitude,
+        longitude,
+      },
+    };
+    console.log("location", location);
+    setFieldValue("property.location", location);
+  };

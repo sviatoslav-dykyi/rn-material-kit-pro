@@ -46,7 +46,8 @@ import { AirbnbRating } from "react-native-ratings";
 import { Dossier } from "../types";
 import { styles } from "../styles";
 import { useEvent } from "react-native-reanimated";
-import { HelperText, TextInput } from "react-native-paper";
+import { HelperText, TextInput, Checkbox } from "react-native-paper";
+import useOnFocus from "../../../hooks/useOnFocus";
 
 const AppartmentForm = ({
   handleChange,
@@ -56,10 +57,12 @@ const AppartmentForm = ({
   status,
   errors,
   setFieldValue,
+  setTouched,
   state,
   toggleActive,
   handleQualityRate,
   handleConditionRate,
+  mode,
 }: FormikValues): ReactElement => {
   const [openSubtype, setOpenSubtype] = useState(false);
   const [openDealtype, setOpenDealtype] = useState(false);
@@ -70,6 +73,17 @@ const AppartmentForm = ({
   const [itemsSubtype, setItemsSubtype] = useState(appartmentSubtypes);
   const [itemsDealtype, setItemsDealtype] = useState(dealTypes);
   const [itemsEnergyLabel, setItemsEnergyLabel] = useState(energyLabels);
+  const [checkboxes, setCheckboxes] = useState({
+    isNew: values.property.isNew,
+    hasLift: values.property.hasLift,
+  });
+
+  useOnFocus(() => {
+    if (mode === "create") {
+      //resetDropDownValues();
+      //resetCheckboxed();
+    }
+  });
 
   useEffect(() => {
     setFieldValue("dealType", dealtype);
@@ -82,6 +96,11 @@ const AppartmentForm = ({
   useEffect(() => {
     setFieldValue("energyLabel", energyLabel);
   }, [energyLabel]);
+
+  // useEffect(() => {
+  //   setFieldValue("property.isNew", checkboxes.isNew);
+  //   setFieldValue("property.hasLift", checkboxes.hasLift);
+  // }, [checkboxes]);
 
   useEffect(() => {
     if (openSubtype) {
@@ -103,6 +122,18 @@ const AppartmentForm = ({
       setOpenEnergyLabel(true);
     }
   }, [openEnergyLabel]);
+
+  const resetDropDownValues = (): void => {
+    setDealtype("");
+    setSubtype("");
+    setEnergyLabel("");
+  };
+
+  const resetCheckboxed = (): void =>
+    setCheckboxes({
+      isNew: false,
+      hasLift: false,
+    });
 
   const handleCloseSubtype = (): void => setOpenSubtype(false);
 
@@ -162,7 +193,7 @@ const AppartmentForm = ({
               size={20}
               style={styles.pickerLabelIcon}
             />
-            <Text style={styles.pickerLabelText}>Deal type:</Text>
+            <Text style={styles.pickerLabelText}>Deal type*</Text>
           </Block>
           <Block
             style={[
@@ -184,6 +215,14 @@ const AppartmentForm = ({
               //maxHeight={1500}
             />
           </Block>
+          <HelperText
+            type="error"
+            visible={
+              touched?.dealType && (status?.errors.dealType || errors?.dealType)
+            }
+          >
+            {touched?.dealType && (status?.errors.dealType || errors?.dealType)}
+          </HelperText>
         </Block>
         {/* <Input
           bgColor="transparent"
@@ -218,7 +257,7 @@ const AppartmentForm = ({
           style={[styles.inputPaper]}
           textColor="white"
           autoCapitalize="none"
-          label={<Text style={styles.inputPaperLabel}>Building year</Text>}
+          label={<Text style={styles.inputPaperLabel}>Building year*</Text>}
           underlineStyle={styles.inputPaperUnderlineStyle}
           value={values.property.buildingYear}
           onChangeText={handleChange("property.buildingYear")}
@@ -336,7 +375,7 @@ const AppartmentForm = ({
           textColor="white"
           autoCapitalize="none"
           label={
-            <Text style={styles.inputPaperLabel}>Net living area (m²)</Text>
+            <Text style={styles.inputPaperLabel}>Net living area (m²)*</Text>
           }
           underlineStyle={styles.inputPaperUnderlineStyle}
           value={values.property.livingArea}
@@ -754,8 +793,8 @@ const AppartmentForm = ({
           autoCapitalize="none"
           label={<Text style={styles.inputPaperLabel}>Garage spaces</Text>}
           underlineStyle={styles.inputPaperUnderlineStyle}
-          value={values.garage_spaces}
-          onChangeText={handleChange("garage_spaces")}
+          value={values.numberOfIndoorParkingSpaces}
+          onChangeText={handleChange("numberOfIndoorParkingSpaces")}
           left={
             <TextInput.Icon
               size={20}
@@ -768,12 +807,14 @@ const AppartmentForm = ({
         <HelperText
           type="error"
           visible={
-            touched?.garage_spaces &&
-            (status?.errors.garage_spaces || errors.garage_spaces)
+            touched?.numberOfIndoorParkingSpaces &&
+            (status?.errors.numberOfIndoorParkingSpaces ||
+              errors.numberOfIndoorParkingSpaces)
           }
         >
-          {touched?.property?.garage_spaces &&
-            (status?.errors.garage_spaces || errors.garage_spaces)}
+          {touched?.property?.numberOfIndoorParkingSpaces &&
+            (status?.errors.numberOfIndoorParkingSpaces ||
+              errors.numberOfIndoorParkingSpaces)}
         </HelperText>
         {/* <Input
           bgColor="transparent"
@@ -837,6 +878,17 @@ const AppartmentForm = ({
             (status?.errors.property.numberOfOutdoorParkingSpaces ||
               errors.property?.numberOfOutdoorParkingSpaces)}
         </HelperText>
+        {/* <Text>
+          checkboxes.isNew={JSON.stringify(Boolean(checkboxes.isNew))}
+        </Text>
+        <Text>
+          checkboxes.isNew={JSON.stringify(Boolean(checkboxes.hasLift))}
+        </Text>
+        <Checkbox
+          status={Boolean(values.property.isNew) ? "checked" : "unchecked"}
+          onPress={() => !values.property.isNew}
+        />
+        <Text></Text> */}
         <Block style={styles.checkboxBlock} row>
           <BouncyCheckbox
             size={25}
@@ -844,21 +896,48 @@ const AppartmentForm = ({
             textComponent={
               <Text style={styles.checkboxText}>New building</Text>
             }
-            isChecked={Boolean(values.isNew)}
-            onPress={(isChecked: boolean) => {
-              setFieldValue("isNew", isChecked);
+            isChecked={Boolean(checkboxes.isNew)}
+            onPress={(isNew: boolean) => {
+              setCheckboxes((prevState) => ({
+                ...prevState,
+                isNew,
+              }));
             }}
             style={styles.checkbox}
           />
+          {/* <BouncyCheckbox
+            size={25}
+            fillColor={materialTheme.COLORS.BUTTON_COLOR}
+            textComponent={
+              <Text style={styles.checkboxText}>New building</Text>
+            }
+            isChecked={Boolean(values.property.isNew)}
+            onPress={(isChecked: boolean) => {
+              setFieldValue("property.isNew", isChecked);
+            }}
+            style={styles.checkbox}
+          /> */}
           <BouncyCheckbox
             size={25}
             fillColor={materialTheme.COLORS.BUTTON_COLOR}
             textComponent={<Text style={styles.checkboxText}>Lift</Text>}
-            isChecked={Boolean(values.hasLift)}
-            onPress={(isChecked: boolean) => {
-              setFieldValue("hasLift", isChecked);
+            isChecked={Boolean(checkboxes.hasLift)}
+            onPress={(hasLift: boolean) => {
+              setCheckboxes((prevState) => ({
+                ...prevState,
+                hasLift,
+              }));
             }}
           />
+          {/* <BouncyCheckbox
+            size={25}
+            fillColor={materialTheme.COLORS.BUTTON_COLOR}
+            textComponent={<Text style={styles.checkboxText}>Lift</Text>}
+            isChecked={Boolean(values.property.hasLift)}
+            onPress={(isChecked: boolean) => {
+              setFieldValue("property.hasLift", isChecked);
+            }}
+          /> */}
         </Block>
         <Rating
           values={values}

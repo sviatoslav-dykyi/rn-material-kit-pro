@@ -43,32 +43,7 @@ const EditDossier = (): ReactElement => {
   const [isLoaing, setIsLoading] = useState(false);
   const [addressText, setAddressText] = useState("");
 
-  const [state, setState] = useState<any>({
-    active: {
-      title: false,
-      property: {
-        balconyArea: false,
-        buildingYear: false,
-        floorNumber: false,
-        gardenArea: false,
-        livingArea: false,
-        numberOfBathrooms: false,
-        numberOfFloorsInBuilding: false,
-        numberOfIndoorParkingSpaces: false,
-        numberOfOutdoorParkingSpaces: false,
-        numberOfRooms: false,
-        renovationYear: false,
-      },
-    },
-  });
-
   useOnFocus(() => fetchDossier({ setDossier, setIsLoading, id }));
-
-  const toggleActive = (name: string) => {
-    const { active } = state;
-    active[name] = !active[name];
-    setState({ active });
-  };
 
   const getGoogleAddress = async (lat: number, lng: number) => {
     const response = await fetch(
@@ -133,22 +108,14 @@ const EditDossier = (): ReactElement => {
                   initialValues={prepareDossierBeforeForm(dossier)}
                   //onSubmit={() => {}}
                   enableReinitialize
-                  onSubmit={handleEditDossierSubmit()}
+                  onSubmit={handleEditDossierSubmit({ navigation })}
                   validationSchema={Yup.object().shape({
-                    //property,
-                    // firstName,
-                    // lastName,
-                    // email,
-                    // phone,
-                    // password,
-                    // passwordConfirm,
+                    property,
                   })}
                 >
                   {(props) => (
                     <Form
                       {...props}
-                      state={state}
-                      toggleActive={toggleActive}
                       mode="edit"
                       addressText={addressText}
                     ></Form>

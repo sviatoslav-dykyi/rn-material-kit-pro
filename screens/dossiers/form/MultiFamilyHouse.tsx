@@ -58,62 +58,8 @@ const MultiFamilyHouseForm = ({
   handleQualityRate,
   handleConditionRate,
 }: FormikValues): ReactElement => {
-  const [openSubtype, setOpenSubtype] = useState(false);
-  const [openDealtype, setOpenDealtype] = useState(false);
-  const [openEnergyLabel, setOpenEnergyLabel] = useState(false);
-  const [subtype, setSubtype] = useState(values.property.propertyType.subcode);
-  const [dealtype, setDealtype] = useState(values.dealType);
-  const [energyLabel, setEnergyLabel] = useState(values.energyLabel);
-  const [itemsSubtype, setItemsSubtype] = useState(houseSubtypes);
-  const [itemsDealtype, setItemsDealtype] = useState(dealTypes);
-  const [itemsEnergyLabel, setItemsEnergyLabel] = useState(energyLabels);
-  useEffect(() => {
-    setFieldValue("dealType", dealtype);
-  }, [dealtype]);
-
-  useEffect(() => {
-    setFieldValue("property.propertyType.subcode", subtype);
-  }, [subtype]);
-
-  useEffect(() => {
-    setFieldValue("energyLabel", energyLabel);
-  }, [energyLabel]);
-
-  useEffect(() => {
-    if (openSubtype) {
-      handleCloseDropdownPickers();
-      setOpenSubtype(true);
-    }
-  }, [openSubtype]);
-
-  useEffect(() => {
-    if (openDealtype) {
-      handleCloseDropdownPickers();
-      setOpenDealtype(true);
-    }
-  }, [openDealtype]);
-
-  useEffect(() => {
-    if (openEnergyLabel) {
-      handleCloseDropdownPickers();
-      setOpenEnergyLabel(true);
-    }
-  }, [openEnergyLabel]);
-
-  const handleCloseSubtype = (): void => setOpenSubtype(false);
-
-  const handleCloseDealtype = (): void => setOpenDealtype(false);
-
-  const handleCloseEnergyLabel = (): void => setOpenEnergyLabel(false);
-
-  const handleCloseDropdownPickers = (): void => {
-    handleCloseSubtype();
-    handleCloseDealtype();
-    handleCloseEnergyLabel();
-  };
-
   return (
-    <TouchableOpacity activeOpacity={1} onPress={handleCloseDropdownPickers}>
+    <TouchableOpacity activeOpacity={1}>
       {/* <Input
         bgColor="transparent"
         placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
@@ -147,7 +93,7 @@ const MultiFamilyHouseForm = ({
         style={[styles.inputPaper]}
         textColor="white"
         autoCapitalize="none"
-        label={<Text style={styles.inputPaperLabel}>Building year</Text>}
+        label={<Text style={styles.inputPaperLabel}>Building year*</Text>}
         underlineStyle={styles.inputPaperUnderlineStyle}
         value={values.property.buildingYear}
         onChangeText={handleChange("property.buildingYear")}
@@ -266,7 +212,9 @@ const MultiFamilyHouseForm = ({
         style={[styles.inputPaper]}
         textColor="white"
         autoCapitalize="none"
-        label={<Text style={styles.inputPaperLabel}>Net living area (m²)</Text>}
+        label={
+          <Text style={styles.inputPaperLabel}>Net living area (m²)*</Text>
+        }
         underlineStyle={styles.inputPaperUnderlineStyle}
         value={values.property.livingArea}
         onChangeText={handleChange("property.livingArea")}
@@ -317,7 +265,7 @@ const MultiFamilyHouseForm = ({
         style={[styles.inputPaper]}
         textColor="white"
         autoCapitalize="none"
-        label={<Text style={styles.inputPaperLabel}>Land area (m²)</Text>}
+        label={<Text style={styles.inputPaperLabel}>Land area (m²)*</Text>}
         underlineStyle={styles.inputPaperUnderlineStyle}
         value={values.property.landArea}
         onChangeText={handleChange("property.landArea")}

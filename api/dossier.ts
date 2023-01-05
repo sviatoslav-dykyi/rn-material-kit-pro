@@ -1,11 +1,12 @@
+import { Dossier } from "../screens/dossiers/types";
 import { http } from "../utils/http";
 
-export const createDossier = async (data: FormData) => {
-  return await http.postFormData("dossiers", data);
+export const createDossier = async (data: Dossier) => {
+  return await http.post("dossiers", data);
 };
 
-export const editDossier = async (data: FormData, id: string) => {
-  return await http.put(`dossiers/${id}`, data);
+export const editDossier = async (data: Dossier) => {
+  return await http.put(`dossiers/${data.id}`, data);
 };
 
 export const getDossiers = async () => {
@@ -23,3 +24,7 @@ export const deleteDossier = async (id: string) => {
 export const getSocioEconomicData = async (id: string, data: any) => {
   return await http.post(`/dossiers/socio-economics/${id}`, data);
 };
+
+// export const uploadImage = async (image: File) => {
+//   return await http.post(`/dossiers/images`, data);
+// };
