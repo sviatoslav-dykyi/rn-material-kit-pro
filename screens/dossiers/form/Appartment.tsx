@@ -1,4 +1,10 @@
-import React, { useState, ReactElement, useRef, useEffect } from "react";
+import React, {
+  useState,
+  ReactElement,
+  useRef,
+  useEffect,
+  useContext,
+} from "react";
 import {
   Alert,
   Dimensions,
@@ -48,6 +54,7 @@ import { styles } from "../styles";
 import { useEvent } from "react-native-reanimated";
 import { HelperText, TextInput, Checkbox } from "react-native-paper";
 import useOnFocus from "../../../hooks/useOnFocus";
+import { FormContext } from "../../../context/Form";
 
 const AppartmentForm = ({
   handleChange,
@@ -64,15 +71,36 @@ const AppartmentForm = ({
   handleConditionRate,
   mode,
 }: FormikValues): ReactElement => {
-  const [openSubtype, setOpenSubtype] = useState(false);
-  const [openDealtype, setOpenDealtype] = useState(false);
-  const [openEnergyLabel, setOpenEnergyLabel] = useState(false);
-  const [subtype, setSubtype] = useState(values.property.propertyType.subcode);
-  const [dealtype, setDealtype] = useState(values.dealType);
-  const [energyLabel, setEnergyLabel] = useState(values.property.energyLabel);
-  const [itemsSubtype, setItemsSubtype] = useState(appartmentSubtypes);
-  const [itemsDealtype, setItemsDealtype] = useState(dealTypes);
-  const [itemsEnergyLabel, setItemsEnergyLabel] = useState(energyLabels);
+  // const [openSubtype, setOpenSubtype] = useState(false);
+  // const [openDealtype, setOpenDealtype] = useState(false);
+  // const [openEnergyLabel, setOpenEnergyLabel] = useState(false);
+  // const [subtype, setSubtype] = useState(values.property.propertyType.subcode);
+  // const [dealtype, setDealtype] = useState(values.dealType);
+  // const [energyLabel, setEnergyLabel] = useState(values.property.energyLabel);
+  // const [itemsSubtype, setItemsSubtype] = useState(appartmentSubtypes);
+  // const [itemsDealtype, setItemsDealtype] = useState(dealTypes);
+  // const [itemsEnergyLabel, setItemsEnergyLabel] = useState(energyLabels);
+  const {
+    openSubtype,
+    setOpenSubtype,
+    openDealtype,
+    setOpenDealtype,
+    openEnergyLabel,
+    setOpenEnergyLabel,
+    subtype,
+    setSubtype,
+    dealtype,
+    setDealtype,
+    energyLabel,
+    setEnergyLabel,
+    itemsSubtype,
+    setItemsSubtype,
+    itemsDealtype,
+    setItemsDealtype,
+    itemsEnergyLabel,
+    setItemsEnergyLabel,
+    handleCloseDropdownPickers,
+  } = useContext(FormContext);
   const [checkboxes, setCheckboxes] = useState({
     isNew: values.property.isNew,
     hasLift: values.property.hasLift,
@@ -85,67 +113,28 @@ const AppartmentForm = ({
     }
   });
 
-  useEffect(() => {
-    setFieldValue("dealType", dealtype);
-  }, [dealtype]);
+  // useEffect(() => {
+  //   setFieldValue("dealType", dealtype);
+  // }, [dealtype]);
 
-  useEffect(() => {
-    setFieldValue("property.propertyType.subcode", subtype);
-  }, [subtype]);
+  // useEffect(() => {
+  //   setFieldValue("property.propertyType.subcode", subtype);
+  // }, [subtype]);
 
-  useEffect(() => {
-    setFieldValue("energyLabel", energyLabel);
-  }, [energyLabel]);
+  // useEffect(() => {
+  //   setFieldValue("energyLabel", energyLabel);
+  // }, [energyLabel]);
 
   // useEffect(() => {
   //   setFieldValue("property.isNew", checkboxes.isNew);
   //   setFieldValue("property.hasLift", checkboxes.hasLift);
   // }, [checkboxes]);
 
-  useEffect(() => {
-    if (openSubtype) {
-      handleCloseDropdownPickers();
-      setOpenSubtype(true);
-    }
-  }, [openSubtype]);
-
-  useEffect(() => {
-    if (openDealtype) {
-      handleCloseDropdownPickers();
-      setOpenDealtype(true);
-    }
-  }, [openDealtype]);
-
-  useEffect(() => {
-    if (openEnergyLabel) {
-      handleCloseDropdownPickers();
-      setOpenEnergyLabel(true);
-    }
-  }, [openEnergyLabel]);
-
-  const resetDropDownValues = (): void => {
-    setDealtype("");
-    setSubtype("");
-    setEnergyLabel("");
-  };
-
-  const resetCheckboxed = (): void =>
-    setCheckboxes({
-      isNew: false,
-      hasLift: false,
-    });
-
-  const handleCloseSubtype = (): void => setOpenSubtype(false);
-
-  const handleCloseDealtype = (): void => setOpenDealtype(false);
-
-  const handleCloseEnergyLabel = (): void => setOpenEnergyLabel(false);
-
-  const handleCloseDropdownPickers = (): void => {
-    handleCloseSubtype();
-    handleCloseDealtype();
-    handleCloseEnergyLabel();
-  };
+  // const resetDropDownValues = (): void => {
+  //   setDealtype("");
+  //   setSubtype("");
+  //   setEnergyLabel("");
+  // };
 
   return (
     <TouchableOpacity activeOpacity={1} onPress={handleCloseDropdownPickers}>

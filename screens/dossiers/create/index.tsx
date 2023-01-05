@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  Text,
 } from "react-native";
 import { Formik } from "formik";
 import { Block, theme } from "galio-framework";
@@ -24,7 +25,12 @@ import {
   useNavigation,
 } from "@react-navigation/native";
 import { useRoute } from "@react-navigation/native";
-import { initCreateDossierValues } from "../utils";
+import {
+  appartmentSubtypes,
+  dealTypes,
+  energyLabels,
+  initCreateDossierValues,
+} from "../utils";
 import Form from "../form";
 import { handleSignUpSubmit } from "../../signUp/utils";
 import { styles } from "../styles";
@@ -38,16 +44,86 @@ import { FormContext } from "../../../context/Form";
 
 const CreateDossier = ({ navigation }: any): ReactElement => {
   const { property } = useValidation();
-  const [createDossierInit, setCreateDossierInit] = useState(initCreateDossier);
+  const [createDossierInit] = useState(initCreateDossier);
+  const [openSubtype, setOpenSubtype] = useState(false);
+  const [openDealtype, setOpenDealtype] = useState(false);
+  const [openEnergyLabel, setOpenEnergyLabel] = useState(false);
+  const [subtype, setSubtype] = useState("");
+  const [dealtype, setDealtype] = useState("");
+  const [energyLabel, setEnergyLabel] = useState("");
+  const [itemsSubtype, setItemsSubtype] = useState(appartmentSubtypes);
+  const [itemsDealtype, setItemsDealtype] = useState(dealTypes);
+  const [itemsEnergyLabel, setItemsEnergyLabel] = useState(energyLabels);
 
-  useOnFocus(() => {
-    setCreateDossierInit(initCreateDossier);
-  });
+  const isFocused = useIsFocused();
 
-  const rr = useContext(FormContext);
+  useEffect(() => {
+    if (isFocused) {
+      setDealtype("");
+      setSubtype("");
+      setEnergyLabel("");
+    }
+  }, [isFocused]);
+
+  const handleCloseSubtype = (): void => setOpenSubtype(false);
+
+  const handleCloseDealtype = (): void => setOpenDealtype(false);
+
+  const handleCloseEnergyLabel = (): void => setOpenEnergyLabel(false);
+
+  const handleCloseDropdownPickers = (): void => {
+    handleCloseSubtype();
+    handleCloseDealtype();
+    handleCloseEnergyLabel();
+  };
+
+  useEffect(() => {
+    if (openSubtype) {
+      handleCloseDropdownPickers();
+      setOpenSubtype(true);
+    }
+  }, [openSubtype]);
+
+  useEffect(() => {
+    if (openDealtype) {
+      handleCloseDropdownPickers();
+      setOpenDealtype(true);
+    }
+  }, [openDealtype]);
+
+  useEffect(() => {
+    if (openEnergyLabel) {
+      handleCloseDropdownPickers();
+      setOpenEnergyLabel(true);
+    }
+  }, [openEnergyLabel]);
+
+  const auxDossierValues = { subtype, dealtype, energyLabel };
 
   return (
-    <FormContext.Provider value={{}}>
+    <FormContext.Provider
+      value={{
+        openSubtype,
+        setOpenSubtype,
+        openDealtype,
+        setOpenDealtype,
+        openEnergyLabel,
+        setOpenEnergyLabel,
+        subtype,
+        setSubtype,
+        dealtype,
+        setDealtype,
+        energyLabel,
+        setEnergyLabel,
+        itemsSubtype,
+        setItemsSubtype,
+        itemsDealtype,
+        setItemsDealtype,
+        itemsEnergyLabel,
+        setItemsEnergyLabel,
+        handleCloseDropdownPickers,
+      }}
+    >
       <ScrollView>
         <LinearGradient
           start={{ x: 0, y: 0 }}
@@ -61,6 +137,7 @@ const CreateDossier = ({ navigation }: any): ReactElement => {
         >
           <DismissKeyboardHOC>
             <Block flex middle>
+              <Text>{JSON.stringify(dealtype)}</Text>
               <KeyboardAvoidingView
                 //behavior={Platform.OS === "ios" ? "padding" : "position"}
                 enabled

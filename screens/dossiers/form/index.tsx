@@ -32,7 +32,7 @@ import {
   MIN_HEIGHT_RICH_CONTAINER,
   qualityRates,
 } from "../utils";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { FormikValues } from "formik";
 import { DossierTypeIds, DossierTypes } from "../../../utils/constants";
 import { Dossier, DossierImage, DossierImageError } from "../types";
@@ -87,12 +87,13 @@ const CreateDossiersForm = ({
   const [imageIsLoading, setImageIsLoading] = useState(false);
   const [imageErrors, setImageErrors] = useState<string[]>([]);
 
-  // useOnFocus(() => {
-  //   if (mode === "create") {
-  //     ref.current?.setAddressText("");
-  //     resetForm();
-  //   }
-  // });
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) {
+      resetForm();
+    }
+  }, [isFocused]);
 
   const handleEditorTextChange = (newText: string) =>
     setFieldValue("description", newText);
@@ -560,4 +561,4 @@ const CreateDossiersForm = ({
   );
 };
 
-export default CreateDossiersForm;
+export default React.memo(CreateDossiersForm);

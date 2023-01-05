@@ -44,7 +44,14 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
 
-  useOnFocus(() => fetchDossiers({ setDossiers, setIsLoading }));
+  const fetch = async () => {
+    await fetchDossiers({ setDossiers, setIsLoading });
+  };
+
+  useOnFocus(() => {
+    console.log("fetching");
+    fetch();
+  });
 
   const handleDelete = (_id: string) => async () => {
     const response = await deleteDossier(_id);
