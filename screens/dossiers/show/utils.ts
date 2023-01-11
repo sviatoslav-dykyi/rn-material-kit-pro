@@ -1,4 +1,4 @@
-import { getSocioEconomicData } from "../../../api";
+import { getSocioEconomicData } from "../../../api/dossier";
 import { ShowPageTabs } from "./types";
 
 export const fetchSocioEconomicData = async ({

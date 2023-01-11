@@ -220,6 +220,21 @@ function AppStack(props) {
     >
       {state.userToken == null ? (
         <>
+          {/* <Drawer.Screen
+            name="Sign In"
+            component={SignInScreen}
+            options={{
+              headerShown: false,
+              drawerIcon: ({ focused }) => (
+                <Icon
+                  size={16}
+                  name="ios-log-in"
+                  family="ionicon"
+                  color={focused ? "white" : materialTheme.COLORS.MUTED}
+                />
+              ),
+            }}
+          /> */}
           <Stack.Screen
             name="CreateDossier"
             headerShown={false}

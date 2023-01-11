@@ -112,8 +112,7 @@ export const styles = StyleSheet.create({
   googlePlacesLabelContainer: {
     width: width * 0.9,
     color: materialTheme.COLORS.PLACEHOLDER,
-    marginBottom: 15,
-    marginTop: 20,
+    marginTop: 15,
   },
   googlePlacesContainer: {
     width: width * 0.9,

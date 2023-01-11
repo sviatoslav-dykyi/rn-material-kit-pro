@@ -139,18 +139,16 @@ const CreateDossier = ({ navigation }: any): ReactElement => {
           enabled
           keyboardVerticalOffset={100}
         >
-          <ScrollView nestedScrollEnabled={true}>
-            <Formik
-              initialValues={prepareDossierBeforeForm(createDossierInit)}
-              onSubmit={handleCreateDossierSubmit({ navigation })}
-              validationSchema={Yup.object().shape({
-                property,
-              })}
-              enableReinitialize
-            >
-              {(props) => <Form {...props} addressText={""}></Form>}
-            </Formik>
-          </ScrollView>
+          <Formik
+            initialValues={prepareDossierBeforeForm(createDossierInit)}
+            onSubmit={handleCreateDossierSubmit({ navigation })}
+            validationSchema={Yup.object().shape({
+              property,
+            })}
+            enableReinitialize
+          >
+            {(props) => <Form {...props} addressText={""}></Form>}
+          </Formik>
         </KeyboardAvoidingView>
       </LinearGradient>
     </FormContext.Provider>

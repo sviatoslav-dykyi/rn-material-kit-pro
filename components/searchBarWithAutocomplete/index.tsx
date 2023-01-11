@@ -38,7 +38,7 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = (
     onCancel,
   } = props;
 
-  const { container, inputStyle } = styles;
+  const { container } = styles;
   const passedStyles = Array.isArray(style)
     ? Object.assign({}, ...style)
     : style;
@@ -48,8 +48,8 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = (
         borderBottomRightRadius: 0,
       }
     : {
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10,
       };
 
   const _renderPredictions = (predictions: PredictionType[]) => {
@@ -94,48 +94,25 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = (
         },
       ]}
     >
-      {/* <Button
-        onlyIcon
-        icon="close"
-        iconFamily="ionicon"
-        iconSize={30}
-        iconColor="#fff"
-        onPress={onCancel}
-        style={styles.closeIcon}
-      ></Button> */}
-      {/* <Input
-        right
-        //placeholderTextColor={materialTheme.COLORS.PLACEHOLDER}
-        placeholder="Search by address"
-        placeholderTextColor="gray"
-        value={value}
-        onChangeText={onChangeText}
-        returnKeyType="search"
-        onLayout={(event) => {
-          const { height, width } = event.nativeEvent.layout;
-          setInputSize({ height, width });
-        }}
-        icon="close"
-        family="MaterialIcons"
-        iconSize={18}
-      /> */}
-
       <TextInput
         placeholder="Search by address"
         placeholderTextColor="gray"
+        mode="outlined"
         value={value}
         onChangeText={onChangeText}
         returnKeyType="search"
+        multiline={true}
         numberOfLines={1}
-        underlineStyle={{
-          borderColor: materialTheme.COLORS.BUTTON_COLOR,
-          borderWidth: 1,
-        }}
+        style={[styles.inputStyle]}
+        outlineStyle={[styles.outlineStyle, inputBottomRadius]}
+        outlineColor="transparent"
         onLayout={(event) => {
           const { height, width } = event.nativeEvent.layout;
           setInputSize({ height, width });
         }}
-        right={<TextInput.Icon icon="close" onPress={onCancel} />}
+        right={
+          <TextInput.Icon style={styles.icon} icon="close" onPress={onCancel} />
+        }
       />
       {showPredictions && _renderPredictions(predictions)}
     </View>
@@ -148,13 +125,8 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   inputStyle: {
-    height: 50,
-    paddingVertical: 16,
-    paddingHorizontal: 16,
-    backgroundColor: "#cfcfcf",
-    borderRadius: 20,
-    color: "black",
-    fontSize: 16,
+    fontSize: 14,
+    backgroundColor: "#fff",
   },
   predictionsContainer: {
     backgroundColor: "#cfcfcf",
@@ -168,13 +140,11 @@ const styles = StyleSheet.create({
     borderBottomColor: "black",
     borderBottomWidth: 1,
   },
-  closeIcon: {
-    position: "absolute",
+  icon: {
     top: 5,
-    right: -3,
-    width: 30,
-    height: 30,
-    zIndex: 1111111,
+  },
+  outlineStyle: {
+    borderRadius: 10,
   },
 });
 

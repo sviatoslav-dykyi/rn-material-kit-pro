@@ -45,6 +45,7 @@ import {
   Image,
   ActivityIndicator,
   Alert,
+  TouchableOpacity,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
@@ -136,63 +137,75 @@ const CreateDossiersForm = ({
   }, [addressText]);
 
   return (
-    <Block center>
+    <View style={{ flex: 1 }}>
       <Button
-        size="large"
-        shadowless
-        style={{ height: 48 }}
+        icon="plus"
+        iconFamily="Entypo"
+        iconSize={20}
+        textStyle={{
+          color: "white",
+          fontSize: 19,
+        }}
+        style={{
+          position: "absolute",
+          bottom: 10,
+          right: 10,
+          borderRadius: 20,
+        }}
         color={materialTheme.COLORS.BUTTON_COLOR}
         onPress={() => {
           submitForm();
         }}
         loading={isSubmitting}
       >
-        {mode === "create" ? "CREATE" : "EDIT"}
+        {mode === "create" ? "Create" : "Edit"}
       </Button>
-      <TextInput
-        style={[styles.inputPaper]}
-        textColor="white"
-        autoCapitalize="none"
-        label={<Text style={styles.inputPaperLabel}>Title</Text>}
-        underlineStyle={styles.inputPaperUnderlineStyle}
-        value={values.title}
-        onChangeText={handleChange("title")}
-        left={
-          <TextInput.Icon
-            size={20}
-            icon="clipboard-text-outline"
-            color={() => "white"}
+      <ScrollView nestedScrollEnabled={true}>
+        <Block center>
+          <TextInput
+            style={[styles.inputPaper]}
+            textColor="white"
+            autoCapitalize="none"
+            label={<Text style={styles.inputPaperLabel}>Title</Text>}
+            underlineStyle={styles.inputPaperUnderlineStyle}
+            value={values.title}
+            onChangeText={handleChange("title")}
+            left={
+              <TextInput.Icon
+                size={20}
+                icon="clipboard-text-outline"
+                color={() => "white"}
+              />
+            }
           />
-        }
-      />
-      <HelperText
-        type="error"
-        visible={touched.title && (status?.errors.title || errors.title)}
-      >
-        {touched.title && (status?.errors.title || errors.title)}
-      </HelperText>
-      <Block row style={styles.googlePlacesLabelContainer}>
-        <Icon
-          name="location-on"
-          color="#fff"
-          family="MaterialIcons"
-          icon="location-on"
-          iconSize={18}
-          size={20}
-          style={styles.pickerLabelIcon}
-        />
-        <Text style={styles.pickerLabelText}>Address*</Text>
-      </Block>
-      <Block style={styles.ratingBlock}>
-        <SearchBarWithAutocompleteWrapper
-          onSuccess={(location) => {
-            console.log("here location", location);
-            setFieldValue("property.location", location);
-          }}
-        />
-      </Block>
+          <HelperText
+            type="error"
+            visible={touched.title && (status?.errors.title || errors.title)}
+          >
+            {touched.title && (status?.errors.title || errors.title)}
+          </HelperText>
+          <Block row style={styles.googlePlacesLabelContainer}>
+            <Icon
+              name="location-on"
+              color="#fff"
+              family="MaterialIcons"
+              icon="location-on"
+              iconSize={18}
+              size={20}
+              style={styles.pickerLabelIcon}
+            />
+            <Text style={styles.pickerLabelText}>Address*</Text>
+          </Block>
+          <Block style={styles.ratingBlock}>
+            <SearchBarWithAutocompleteWrapper
+              onSuccess={(location) => {
+                console.log("here location", location);
+                setFieldValue("property.location", location);
+              }}
+            />
+          </Block>
 
-      {/* <Block>
+          {/* <Block>
         <Block
           style={{
             borderColor: "red",
@@ -251,7 +264,7 @@ const CreateDossiersForm = ({
         </Block>
       </Block> */}
 
-      {/* <ScrollView
+          {/* <ScrollView
         horizontal={true}
         nestedScrollEnabled={true}
         keyboardShouldPersistTaps="handled"
@@ -285,227 +298,231 @@ const CreateDossiersForm = ({
           }}
         />
       </ScrollView> */}
-      <HelperText
-        style={{ marginTop: 10 }}
-        type="error"
-        visible={
-          touched.property?.location?.address.postCode &&
-          Object.values(errors.property?.location?.address || []).filter(
-            (el) => el
-          ).length
-        }
-      >
-        {touched.property?.location?.address.postCode && (
-          <>
-            Address is not correct (
-            {Object.values(errors.property?.location?.address || [])?.map(
-              (el, _, arr) => `${el}${el !== arr[arr.length - 1] ? ", " : ""}`
+          <HelperText
+            style={{ marginTop: 10 }}
+            type="error"
+            visible={
+              touched.property?.location?.address.postCode &&
+              Object.values(errors.property?.location?.address || []).filter(
+                (el) => el
+              ).length
+            }
+          >
+            {touched.property?.location?.address.postCode && (
+              <>
+                Address is not correct (
+                {Object.values(errors.property?.location?.address || [])?.map(
+                  (el, _, arr) =>
+                    `${el}${el !== arr[arr.length - 1] ? ", " : ""}`
+                )}
+                )
+              </>
             )}
-            )
-          </>
-        )}
-      </HelperText>
+          </HelperText>
 
-      <Block row style={[styles.typesBlock, { marginTop: 20 }]}>
-        {dossierTypes.map(({ value, label, icon }) => (
-          <Button
-            key={value}
-            style={[
-              styles.typesButtons,
-              values.property?.propertyType?.code == value && styles.selected,
-              { height: 65 },
-            ]}
-            size={"small"}
-            onPress={hanleButtonTypePress(value)}
-            icon={icon}
-            iconFamily="MaterialIcons"
-            iconSize={19}
-          >
-            {label}
-          </Button>
-        ))}
-      </Block>
-      {values.property.propertyType.code === DossierTypes.APARTMENT && (
-        <AppartmentForm
-          {...{
-            handleChange,
-            handleBlur,
-            values,
-            touched,
-            status,
-            errors,
-            setFieldValue,
-            handleQualityRate,
-            handleConditionRate,
-            mode,
-          }}
-        />
-      )}
-      {values.property.propertyType.code === DossierTypes.HOUSE && (
-        <HouseForm
-          {...{
-            handleChange,
-            handleBlur,
-            values,
-            touched,
-            status,
-            errors,
-            setFieldValue,
-            handleQualityRate,
-            handleConditionRate,
-            mode,
-          }}
-        />
-      )}
-      {values.property.propertyType.code ===
-        DossierTypes.MULTI_FAMILY_HOUSE && (
-        <MultiFamilyHouseForm
-          {...{
-            handleChange,
-            handleBlur,
-            values,
-            touched,
-            status,
-            errors,
-            setFieldValue,
-            handleQualityRate,
-            handleConditionRate,
-            mode,
-          }}
-        />
-      )}
-      <Block
-        style={[
-          styles.richContainer,
-          {
-            height,
-          },
-        ]}
-      >
-        <RichEditor
-          disabled={false}
-          initialContentHTML={values.description}
-          containerStyle={[
-            {
-              flexBasis: height,
-            },
-          ]}
-          ref={RichText}
-          style={[
-            {
-              flexBasis: height,
-            },
-          ]}
-          placeholder={"Start Writing Here"}
-          onChange={handleEditorTextChange}
-          onHeightChange={handleHeightChange}
-        />
-        <RichToolbar
-          style={[styles.richBar, { marginTop: 5 }]}
-          editor={RichText}
-          disabled={false}
-          iconTint={"purple"}
-          selectedIconTint={"pink"}
-          disabledIconTint={"purple"}
-          iconMap={{
-            [actions.heading1]: ({ tintColor }) => (
-              <Text style={[styles.tib, { color: tintColor }]}>H1</Text>
-            ),
-          }}
-        />
-      </Block>
-      <Block flex row>
-        <Button
-          uppercase
-          onPress={pickDocument}
-          icon={"star"}
-          iconFamily="AntDesign"
-          iconSize={19}
-        >
-          Upload document
-        </Button>
-        <Button
-          uppercase
-          onPress={pickImage({
-            setImageIsLoading,
-            setImageErrors,
-            setFieldValue,
-            values,
-          })}
-          icon={"picture"}
-          iconFamily="AntDesign"
-          iconSize={19}
-        >
-          Upload images
-        </Button>
-      </Block>
-      <Block>
-        {values.images?.map(({ url }: DossierImage, i: number) => (
-          <Block
-            row
-            space="between"
-            key={url + " " + i}
-            style={styles.homeImageContainer}
-          >
-            <Image
-              key={i + " " + Math.random()}
-              style={{
-                width: styles.homeImage.width,
-                height: 100,
-                // height:
-                //   width > height
-                //     ? (height / width) * styles.homeImage.width
-                //     : 130,
-              }}
-              source={{ uri: url }}
-              resizeMode="contain"
-            />
-            <Button
-              onlyIcon
-              shadowColor={true}
-              icon="delete"
-              iconFamily="MaterialIcons"
-              color="red"
-              iconSize={30}
-              onPress={() => {
-                const auxImages = [...values.images];
-                auxImages.splice(i, 1);
-                setFieldValue("images", auxImages);
-              }}
-              style={{ width: 40, height: 40 }}
-            ></Button>
+          <Block row style={[styles.typesBlock, { marginTop: 20 }]}>
+            {dossierTypes.map(({ value, label, icon }) => (
+              <Button
+                key={value}
+                style={[
+                  styles.typesButtons,
+                  values.property?.propertyType?.code == value &&
+                    styles.selected,
+                  { height: 65 },
+                ]}
+                size={"small"}
+                onPress={hanleButtonTypePress(value)}
+                icon={icon}
+                iconFamily="MaterialIcons"
+                iconSize={19}
+              >
+                {label}
+              </Button>
+            ))}
           </Block>
-        ))}
-      </Block>
-      {imageIsLoading && (
-        <Block style={styles.activityIndicator}>
-          <ActivityIndicator
-            size="large"
-            color={materialTheme.COLORS.BUTTON_COLOR}
-          />
+          {values.property.propertyType.code === DossierTypes.APARTMENT && (
+            <AppartmentForm
+              {...{
+                handleChange,
+                handleBlur,
+                values,
+                touched,
+                status,
+                errors,
+                setFieldValue,
+                handleQualityRate,
+                handleConditionRate,
+                mode,
+              }}
+            />
+          )}
+          {values.property.propertyType.code === DossierTypes.HOUSE && (
+            <HouseForm
+              {...{
+                handleChange,
+                handleBlur,
+                values,
+                touched,
+                status,
+                errors,
+                setFieldValue,
+                handleQualityRate,
+                handleConditionRate,
+                mode,
+              }}
+            />
+          )}
+          {values.property.propertyType.code ===
+            DossierTypes.MULTI_FAMILY_HOUSE && (
+            <MultiFamilyHouseForm
+              {...{
+                handleChange,
+                handleBlur,
+                values,
+                touched,
+                status,
+                errors,
+                setFieldValue,
+                handleQualityRate,
+                handleConditionRate,
+                mode,
+              }}
+            />
+          )}
+          <Block
+            style={[
+              styles.richContainer,
+              {
+                height,
+              },
+            ]}
+          >
+            <RichEditor
+              disabled={false}
+              initialContentHTML={values.description}
+              containerStyle={[
+                {
+                  flexBasis: height,
+                },
+              ]}
+              ref={RichText}
+              style={[
+                {
+                  flexBasis: height,
+                },
+              ]}
+              placeholder={"Start Writing Here"}
+              onChange={handleEditorTextChange}
+              onHeightChange={handleHeightChange}
+            />
+            <RichToolbar
+              style={[styles.richBar, { marginTop: 5 }]}
+              editor={RichText}
+              disabled={false}
+              iconTint={"purple"}
+              selectedIconTint={"pink"}
+              disabledIconTint={"purple"}
+              iconMap={{
+                [actions.heading1]: ({ tintColor }) => (
+                  <Text style={[styles.tib, { color: tintColor }]}>H1</Text>
+                ),
+              }}
+            />
+          </Block>
+          <Block flex row>
+            <Button
+              uppercase
+              onPress={pickDocument}
+              icon={"star"}
+              iconFamily="AntDesign"
+              iconSize={19}
+            >
+              Upload document
+            </Button>
+            <Button
+              uppercase
+              onPress={pickImage({
+                setImageIsLoading,
+                setImageErrors,
+                setFieldValue,
+                values,
+              })}
+              icon={"picture"}
+              iconFamily="AntDesign"
+              iconSize={19}
+            >
+              Upload images
+            </Button>
+          </Block>
+          <Block>
+            {values.images?.map(({ url }: DossierImage, i: number) => (
+              <Block
+                row
+                space="between"
+                key={url + " " + i}
+                style={styles.homeImageContainer}
+              >
+                <Image
+                  key={i + " " + Math.random()}
+                  style={{
+                    width: styles.homeImage.width,
+                    height: 100,
+                    // height:
+                    //   width > height
+                    //     ? (height / width) * styles.homeImage.width
+                    //     : 130,
+                  }}
+                  source={{ uri: url }}
+                  resizeMode="contain"
+                />
+                <Button
+                  onlyIcon
+                  shadowColor={true}
+                  icon="delete"
+                  iconFamily="MaterialIcons"
+                  color="red"
+                  iconSize={30}
+                  onPress={() => {
+                    const auxImages = [...values.images];
+                    auxImages.splice(i, 1);
+                    setFieldValue("images", auxImages);
+                  }}
+                  style={{ width: 40, height: 40 }}
+                ></Button>
+              </Block>
+            ))}
+          </Block>
+          {imageIsLoading && (
+            <Block style={styles.activityIndicator}>
+              <ActivityIndicator
+                size="large"
+                color={materialTheme.COLORS.BUTTON_COLOR}
+              />
+            </Block>
+          )}
+          {imageErrors.map((error) => (
+            <View>
+              <Text style={{ color: "red" }}>{error}</Text>
+            </View>
+          ))}
+          <Block flex={10}>
+            <Button
+              size="large"
+              shadowless
+              style={{ height: 48 }}
+              color={materialTheme.COLORS.BUTTON_COLOR}
+              onPress={() => {
+                //console.log("values", values);
+                submitForm();
+              }}
+              loading={isSubmitting}
+            >
+              {mode === "create" ? "CREATE" : "EDIT"}
+            </Button>
+          </Block>
         </Block>
-      )}
-      {imageErrors.map((error) => (
-        <View>
-          <Text style={{ color: "red" }}>{error}</Text>
-        </View>
-      ))}
-      <Block flex={10}>
-        <Button
-          size="large"
-          shadowless
-          style={{ height: 48 }}
-          color={materialTheme.COLORS.BUTTON_COLOR}
-          onPress={() => {
-            //console.log("values", values);
-            submitForm();
-          }}
-          loading={isSubmitting}
-        >
-          {mode === "create" ? "CREATE" : "EDIT"}
-        </Button>
-      </Block>
-    </Block>
+      </ScrollView>
+    </View>
   );
 };
 
