@@ -14,7 +14,7 @@ import {
   Text,
 } from "react-native";
 import { Formik } from "formik";
-import { Block, Button, theme } from "galio-framework";
+import { Block, theme } from "galio-framework";
 
 import { LinearGradient } from "expo-linear-gradient";
 import useValidation from "../../../hooks/useValidation";
@@ -41,8 +41,6 @@ import { prepareDossierBeforeForm } from "../form/utils";
 import DismissKeyboardHOC from "../../../hoc/DismissKeyboard";
 import useOnFocus from "../../../hooks/useOnFocus";
 import { FormContext } from "../../../context/Form";
-import { materialTheme } from "../../../constants";
-import { HelperText, TextInput } from "react-native-paper";
 
 const CreateDossier = ({ navigation }: any): ReactElement => {
   const { property } = useValidation();
@@ -126,33 +124,40 @@ const CreateDossier = ({ navigation }: any): ReactElement => {
         handleCloseDropdownPickers,
       }}
     >
-      <LinearGradient
-        start={{ x: 0, y: 0 }}
-        end={{ x: 0.25, y: 1.1 }}
-        locations={[0.2, 1]}
-        colors={["#6C24AA", "#15002B"]}
-        style={[styles.signup, { flex: 1 }]}
-      >
-        <KeyboardAvoidingView
-          style={{ flex: 1, flexDirection: "column", justifyContent: "center" }}
-          behavior="padding"
-          enabled
-          keyboardVerticalOffset={100}
+      <ScrollView>
+        <LinearGradient
+          start={{ x: 0, y: 0 }}
+          end={{ x: 0.25, y: 1.1 }}
+          locations={[0.2, 1]}
+          colors={["#6C24AA", "#15002B"]}
+          style={[
+            styles.signup,
+            { flex: 1, paddingTop: (theme.SIZES?.BASE || 0) * 4 },
+          ]}
         >
-          <ScrollView nestedScrollEnabled={true}>
-            <Formik
-              initialValues={prepareDossierBeforeForm(createDossierInit)}
-              onSubmit={handleCreateDossierSubmit({ navigation })}
-              validationSchema={Yup.object().shape({
-                property,
-              })}
-              enableReinitialize
-            >
-              {(props) => <Form {...props} addressText={""}></Form>}
-            </Formik>
-          </ScrollView>
-        </KeyboardAvoidingView>
-      </LinearGradient>
+          <DismissKeyboardHOC>
+            <Block flex middle>
+              <Text>{JSON.stringify(dealtype)}</Text>
+              <KeyboardAvoidingView
+                //behavior={Platform.OS === "ios" ? "padding" : "position"}
+                enabled
+                keyboardVerticalOffset={0}
+              >
+                <Formik
+                  initialValues={prepareDossierBeforeForm(createDossierInit)}
+                  onSubmit={handleCreateDossierSubmit({ navigation })}
+                  validationSchema={Yup.object().shape({
+                    property,
+                  })}
+                  enableReinitialize
+                >
+                  {(props) => <Form {...props} addressText={""}></Form>}
+                </Formik>
+              </KeyboardAvoidingView>
+            </Block>
+          </DismissKeyboardHOC>
+        </LinearGradient>
+      </ScrollView>
     </FormContext.Provider>
   );
 };

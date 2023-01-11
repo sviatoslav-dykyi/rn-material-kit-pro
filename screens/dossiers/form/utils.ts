@@ -153,7 +153,8 @@ export const removeEmptyString = (object: any) => {
 };
 
 export const GOOGLE_API_KEY = "AIzaSyC1jikr2uE40MmY83vnuDzFCYFhZWYAolg";
-
+export const GOOGLE_PACES_API_BASE_URL =
+  "https://maps.googleapis.com/maps/api/place";
 // "property": Object {
 //   "balconyArea": "",
 //   "buildingYear": "1990",
