@@ -6,6 +6,7 @@ import {
   AppartmentSubtype,
   ConditionRate,
   DealType,
+  DossierSubtype,
   DossierType,
   EnergyLabel,
   HouseSubtype,
@@ -106,17 +107,16 @@ export const RATING_REVIEW_SIZE = 12;
 export const RATING_SIZE = 35;
 export const MIN_HEIGHT_RICH_CONTAINER = 150;
 
-export const appartmentSubtypes: { value: AppartmentSubtype; label: string }[] =
-  [
-    { value: "apartment_normal", label: "Apartment" },
-    { value: "apartment_penthouse", label: "Penthouse" },
-    { value: "apartment_maisonette", label: "Maisonette" },
-    { value: "apartment_attic", label: "Attic apartment" },
-    { value: "apartment_terraced", label: "Terraced apartment" },
-    { value: "apartment_studio", label: "Studio" },
-  ];
+export const appartmentSubtypes: DossierSubtype[] = [
+  { value: "apartment_normal", label: "Apartment" },
+  { value: "apartment_penthouse", label: "Penthouse" },
+  { value: "apartment_maisonette", label: "Maisonette" },
+  { value: "apartment_attic", label: "Attic apartment" },
+  { value: "apartment_terraced", label: "Terraced apartment" },
+  { value: "apartment_studio", label: "Studio" },
+];
 
-export const houseSubtypes: { value: HouseSubtype; label: string }[] = [
+export const houseSubtypes: DossierSubtype[] = [
   { value: "detached_house", label: "Detached house" },
   { value: "semi_detached_house", label: "Semi-detached house" },
   { value: "terraced_house_end", label: "Terraced house - end" },

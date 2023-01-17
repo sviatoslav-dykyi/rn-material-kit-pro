@@ -27,6 +27,7 @@ import useOnFocus from "../../hooks/useOnFocus";
 import { AuthContext } from "../../context/Auth";
 import { HelperText, TextInput } from "react-native-paper";
 import DismissKeyboardHOC from "../../hoc/DismissKeyboard";
+import { VerificationMode } from "./types";
 const { width } = Dimensions.get("window");
 const SignUp = () => {
   const navigation = useNavigation<Navigation>();
@@ -35,7 +36,8 @@ const SignUp = () => {
     passwordConfirm: true,
   });
 
-  const [verificationMode, setVerificationMode] = useState(false);
+  const [verificationMode, setVerificationMode] =
+    useState<VerificationMode>(null);
   const [verificationCode, setVerificationCode] = useState("");
   const [verificationError, setVerificationError] = useState<string | null>(
     null
@@ -46,7 +48,7 @@ const SignUp = () => {
     useValidation();
 
   useOnFocus(() => {
-    setVerificationMode(false);
+    setVerificationMode(null);
   });
 
   const { signUp } = useContext(AuthContext);
@@ -308,9 +310,11 @@ const SignUp = () => {
                 setValue={setVerificationCode}
                 error={verificationError}
                 isSubmitting={verificationSubmitting}
-                email={verificationEmail}
+                message={verificationEmail}
                 onPress={handleVerification({
+                  verificationMode,
                   verificationCode,
+                  setVerificationCode,
                   setVerificationMode,
                   setVerificationError,
                   setVerificationSubmitting,

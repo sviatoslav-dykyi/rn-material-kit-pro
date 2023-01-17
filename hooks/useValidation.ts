@@ -132,9 +132,10 @@ const useValidation = () => {
         `Phone number should be more than ${PHONE_MAX_CHARACTERS} characters`
       )
       .required("Phone number is required")
-      .test("starts with +49", "Phone number must start with +49", (value) => {
-        return /^\+49/.test(String(value));
-      })
+      // temporary commented
+      // .test("starts with +49", "Phone number must start with +49", (value) => {
+      //   return /^\+49/.test(String(value));
+      // })
       .matches(/^\+[0-9]+$/, "Must be only numbers"),
     password: Yup.string()
       .max(PASSWORD_MAX_CHARACTERS)

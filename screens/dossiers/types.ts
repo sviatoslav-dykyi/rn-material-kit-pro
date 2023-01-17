@@ -102,6 +102,11 @@ export type HouseSubtype =
   | "terraced_house_middle"
   | "farm";
 
+export interface DossierSubtype {
+  value: AppartmentSubtype | HouseSubtype;
+  label: string;
+}
+
 export type EnergyLabel =
   | "a_plus_plus"
   | "a_plus"

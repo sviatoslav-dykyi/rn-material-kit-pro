@@ -139,6 +139,16 @@ const AppartmentForm = ({
   return (
     <TouchableOpacity activeOpacity={1} onPress={handleCloseDropdownPickers}>
       <>
+        <Block style={{ width: width * 0.9 }}>
+          <Text style={[styles.showSubtitle, { color: "#000" }]}>
+            {
+              dossierTypes.find(
+                (el) => el.value === values.property.propertyType.code
+              )?.label
+            }{" "}
+            details
+          </Text>
+        </Block>
         {/* <Text>{JSON.stringify(values, null, 2)}</Text> */}
         <Block center style={{ zIndex: 1 }}>
           <Block
@@ -927,6 +937,11 @@ const AppartmentForm = ({
               setFieldValue("property.hasLift", isChecked);
             }}
           /> */}
+        </Block>
+        <Block style={{ width: width * 0.9, paddingBottom: 10 }}>
+          <Text style={[styles.showSubtitle, { color: "#000" }]}>
+            Quality and Condition
+          </Text>
         </Block>
         <Rating
           values={values}

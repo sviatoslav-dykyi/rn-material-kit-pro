@@ -9,8 +9,8 @@ export const editDossier = async (data: Dossier) => {
   return await http.put(`dossiers/${data.id}`, data);
 };
 
-export const getDossiers = async () => {
-  return await http.get("dossiers");
+export const getDossiers = async (params?: string) => {
+  return await http.get(`dossiers${params ?? ""}`);
 };
 
 export const getDossierById = async (id: string) => {

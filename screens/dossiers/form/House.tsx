@@ -1,4 +1,10 @@
-import React, { useState, ReactElement, useRef, useEffect } from "react";
+import React, {
+  useState,
+  ReactElement,
+  useRef,
+  useEffect,
+  useContext,
+} from "react";
 import {
   Alert,
   Dimensions,
@@ -10,6 +16,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { FormContext } from "../../../context/Form";
 import { Picker } from "@react-native-picker/picker";
 import { Formik } from "formik";
 import { Block, Button, Input, Text, theme, Icon } from "galio-framework";
@@ -62,75 +69,36 @@ const HouseForm = ({
   handleConditionRate,
   mode,
 }: FormikValues): ReactElement => {
-  const [openSubtype, setOpenSubtype] = useState(false);
-  const [openDealtype, setOpenDealtype] = useState(false);
-  const [openEnergyLabel, setOpenEnergyLabel] = useState(false);
-  const [subtype, setSubtype] = useState(values.property.propertyType.subcode);
-  const [dealtype, setDealtype] = useState(values.dealType);
-  const [energyLabel, setEnergyLabel] = useState(values.energyLabel);
-  const [itemsSubtype, setItemsSubtype] = useState(houseSubtypes);
-  const [itemsDealtype, setItemsDealtype] = useState(dealTypes);
-  const [itemsEnergyLabel, setItemsEnergyLabel] = useState(energyLabels);
-
+  const {
+    openSubtype,
+    setOpenSubtype,
+    openDealtype,
+    setOpenDealtype,
+    openEnergyLabel,
+    setOpenEnergyLabel,
+    subtype,
+    setSubtype,
+    dealtype,
+    setDealtype,
+    energyLabel,
+    setEnergyLabel,
+    itemsSubtype,
+    setItemsSubtype,
+    itemsDealtype,
+    setItemsDealtype,
+    itemsEnergyLabel,
+    setItemsEnergyLabel,
+    handleCloseDropdownPickers,
+  } = useContext(FormContext);
   // useOnFocus(() => {
   //   if (mode === "create") resetDropDownValues();
   // });
-
-  useEffect(() => {
-    // if (dealtype)
-    //   setTouched({
-    //     ...touched,
-    //     dealType: true,
-    //   });
-    setFieldValue("dealType", dealtype);
-  }, [dealtype]);
-
-  useEffect(() => {
-    setFieldValue("property.propertyType.subcode", subtype);
-  }, [subtype]);
-
-  useEffect(() => {
-    setFieldValue("energyLabel", energyLabel);
-  }, [energyLabel]);
-
-  useEffect(() => {
-    if (openSubtype) {
-      handleCloseDropdownPickers();
-      setOpenSubtype(true);
-    }
-  }, [openSubtype]);
-
-  useEffect(() => {
-    if (openDealtype) {
-      handleCloseDropdownPickers();
-      setOpenDealtype(true);
-    }
-  }, [openDealtype]);
-
-  useEffect(() => {
-    if (openEnergyLabel) {
-      handleCloseDropdownPickers();
-      setOpenEnergyLabel(true);
-    }
-  }, [openEnergyLabel]);
 
   // const resetDropDownValues = (): void => {
   //   setDealtype("");
   //   setSubtype("");
   //   setEnergyLabel("");
   // };
-
-  const handleCloseSubtype = (): void => setOpenSubtype(false);
-
-  const handleCloseDealtype = (): void => setOpenDealtype(false);
-
-  const handleCloseEnergyLabel = (): void => setOpenEnergyLabel(false);
-
-  const handleCloseDropdownPickers = (): void => {
-    handleCloseSubtype();
-    handleCloseDealtype();
-    handleCloseEnergyLabel();
-  };
 
   return (
     <TouchableOpacity activeOpacity={1} onPress={handleCloseDropdownPickers}>

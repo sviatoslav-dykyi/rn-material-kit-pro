@@ -160,10 +160,8 @@ const AuthProvider = ({ children }: Props) => {
         const response = await signUpRequest(data);
         const json = await response.json();
         if ([200, 201].includes(response.status)) {
-          const {
-            user: { email },
-          } = json;
-          onSuccess && onSuccess(email);
+          const { message } = json;
+          onSuccess && onSuccess(message);
         } else {
           const { message } = json;
           onError && onError(message);

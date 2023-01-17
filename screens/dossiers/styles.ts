@@ -5,7 +5,11 @@ import { materialTheme } from "../../constants";
 
 const { width } = Dimensions.get("window");
 
+export const SLIDER_WIDTH = Dimensions.get("window").width + 80;
+export const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7);
+
 export const styles = StyleSheet.create({
+  container: { flex: 1 },
   signup: {
     marginTop: Platform.OS === "android" ? -HeaderHeight : 0,
   },
@@ -209,6 +213,18 @@ export const styles = StyleSheet.create({
   inputPaperIcon: {
     marginBottom: -15,
   },
+  submitDossierBtn: {
+    position: "absolute",
+    bottom: 10,
+    right: 10,
+    borderRadius: 20,
+    width: 120,
+  },
+  submitDossierBtnText: {
+    color: "white",
+    fontSize: 19,
+  },
+  homeCreateButton: { position: "absolute", bottom: 12, right: 10 },
 });
 
 export const styles2 = StyleSheet.create({});

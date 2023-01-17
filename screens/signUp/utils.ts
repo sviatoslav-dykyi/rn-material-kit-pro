@@ -1,7 +1,8 @@
 import { FormikValues } from "formik";
 import { Dispatch, SetStateAction, useContext } from "react";
-import { confirmMail } from "../../api";
+import { confirmMail, confirmPhone } from "../../api";
 import { Navigation } from "../../types/navigation";
+import { VerificationMode } from "./types";
 
 // export const initSignUpValues = {
 //   phone: "+493482932441",
@@ -23,14 +24,18 @@ export const initSignUpValues = {
 
 export const handleVerification =
   ({
+    verificationMode,
     verificationCode,
+    setVerificationCode,
     setVerificationMode,
     setVerificationError,
     setVerificationSubmitting,
     navigation,
   }: {
+    verificationMode: VerificationMode;
     verificationCode: string;
-    setVerificationMode: Dispatch<SetStateAction<boolean>>;
+    setVerificationCode: Dispatch<SetStateAction<string>>;
+    setVerificationMode: Dispatch<SetStateAction<VerificationMode>>;
     setVerificationError: Dispatch<SetStateAction<string | null>>;
     setVerificationSubmitting: Dispatch<SetStateAction<boolean>>;
     navigation: Navigation;
@@ -38,19 +43,33 @@ export const handleVerification =
   async (): Promise<void> => {
     if (!verificationCode) return;
     setVerificationSubmitting(true);
-    const response = await confirmMail(verificationCode);
-    const json = await response.json();
-    if ([200, 201].includes(response.status)) {
-      const {
-        user: { email },
-      } = json;
-      setVerificationMode(false);
-      setVerificationSubmitting(false);
-      navigation?.navigate("Sign In", { email: email });
-    } else {
-      const { message } = json;
-      setVerificationError(message);
+    if (verificationMode === "email") {
+      const response = await confirmMail(verificationCode);
+      const json = await response.json();
+      if ([200, 201].includes(response.status)) {
+        console.log("json email", json);
+        setVerificationMode("phone");
+        setVerificationSubmitting(false);
+        setVerificationCode("");
+      } else {
+        const { message } = json;
+        setVerificationError(message);
+      }
+    } else if (verificationMode === "phone") {
+      const response = await confirmPhone(verificationCode);
+      const json = await response.json();
+      if ([200, 201].includes(response.status)) {
+        console.log("json phone", json);
+        setVerificationMode(null);
+        setVerificationSubmitting(false);
+        setVerificationCode("");
+        navigation?.navigate("Home");
+      } else {
+        const { message } = json;
+        setVerificationError(message);
+      }
     }
+
     setVerificationSubmitting(false);
   };
 
@@ -60,7 +79,7 @@ export const handleSignUpSubmit = ({
   setVerificationEmail,
 }: {
   signUp: (data: any, onSuccess: any, onError: any) => Promise<void>;
-  setVerificationMode: Dispatch<SetStateAction<boolean>>;
+  setVerificationMode: Dispatch<SetStateAction<VerificationMode>>;
   setVerificationEmail: Dispatch<SetStateAction<string>>;
 }) => {
   return async (
@@ -71,14 +90,14 @@ export const handleSignUpSubmit = ({
     setSubmitting(true);
     await signUp(
       values,
-      (email: string) => {
+      (message: string) => {
         setStatus({
           success: true,
           errors: {},
         });
         setSubmitting(false);
-        setVerificationMode(true);
-        setVerificationEmail(email);
+        setVerificationMode("email");
+        setVerificationEmail(message);
       },
       (message: string) => {
         console.log("inside2");

@@ -17,6 +17,10 @@ export const confirmMail = async (code: string) => {
   return await http.get(`auth/confirmMail/${code}`);
 };
 
+export const confirmPhone = async (code: string) => {
+  return await http.get(`auth/confirmPhone/${code}`);
+};
+
 export const resetPassword = async (code: string, data: ResetPassword) => {
   return await http.patch(`auth/resetpassword/${code}`, data);
 };

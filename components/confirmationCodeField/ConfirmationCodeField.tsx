@@ -56,7 +56,7 @@ const ConfirmationCodeField = ({
   onPress,
   error,
   isSubmitting,
-  email,
+  message,
   confirmButtonTitle = "VERIFY",
   title = "Verification",
 }: {
@@ -65,7 +65,7 @@ const ConfirmationCodeField = ({
   onPress: () => void;
   error?: string | null;
   isSubmitting?: boolean;
-  email: string;
+  message: string;
   confirmButtonTitle?: string;
   title?: string;
 }) => {
@@ -126,11 +126,12 @@ const ConfirmationCodeField = ({
 
       {!error ? (
         <Text style={styles.subTitle}>
-          {"Please enter the  code \n"}
+          {message}
+          {/* {"Please enter the  code \n"}
           we send to{" "}
           <Text style={{ textDecorationLine: "underline", color: "#777" }}>
             {email || "your email address"}
-          </Text>
+          </Text> */}
         </Text>
       ) : (
         <Text style={styles.subTitle}>{error}</Text>

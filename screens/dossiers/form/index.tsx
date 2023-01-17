@@ -21,6 +21,7 @@ import {
   TextInput,
   HelperText,
 } from "react-native-paper";
+
 import {
   actions,
   RichEditor,
@@ -46,9 +47,11 @@ import {
   ActivityIndicator,
   Alert,
   TouchableOpacity,
+  StyleSheet,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
+import Carousel from "react-native-reanimated-carousel";
 import HouseForm from "./House";
 import {
   GooglePlacesAutocomplete,
@@ -58,6 +61,7 @@ import {
   findAddressDetail,
   GOOGLE_API_KEY,
   onGoogleAutocompleteChange,
+  pickDocument,
   pickImage,
 } from "./utils";
 import { Icon } from "../../../components";
@@ -68,6 +72,7 @@ import { REACT_BASE_URL } from "../../../constants/utils";
 import { ImagePickerResult } from "expo-image-picker";
 import SearchBarWithAutocompleteWrapper from "../../../components/searchBarWithAutocomplete/Wrapper";
 const { width } = Dimensions.get("window");
+
 const CreateDossiersForm = ({
   handleChange,
   handleBlur,
@@ -90,7 +95,7 @@ const CreateDossiersForm = ({
   const [imageErrors, setImageErrors] = useState<string[]>([]);
 
   const isFocused = useIsFocused();
-
+  const isCarousel = React.useRef(null);
   useEffect(() => {
     if (isFocused) {
       resetForm();
@@ -117,41 +122,54 @@ const CreateDossiersForm = ({
   const hanleButtonTypePress = (code: DossierTypes) => () =>
     setFieldValue("property.propertyType.code", code);
 
-  const pickDocument = async () => {
-    try {
-      const res = await DocumentPicker.getDocumentAsync({
-        copyToCacheDirectory: true,
-      });
-      //console.log("res123213", res);
-      //this.uploadAPICall(res); //here you can call your API and send the data to that API
-    } catch (err) {
-      //console.log("error--");
-    }
-  };
-  console.log("errors", errors?.property?.location);
-  console.log("touched", touched);
   const ref = useRef<GooglePlacesAutocompleteRef | null>(null);
 
   useEffect(() => {
     ref.current?.setAddressText(addressText);
   }, [addressText]);
 
+  const removeImage = (index: number) => {
+    const auxImages = [...values.images];
+    auxImages.splice(index, 1);
+    setFieldValue("images", auxImages);
+  };
+
+  const CarouselCardItem =
+    (handleOnPress: (index: number) => void) =>
+    ({ item, index }: any) => {
+      return (
+        <View style={[styles2.container, { position: "relative" }]} key={index}>
+          <Image source={{ uri: item.imgUrl }} style={styles2.image} />
+          <Button
+            onlyIcon
+            shadowColor={true}
+            icon="delete"
+            iconFamily="MaterialIcons"
+            color="red"
+            iconSize={30}
+            onPress={() => {
+              handleOnPress(index);
+            }}
+            style={{
+              width: 40,
+              height: 40,
+              position: "absolute",
+              top: 0,
+              right: 15,
+            }}
+          ></Button>
+        </View>
+      );
+    };
+
   return (
-    <View style={{ flex: 1 }}>
-      <Button
+    <View style={{ flex: 1, paddingTop: 30 }}>
+      {/* <Button
         icon="plus"
         iconFamily="Entypo"
         iconSize={20}
-        textStyle={{
-          color: "white",
-          fontSize: 19,
-        }}
-        style={{
-          position: "absolute",
-          bottom: 10,
-          right: 10,
-          borderRadius: 20,
-        }}
+        textStyle={styles.submitDossierBtnText}
+        style={styles.submitDossierBtn}
         color={materialTheme.COLORS.BUTTON_COLOR}
         onPress={() => {
           submitForm();
@@ -159,7 +177,7 @@ const CreateDossiersForm = ({
         loading={isSubmitting}
       >
         {mode === "create" ? "Create" : "Edit"}
-      </Button>
+      </Button> */}
       <ScrollView nestedScrollEnabled={true}>
         <Block center>
           <TextInput
@@ -184,7 +202,7 @@ const CreateDossiersForm = ({
           >
             {touched.title && (status?.errors.title || errors.title)}
           </HelperText>
-          <Block row style={styles.googlePlacesLabelContainer}>
+          {/* <Block row style={styles.googlePlacesLabelContainer}>
             <Icon
               name="location-on"
               color="#fff"
@@ -195,7 +213,7 @@ const CreateDossiersForm = ({
               style={styles.pickerLabelIcon}
             />
             <Text style={styles.pickerLabelText}>Address*</Text>
-          </Block>
+          </Block> */}
           <Block style={styles.ratingBlock}>
             <SearchBarWithAutocompleteWrapper
               onSuccess={(location) => {
@@ -389,6 +407,11 @@ const CreateDossiersForm = ({
               }}
             />
           )}
+          <Block style={{ width: width * 0.9, paddingBottom: 10 }}>
+            <Text style={[styles.showSubtitle, { color: "#000" }]}>
+              Description
+            </Text>
+          </Block>
           <Block
             style={[
               styles.richContainer,
@@ -429,7 +452,33 @@ const CreateDossiersForm = ({
               }}
             />
           </Block>
-          <Block flex row>
+
+          <Block style={{ width: width * 0.9 }}>
+            <Text style={[styles.showSubtitle, { color: "#000" }]}>Photos</Text>
+            <Button
+              onPress={pickImage({
+                setImageIsLoading,
+                setImageErrors,
+                setFieldValue,
+                values,
+              })}
+              icon={"picture"}
+              iconFamily="AntDesign"
+              iconSize={19}
+              style={{
+                paddingLeft: 20,
+                paddingRight: 20,
+                //width: 200,
+                borderRadius: 30,
+                marginLeft: 0,
+                height: 48,
+              }}
+            >
+              Upload
+            </Button>
+          </Block>
+
+          {/* <Block flex row>
             <Button
               uppercase
               onPress={pickDocument}
@@ -453,8 +502,8 @@ const CreateDossiersForm = ({
             >
               Upload images
             </Button>
-          </Block>
-          <Block>
+          </Block> */}
+          {/* <Block>
             {values.images?.map(({ url }: DossierImage, i: number) => (
               <Block
                 row
@@ -491,7 +540,32 @@ const CreateDossiersForm = ({
                 ></Button>
               </Block>
             ))}
-          </Block>
+          </Block> */}
+          {values?.images?.length > 0 && (
+            <View style={{ width: width * 0.9, paddingTop: 20 }}>
+              <Carousel
+                loop={true}
+                width={width}
+                height={width / 2}
+                autoPlay={false}
+                data={values.images?.map(({ url }: DossierImage) => ({
+                  imgUrl: url,
+                }))}
+                scrollAnimationDuration={1000}
+                onSnapToItem={(index) => console.log("current index:", index)}
+                renderItem={CarouselCardItem(removeImage)}
+                mode="horizontal-stack"
+                enabled={values?.images?.length > 1}
+                modeConfig={{
+                  snapDirection: "left",
+                  moveSize: 400,
+                  stackInterval: 30,
+                  scaleInterval: 0.08,
+                  rotateZDeg: 135,
+                }}
+              />
+            </View>
+          )}
           {imageIsLoading && (
             <Block style={styles.activityIndicator}>
               <ActivityIndicator
@@ -505,7 +579,28 @@ const CreateDossiersForm = ({
               <Text style={{ color: "red" }}>{error}</Text>
             </View>
           ))}
-          <Block flex={10}>
+          <Block style={{ width: width * 0.9 }}>
+            <Text style={[styles.showSubtitle, { color: "#000" }]}>
+              Attachments
+            </Text>
+            <Button
+              onPress={pickDocument}
+              icon={"documents"}
+              iconFamily="Entypo"
+              iconSize={19}
+              style={{
+                paddingLeft: 20,
+                paddingRight: 20,
+                //width: 200,
+                borderRadius: 30,
+                marginLeft: 0,
+                height: 48,
+              }}
+            >
+              Upload
+            </Button>
+          </Block>
+          <Block style={{ paddingTop: 50 }}>
             <Button
               size="large"
               shadowless
@@ -526,4 +621,41 @@ const CreateDossiersForm = ({
   );
 };
 
-export default React.memo(CreateDossiersForm);
+const SLIDER_WIDTH = Dimensions.get("window").width + 80;
+const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7);
+
+const styles2 = StyleSheet.create({
+  container: {
+    backgroundColor: "white",
+    borderRadius: 8,
+    width: ITEM_WIDTH,
+    paddingBottom: 40,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.29,
+    shadowRadius: 4.65,
+    elevation: 7,
+  },
+  image: {
+    width: ITEM_WIDTH,
+    height: 300,
+  },
+  header: {
+    color: "#222",
+    fontSize: 28,
+    fontWeight: "bold",
+    paddingLeft: 20,
+    paddingTop: 20,
+  },
+  body: {
+    color: "#222",
+    fontSize: 18,
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+});
+
+export default CreateDossiersForm;

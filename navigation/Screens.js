@@ -220,7 +220,7 @@ function AppStack(props) {
     >
       {state.userToken == null ? (
         <>
-          {/* <Drawer.Screen
+          <Drawer.Screen
             name="Sign In"
             component={SignInScreen}
             options={{
@@ -234,8 +234,8 @@ function AppStack(props) {
                 />
               ),
             }}
-          /> */}
-          <Stack.Screen
+          />
+          {/* <Stack.Screen
             name="CreateDossier"
             headerShown={false}
             component={CreateDossierScreen}
@@ -251,7 +251,7 @@ function AppStack(props) {
                 />
               ),
             }}
-          />
+          /> */}
           <Drawer.Screen
             name="Sign Up"
             component={SignUpScreen}

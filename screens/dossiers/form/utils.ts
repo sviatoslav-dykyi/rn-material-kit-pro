@@ -4,12 +4,13 @@ import {
   GooglePlaceDetail,
   PlaceType,
 } from "react-native-google-places-autocomplete";
+import * as DocumentPicker from "expo-document-picker";
 import { DossierTypes } from "../../../utils/constants";
 import { Dossier } from "../types";
 import { conditionRates, qualityRates } from "../utils";
 import omit from "lodash/omit";
 import * as ImagePicker from "expo-image-picker";
-import { upload } from "../edit/utils";
+import { upload, uploadDocument } from "../edit/utils";
 import { REACT_BASE_URL } from "../../../constants/utils";
 import { PickImageProps } from "./types";
 
@@ -252,6 +253,25 @@ export const pickImage =
       setImageIsLoading(false);
     }
   };
+
+export const pickDocument = async () => {
+  try {
+    const result = await DocumentPicker.getDocumentAsync({
+      multiple: true,
+      copyToCacheDirectory: true,
+    });
+    const { type } = result;
+    if (type !== "success") return;
+    console.log("result.uri", result.uri);
+    const res = await uploadDocument(
+      `${REACT_BASE_URL}/dossiers/attachments`,
+      result.uri
+    );
+    //this.uploadAPICall(res); //here you can call your API and send the data to that API
+  } catch (err) {
+    //console.log("error--");
+  }
+};
 
 export const onGoogleAutocompleteChange =
   ({

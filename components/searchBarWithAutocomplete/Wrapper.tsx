@@ -40,11 +40,6 @@ const SearchBarWithAutocompleteWrapper = ({
 
   const { container } = styles;
 
-  /**
-   * Grab predictions on entering text
-   *    by sending reqyest to Google Places API.
-   * API details: https://developers.google.com/maps/documentation/places/web-service/autocomplete
-   */
   const onChangeText = async () => {
     if (search.term.trim() === "") return;
     if (!search.fetchPredictions) return;
@@ -68,12 +63,6 @@ const SearchBarWithAutocompleteWrapper = ({
   };
   useDebounce(onChangeText, 1000, [search.term]);
 
-  /**
-   * Grab lattitude and longitude on prediction tapped
-   *    by sending another reqyest using the place id.
-   * You can check what kind of information you can get at:
-   *    https://developers.google.com/maps/documentation/places/web-service/details#PlaceDetailsRequests
-   */
   const onPredictionTapped = async (placeId: string, description: string) => {
     const apiUrl = `${GOOGLE_PACES_API_BASE_URL}/details/json?key=${GOOGLE_API_KEY}&place_id=${placeId}`;
     try {

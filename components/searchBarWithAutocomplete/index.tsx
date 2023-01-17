@@ -8,7 +8,9 @@ import {
   TouchableOpacity,
   Text,
   ScrollView,
+  Dimensions,
 } from "react-native";
+const { width } = Dimensions.get("window");
 import { TextInput } from "react-native-paper";
 import { materialTheme } from "../../constants";
 import { PredictionType } from "./Wrapper";
@@ -94,24 +96,48 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = (
         },
       ]}
     >
+      {/* <TextInput
+        style={[styles.inputPaper]}
+        textColor="white"
+        autoCapitalize="none"
+        label={<Text style={styles.inputPaperLabel}>Title</Text>}
+        underlineStyle={styles.inputPaperUnderlineStyle}
+        value={"fdsfsf"}
+        //onChangeText={handleChange("title")}
+        left={
+          <TextInput.Icon
+            size={20}
+            icon="clipboard-text-outline"
+            color={() => "white"}
+          />
+        }
+      /> */}
       <TextInput
-        placeholder="Search by address"
-        placeholderTextColor="gray"
-        mode="outlined"
+        textColor="white"
+        autoCapitalize="none"
+        label={<Text style={styles.inputPaperLabel}>Address*</Text>}
         value={value}
         onChangeText={onChangeText}
         returnKeyType="search"
         multiline={true}
         numberOfLines={1}
-        style={[styles.inputStyle]}
-        outlineStyle={[styles.outlineStyle, inputBottomRadius]}
-        outlineColor="transparent"
+        style={[styles.inputPaper]}
+        underlineStyle={[styles.inputPaperUnderlineStyle, inputBottomRadius]}
         onLayout={(event) => {
           const { height, width } = event.nativeEvent.layout;
           setInputSize({ height, width });
         }}
         right={
-          <TextInput.Icon style={styles.icon} icon="close" onPress={onCancel} />
+          value ? (
+            <TextInput.Icon
+              style={styles.icon}
+              icon="close"
+              onPress={onCancel}
+            />
+          ) : null
+        }
+        left={
+          <TextInput.Icon size={20} icon="map-marker" color={() => "white"} />
         }
       />
       {showPredictions && _renderPredictions(predictions)}
@@ -126,7 +152,7 @@ const styles = StyleSheet.create({
   },
   inputStyle: {
     fontSize: 14,
-    backgroundColor: "#fff",
+    //backgroundColor: "#fff",
   },
   predictionsContainer: {
     backgroundColor: "#cfcfcf",
@@ -142,9 +168,24 @@ const styles = StyleSheet.create({
   },
   icon: {
     top: 5,
+    marginRight: -20,
   },
   outlineStyle: {
     borderRadius: 10,
+  },
+  inputPaper: {
+    width: width * 0.9,
+    backgroundColor: "transparent",
+  },
+  inputPaperLabel: {
+    color: materialTheme.COLORS.PLACEHOLDER,
+  },
+  inputPaperUnderlineStyle: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#fff",
+  },
+  inputPaperIcon: {
+    marginBottom: -15,
   },
 });
 
