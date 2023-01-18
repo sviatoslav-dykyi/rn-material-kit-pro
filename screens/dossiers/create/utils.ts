@@ -10,14 +10,16 @@ export const handleCreateDossierSubmit = ({ navigation }: any) => {
     { setStatus, setSubmitting, setValues, setTouched, resetForm }: FormikValues
   ): Promise<void> => {
     setSubmitting(true);
+
     const clone = JSON.parse(JSON.stringify(dossier));
     const result = prepareBeforeFormJsonDara(clone);
     //console.log()
     console.log("finally before submission", result);
+
     //console.log("condition", result.property.condition);
     const response = await createDossier(result);
     const json = await response.json();
-    console.log("json", json);
+    console.log("json.dossier.property", json.dossier.property);
     if ([200, 201].includes(response.status)) {
       setSubmitting(false);
       navigation.navigate("Home");

@@ -93,7 +93,7 @@ const CreateDossiersForm = ({
   const [height, setHeight] = useState(MIN_HEIGHT_RICH_CONTAINER);
   const [imageIsLoading, setImageIsLoading] = useState(false);
   const [imageErrors, setImageErrors] = useState<string[]>([]);
-
+  console.log("errors", errors);
   const isFocused = useIsFocused();
   const isCarousel = React.useRef(null);
   useEffect(() => {
@@ -119,8 +119,10 @@ const CreateDossiersForm = ({
     setFieldValue(field, conditionRates[rating - 1].value);
   };
 
-  const hanleButtonTypePress = (code: DossierTypes) => () =>
+  const hanleButtonTypePress = (code: DossierTypes) => () => {
+    setFieldValue("property.propertyType.subcode", "");
     setFieldValue("property.propertyType.code", code);
+  };
 
   const ref = useRef<GooglePlacesAutocompleteRef | null>(null);
 
@@ -169,7 +171,7 @@ const CreateDossiersForm = ({
         iconFamily="Entypo"
         iconSize={20}
         textStyle={styles.submitDossierBtnText}
-        style={styles.submitDossierBtn}
+        //style={styles.submitDossierBtn}
         color={materialTheme.COLORS.BUTTON_COLOR}
         onPress={() => {
           submitForm();
@@ -216,8 +218,9 @@ const CreateDossiersForm = ({
           </Block> */}
           <Block style={styles.ratingBlock}>
             <SearchBarWithAutocompleteWrapper
+              mode={mode}
+              addressText={addressText}
               onSuccess={(location) => {
-                console.log("here location", location);
                 setFieldValue("property.location", location);
               }}
             />

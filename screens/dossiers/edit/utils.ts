@@ -36,10 +36,11 @@ export const handleEditDossierSubmit = ({ navigation }: any) => {
     const result = prepareBeforeFormJsonDara(clone);
     //console.log()
     console.log("finally before submission edit", result);
+    console.log("result.property", result.property);
     //console.log("condition", result.property.condition);
     const response = await editDossier(result);
     const json = await response.json();
-    console.log("json", json);
+    console.log("json on edit", json);
     if ([200, 201].includes(response.status)) {
       setSubmitting(false);
       navigation.navigate("Home");

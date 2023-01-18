@@ -91,7 +91,7 @@ type Props = {
 const AuthProvider = ({ children }: Props) => {
   const navigation = useNavigation<Navigation>();
   const [state, dispatch] = useReducer(AuthReducer, authInitState);
-  console.log("Gog");
+
   const [profile, setProfile] = useState();
 
   useEffect(() => {

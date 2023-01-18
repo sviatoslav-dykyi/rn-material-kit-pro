@@ -258,7 +258,7 @@ const Overview = ({ dossier }: { dossier: Dossier }): ReactElement => {
       </Block>
       <Text style={[styles.showSubtitle]}>Quality and Condition</Text>
       <Block>
-        {(quality?.kitchen || condition?.kitchen) && (
+        {
           <>
             <Block row style={[styles.showFieldInfoBlock]}>
               <Icon
@@ -272,7 +272,7 @@ const Overview = ({ dossier }: { dossier: Dossier }): ReactElement => {
               <Text style={styles.showFieldInfoText}>Kitchen</Text>
             </Block>
             <View style={styles.showRatingBlock}>
-              {quality?.kitchen && (
+              {
                 <AirbnbRating
                   count={qualityRates.length}
                   ratingContainerStyle={[styles.showRatingContainerStyle]}
@@ -284,8 +284,8 @@ const Overview = ({ dossier }: { dossier: Dossier }): ReactElement => {
                   size={SHOW_RATING_SIZE}
                   reviewColor={materialTheme.COLORS.BUTTON_COLOR}
                 />
-              )}
-              {condition?.kitchen && (
+              }
+              {
                 <AirbnbRating
                   count={conditionRates.length}
                   ratingContainerStyle={styles.showRatingContainerStyle}
@@ -297,11 +297,11 @@ const Overview = ({ dossier }: { dossier: Dossier }): ReactElement => {
                   size={SHOW_RATING_SIZE}
                   reviewColor={materialTheme.COLORS.BUTTON_COLOR}
                 />
-              )}
+              }
             </View>
           </>
-        )}
-        {(quality?.bathrooms || condition?.bathrooms) && (
+        }
+        {
           <>
             <Block row style={[styles.showFieldInfoBlock]}>
               <Icon
@@ -315,7 +315,7 @@ const Overview = ({ dossier }: { dossier: Dossier }): ReactElement => {
               <Text style={styles.showFieldInfoText}>Bathrooms</Text>
             </Block>
             <View style={styles.showRatingBlock}>
-              {quality?.bathrooms && (
+              {
                 <AirbnbRating
                   count={qualityRates.length}
                   ratingContainerStyle={styles.showRatingContainerStyle}
@@ -327,8 +327,8 @@ const Overview = ({ dossier }: { dossier: Dossier }): ReactElement => {
                   size={SHOW_RATING_SIZE}
                   reviewColor={materialTheme.COLORS.BUTTON_COLOR}
                 />
-              )}
-              {condition?.bathrooms && (
+              }
+              {
                 <AirbnbRating
                   count={conditionRates.length}
                   ratingContainerStyle={styles.showRatingContainerStyle}
@@ -340,11 +340,11 @@ const Overview = ({ dossier }: { dossier: Dossier }): ReactElement => {
                   size={SHOW_RATING_SIZE}
                   reviewColor={materialTheme.COLORS.BUTTON_COLOR}
                 />
-              )}
+              }
             </View>
           </>
-        )}
-        {(quality?.flooring || condition?.flooring) && (
+        }
+        {
           <>
             <Block row style={[styles.showFieldInfoBlock]}>
               <Icon
@@ -358,7 +358,7 @@ const Overview = ({ dossier }: { dossier: Dossier }): ReactElement => {
               <Text style={styles.showFieldInfoText}>Floor</Text>
             </Block>
             <View style={styles.showRatingBlock}>
-              {quality?.flooring && (
+              {
                 <AirbnbRating
                   count={qualityRates.length}
                   ratingContainerStyle={styles.showRatingContainerStyle}
@@ -370,8 +370,8 @@ const Overview = ({ dossier }: { dossier: Dossier }): ReactElement => {
                   size={SHOW_RATING_SIZE}
                   reviewColor={materialTheme.COLORS.BUTTON_COLOR}
                 />
-              )}
-              {condition?.flooring && (
+              }
+              {
                 <AirbnbRating
                   count={conditionRates.length}
                   ratingContainerStyle={styles.showRatingContainerStyle}
@@ -383,11 +383,11 @@ const Overview = ({ dossier }: { dossier: Dossier }): ReactElement => {
                   size={SHOW_RATING_SIZE}
                   reviewColor={materialTheme.COLORS.BUTTON_COLOR}
                 />
-              )}
+              }
             </View>
           </>
-        )}
-        {(quality?.windows || condition?.windows) && (
+        }
+        {
           <>
             <Block row style={[styles.showFieldInfoBlock]}>
               <Icon
@@ -401,7 +401,7 @@ const Overview = ({ dossier }: { dossier: Dossier }): ReactElement => {
               <Text style={styles.showFieldInfoText}>Windows</Text>
             </Block>
             <View style={styles.showRatingBlock}>
-              {quality?.windows && (
+              {
                 <AirbnbRating
                   count={qualityRates.length}
                   ratingContainerStyle={styles.showRatingContainerStyle}
@@ -413,8 +413,8 @@ const Overview = ({ dossier }: { dossier: Dossier }): ReactElement => {
                   size={SHOW_RATING_SIZE}
                   reviewColor={materialTheme.COLORS.BUTTON_COLOR}
                 />
-              )}
-              {condition?.windows && (
+              }
+              {
                 <AirbnbRating
                   count={conditionRates.length}
                   ratingContainerStyle={styles.showRatingContainerStyle}
@@ -426,11 +426,11 @@ const Overview = ({ dossier }: { dossier: Dossier }): ReactElement => {
                   size={SHOW_RATING_SIZE}
                   reviewColor={materialTheme.COLORS.BUTTON_COLOR}
                 />
-              )}
+              }
             </View>
           </>
-        )}
-        {(quality?.masonry || condition?.masonry) && (
+        }
+        {
           <>
             <Block row style={[styles.showFieldInfoBlock]}>
               <Icon
@@ -444,7 +444,7 @@ const Overview = ({ dossier }: { dossier: Dossier }): ReactElement => {
               <Text style={styles.showFieldInfoText}>Masonry</Text>
             </Block>
             <View style={styles.showRatingBlock}>
-              {quality?.masonry && (
+              {
                 <AirbnbRating
                   count={qualityRates.length}
                   ratingContainerStyle={styles.showRatingContainerStyle}
@@ -456,8 +456,8 @@ const Overview = ({ dossier }: { dossier: Dossier }): ReactElement => {
                   size={SHOW_RATING_SIZE}
                   reviewColor={materialTheme.COLORS.BUTTON_COLOR}
                 />
-              )}
-              {condition?.masonry && (
+              }
+              {
                 <AirbnbRating
                   count={conditionRates.length}
                   ratingContainerStyle={styles.showRatingContainerStyle}
@@ -469,10 +469,10 @@ const Overview = ({ dossier }: { dossier: Dossier }): ReactElement => {
                   size={SHOW_RATING_SIZE}
                   reviewColor={materialTheme.COLORS.BUTTON_COLOR}
                 />
-              )}
+              }
             </View>
           </>
-        )}
+        }
         {/* <Rating
           values={dossier}
           handleQualityRate={() => {}}

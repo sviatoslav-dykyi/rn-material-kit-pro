@@ -71,36 +71,61 @@ const AppartmentForm = ({
   handleConditionRate,
   mode,
 }: FormikValues): ReactElement => {
-  // const [openSubtype, setOpenSubtype] = useState(false);
-  // const [openDealtype, setOpenDealtype] = useState(false);
-  // const [openEnergyLabel, setOpenEnergyLabel] = useState(false);
-  // const [subtype, setSubtype] = useState(values.property.propertyType.subcode);
-  // const [dealtype, setDealtype] = useState(values.dealType);
-  // const [energyLabel, setEnergyLabel] = useState(values.property.energyLabel);
-  // const [itemsSubtype, setItemsSubtype] = useState(appartmentSubtypes);
-  // const [itemsDealtype, setItemsDealtype] = useState(dealTypes);
-  // const [itemsEnergyLabel, setItemsEnergyLabel] = useState(energyLabels);
-  const {
-    openSubtype,
-    setOpenSubtype,
-    openDealtype,
-    setOpenDealtype,
-    openEnergyLabel,
-    setOpenEnergyLabel,
-    subtype,
-    setSubtype,
-    dealtype,
-    setDealtype,
-    energyLabel,
-    setEnergyLabel,
-    itemsSubtype,
-    setItemsSubtype,
-    itemsDealtype,
-    setItemsDealtype,
-    itemsEnergyLabel,
-    setItemsEnergyLabel,
-    handleCloseDropdownPickers,
-  } = useContext(FormContext);
+  const [openSubtype, setOpenSubtype] = useState(false);
+  const [openDealtype, setOpenDealtype] = useState(false);
+  const [openEnergyLabel, setOpenEnergyLabel] = useState(false);
+  const [subtype, setSubtype] = useState(values.property.propertyType.subcode);
+  const [dealtype, setDealtype] = useState(values.dealType);
+  const [energyLabel, setEnergyLabel] = useState(values.property.energyLabel);
+  const [itemsSubtype, setItemsSubtype] = useState(appartmentSubtypes);
+  const [itemsDealtype, setItemsDealtype] = useState(dealTypes);
+  const [itemsEnergyLabel, setItemsEnergyLabel] = useState(energyLabels);
+
+  useEffect(() => {
+    setFieldValue("dealType", dealtype);
+  }, [dealtype]);
+
+  useEffect(() => {
+    setFieldValue("property.propertyType.subcode", subtype);
+  }, [subtype]);
+
+  useEffect(() => {
+    setFieldValue("energyLabel", energyLabel);
+  }, [energyLabel]);
+
+  useEffect(() => {
+    if (openSubtype) {
+      handleCloseDropdownPickers();
+      setOpenSubtype(true);
+    }
+  }, [openSubtype]);
+
+  useEffect(() => {
+    if (openDealtype) {
+      handleCloseDropdownPickers();
+      setOpenDealtype(true);
+    }
+  }, [openDealtype]);
+
+  useEffect(() => {
+    if (openEnergyLabel) {
+      handleCloseDropdownPickers();
+      setOpenEnergyLabel(true);
+    }
+  }, [openEnergyLabel]);
+
+  const handleCloseSubtype = (): void => setOpenSubtype(false);
+
+  const handleCloseDealtype = (): void => setOpenDealtype(false);
+
+  const handleCloseEnergyLabel = (): void => setOpenEnergyLabel(false);
+
+  const handleCloseDropdownPickers = (): void => {
+    handleCloseSubtype();
+    handleCloseDealtype();
+    handleCloseEnergyLabel();
+  };
+
   const [checkboxes, setCheckboxes] = useState({
     isNew: values.property.isNew,
     hasLift: values.property.hasLift,
@@ -108,33 +133,16 @@ const AppartmentForm = ({
 
   useOnFocus(() => {
     if (mode === "create") {
-      //resetDropDownValues();
+      resetDropDownValues();
       //resetCheckboxed();
     }
   });
 
-  // useEffect(() => {
-  //   setFieldValue("dealType", dealtype);
-  // }, [dealtype]);
-
-  // useEffect(() => {
-  //   setFieldValue("property.propertyType.subcode", subtype);
-  // }, [subtype]);
-
-  // useEffect(() => {
-  //   setFieldValue("energyLabel", energyLabel);
-  // }, [energyLabel]);
-
-  // useEffect(() => {
-  //   setFieldValue("property.isNew", checkboxes.isNew);
-  //   setFieldValue("property.hasLift", checkboxes.hasLift);
-  // }, [checkboxes]);
-
-  // const resetDropDownValues = (): void => {
-  //   setDealtype("");
-  //   setSubtype("");
-  //   setEnergyLabel("");
-  // };
+  const resetDropDownValues = (): void => {
+    setDealtype("");
+    setSubtype("");
+    setEnergyLabel("");
+  };
 
   return (
     <TouchableOpacity activeOpacity={1} onPress={handleCloseDropdownPickers}>

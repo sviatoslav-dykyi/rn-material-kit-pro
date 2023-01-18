@@ -133,6 +133,7 @@ const SearchBarWithAutocomplete: FunctionComponent<SearchBarProps> = (
               style={styles.icon}
               icon="close"
               onPress={onCancel}
+              color={() => "#fff"}
             />
           ) : null
         }

@@ -96,8 +96,8 @@ export type AppartmentSubtype =
 export type DealType = "sale" | "rent" | "";
 
 export type HouseSubtype =
-  | "detached_house"
-  | "semi_detached_house"
+  | "house_detached"
+  | "house_semi_detached"
   | "terraced_house_end"
   | "terraced_house_middle"
   | "farm";

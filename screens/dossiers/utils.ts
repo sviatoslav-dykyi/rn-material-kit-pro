@@ -117,8 +117,8 @@ export const appartmentSubtypes: DossierSubtype[] = [
 ];
 
 export const houseSubtypes: DossierSubtype[] = [
-  { value: "detached_house", label: "Detached house" },
-  { value: "semi_detached_house", label: "Semi-detached house" },
+  { value: "house_detached", label: "Detached house" },
+  { value: "house_semi_detached", label: "Semi-detached house" },
   { value: "terraced_house_end", label: "Terraced house - end" },
   { value: "terraced_house_middle", label: "Terraced house - middle" },
   { value: "farm", label: "Farm" },

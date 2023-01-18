@@ -209,7 +209,7 @@ const ResetPassword = (): ReactElement => {
                         setValue={setCode}
                         error={verification.error}
                         isSubmitting={isSubmitting}
-                        email={verification.email}
+                        message={verification.email}
                         confirmButtonTitle="RESET PASSWORD"
                         onPress={() => {
                           console.log("111");

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Dimensions,
   StyleSheet,
@@ -46,12 +46,13 @@ const SignUp = () => {
   const [verificationEmail, setVerificationEmail] = useState("");
   const { firstName, lastName, password, passwordConfirm, phone, email } =
     useValidation();
-
+  const [userEmail, setUserEmail] = useState("");
+  const [userPhone, setUserPhone] = useState("");
   useOnFocus(() => {
     setVerificationMode(null);
   });
 
-  const { signUp } = useContext(AuthContext);
+  const { signUp, dispatch } = useContext(AuthContext);
 
   return (
     <LinearGradient
@@ -306,6 +307,7 @@ const SignUp = () => {
               </>
             ) : (
               <ConfirmationCodeField
+                verificationMode={verificationMode}
                 value={verificationCode}
                 setValue={setVerificationCode}
                 error={verificationError}
@@ -318,7 +320,9 @@ const SignUp = () => {
                   setVerificationMode,
                   setVerificationError,
                   setVerificationSubmitting,
+                  setVerificationEmail,
                   navigation,
+                  dispatch,
                 })}
               />
             )}

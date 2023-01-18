@@ -26,14 +26,14 @@ const ShowDossier = (): ReactElement => {
   const route = useRoute<any>();
   const id = route?.params?.id;
   const [dossier, setDossier] = useState<Dossier>();
-  const [isLoaing, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [tab, setTab] = useState<ShowPageTabs>("overview");
 
   useEffect(() => {
     fetchDossier({ setDossier, setIsLoading, id });
   }, [id]);
 
-  if (isLoaing) {
+  if (isLoading) {
     return (
       <View style={styles.activityIndicator}>
         <ActivityIndicator

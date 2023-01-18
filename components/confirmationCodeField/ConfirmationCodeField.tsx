@@ -26,6 +26,7 @@ import { Block, Button, theme, Text } from "galio-framework";
 import { materialTheme } from "../../constants";
 import { useNavigation } from "@react-navigation/native";
 import { Navigation } from "../../types/navigation";
+import { VerificationMode } from "../../screens/signUp/types";
 
 const { Value, Text: AnimatedText } = Animated;
 
@@ -57,6 +58,7 @@ const ConfirmationCodeField = ({
   error,
   isSubmitting,
   message,
+  verificationMode = null,
   confirmButtonTitle = "VERIFY",
   title = "Verification",
 }: {
@@ -66,6 +68,7 @@ const ConfirmationCodeField = ({
   error?: string | null;
   isSubmitting?: boolean;
   message: string;
+  verificationMode?: VerificationMode;
   confirmButtonTitle?: string;
   title?: string;
 }) => {
@@ -159,6 +162,24 @@ const ConfirmationCodeField = ({
         >
           {confirmButtonTitle}
         </Button>
+        {/* <Button
+          size="large"
+          color="transparent"
+          shadowless
+          onPress={() => {
+            //resetForm();
+            navigation?.navigate("Sign Up");
+          }}
+        >
+          <Text
+            center
+            color={theme.COLORS?.WHITE}
+            size={(theme.SIZES?.FONT || 0) * 0.75}
+            style={{ marginTop: 20 }}
+          >
+            {"Didn't receive code? Resend again"}
+          </Text>
+        </Button> */}
         <Button
           size="large"
           color="transparent"

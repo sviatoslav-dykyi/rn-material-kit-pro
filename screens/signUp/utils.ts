@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, useContext } from "react";
 import { confirmMail, confirmPhone } from "../../api";
 import { Navigation } from "../../types/navigation";
 import { VerificationMode } from "./types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // export const initSignUpValues = {
 //   phone: "+493482932441",
@@ -30,7 +31,9 @@ export const handleVerification =
     setVerificationMode,
     setVerificationError,
     setVerificationSubmitting,
+    setVerificationEmail,
     navigation,
+    dispatch,
   }: {
     verificationMode: VerificationMode;
     verificationCode: string;
@@ -38,7 +41,9 @@ export const handleVerification =
     setVerificationMode: Dispatch<SetStateAction<VerificationMode>>;
     setVerificationError: Dispatch<SetStateAction<string | null>>;
     setVerificationSubmitting: Dispatch<SetStateAction<boolean>>;
+    setVerificationEmail: Dispatch<SetStateAction<string>>;
     navigation: Navigation;
+    dispatch: any;
   }) =>
   async (): Promise<void> => {
     if (!verificationCode) return;
@@ -51,6 +56,9 @@ export const handleVerification =
         setVerificationMode("phone");
         setVerificationSubmitting(false);
         setVerificationCode("");
+        setVerificationEmail(
+          "Your email is activated.Please verify your phone by code sent to ypur phone"
+        );
       } else {
         const { message } = json;
         setVerificationError(message);
@@ -59,11 +67,26 @@ export const handleVerification =
       const response = await confirmPhone(verificationCode);
       const json = await response.json();
       if ([200, 201].includes(response.status)) {
-        console.log("json phone", json);
-        setVerificationMode(null);
         setVerificationSubmitting(false);
-        setVerificationCode("");
+
+        const { token, user } = json;
+        try {
+          await AsyncStorage.setItem("token", token);
+          await AsyncStorage.setItem("user", JSON.stringify(user));
+        } catch (e) {
+          console.log("Error when saving token to AsyncStorage");
+        }
+        //setProfile({ ...profile2, ...user });
+        dispatch({
+          type: "SIGN_IN",
+          payload: {
+            token,
+            user,
+          },
+        });
         navigation?.navigate("Home");
+        setVerificationMode(null);
+        setVerificationCode("");
       } else {
         const { message } = json;
         setVerificationError(message);
@@ -86,7 +109,6 @@ export const handleSignUpSubmit = ({
     values: any,
     { setStatus, setSubmitting }: FormikValues
   ): Promise<void> => {
-    console.log("submitted");
     setSubmitting(true);
     await signUp(
       values,

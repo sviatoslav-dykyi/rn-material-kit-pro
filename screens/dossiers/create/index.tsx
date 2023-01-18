@@ -51,19 +51,20 @@ const CreateDossier = ({ navigation }: any): ReactElement => {
   const [openDealtype, setOpenDealtype] = useState(false);
   const [openEnergyLabel, setOpenEnergyLabel] = useState(false);
   const [subtype, setSubtype] = useState("");
-  const [dealtype, setDealtype] = useState("");
+  const [dealType, setDealType] = useState("");
   const [energyLabel, setEnergyLabel] = useState("");
   const [itemsSubtype, setItemsSubtype] = useState(appartmentSubtypes);
   const [itemsDealtype, setItemsDealtype] = useState(dealTypes);
   const [itemsEnergyLabel, setItemsEnergyLabel] = useState(energyLabels);
 
+  const [addressText, setAddressText] = useState("");
+
   const isFocused = useIsFocused();
 
   useEffect(() => {
     if (isFocused) {
-      setDealtype("");
-      setSubtype("");
-      setEnergyLabel("");
+      console.log("address text reseted");
+      setAddressText("");
     }
   }, [isFocused]);
 
@@ -79,28 +80,29 @@ const CreateDossier = ({ navigation }: any): ReactElement => {
     handleCloseEnergyLabel();
   };
 
-  useEffect(() => {
-    if (openSubtype) {
-      handleCloseDropdownPickers();
-      setOpenSubtype(true);
-    }
-  }, [openSubtype]);
+  // useEffect(() => {
+  //   if (openSubtype) {
+  //     handleCloseDropdownPickers();
+  //     setOpenSubtype(true);
+  //   }
+  // }, [openSubtype]);
 
-  useEffect(() => {
-    if (openDealtype) {
-      handleCloseDropdownPickers();
-      setOpenDealtype(true);
-    }
-  }, [openDealtype]);
+  // useEffect(() => {
+  //   if (openDealtype) {
+  //     handleCloseDropdownPickers();
+  //     setOpenDealtype(true);
+  //   }
+  // }, [openDealtype]);
 
-  useEffect(() => {
-    if (openEnergyLabel) {
-      handleCloseDropdownPickers();
-      setOpenEnergyLabel(true);
-    }
-  }, [openEnergyLabel]);
+  // useEffect(() => {
+  //   if (openEnergyLabel) {
+  //     handleCloseDropdownPickers();
+  //     setOpenEnergyLabel(true);
+  //   }
+  // }, [openEnergyLabel]);
 
-  const auxDossierValues = { subtype, dealtype, energyLabel };
+  // const auxDossierValues = { subtype, dealType, energyLabel };
+  // console.log("dealType", dealType);
 
   return (
     <FormContext.Provider
@@ -113,8 +115,8 @@ const CreateDossier = ({ navigation }: any): ReactElement => {
         setOpenEnergyLabel,
         subtype,
         setSubtype,
-        dealtype,
-        setDealtype,
+        dealType,
+        setDealType,
         energyLabel,
         setEnergyLabel,
         itemsSubtype,
@@ -141,13 +143,15 @@ const CreateDossier = ({ navigation }: any): ReactElement => {
         >
           <Formik
             initialValues={prepareDossierBeforeForm(createDossierInit)}
-            onSubmit={handleCreateDossierSubmit({ navigation })}
+            onSubmit={handleCreateDossierSubmit({
+              navigation,
+            })}
             validationSchema={Yup.object().shape({
               property,
             })}
             enableReinitialize
           >
-            {(props) => <Form {...props} addressText={""}></Form>}
+            {(props) => <Form {...props} addressText={addressText}></Form>}
           </Formik>
         </KeyboardAvoidingView>
       </LinearGradient>

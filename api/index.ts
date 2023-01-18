@@ -36,3 +36,11 @@ export const getMe = async () => {
 export const updateUser = async (data: User) => {
   return await http.patch(`users/${data.id}`, data);
 };
+
+export const resendPhoneCode = async (data: { phone: "string" }) => {
+  return await http.post("auth/resend-phonecode", data);
+};
+
+export const resendEmailCode = async (data: { email: "string" }) => {
+  return await http.post("auth/resend-emailcode", data);
+};

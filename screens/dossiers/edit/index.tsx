@@ -51,12 +51,12 @@ const EditDossier = (): ReactElement => {
   const [openDealtype, setOpenDealtype] = useState(false);
   const [openEnergyLabel, setOpenEnergyLabel] = useState(false);
   const [subtype, setSubtype] = useState("");
-  const [dealtype, setDealtype] = useState("");
+  const [dealType, setDealType] = useState("");
   const [energyLabel, setEnergyLabel] = useState("");
   const [itemsSubtype, setItemsSubtype] = useState<DossierSubtype[]>([]);
   const [itemsDealtype, setItemsDealtype] = useState(dealTypes);
   const [itemsEnergyLabel, setItemsEnergyLabel] = useState(energyLabels);
-  console.log("dossier edit", dossier);
+
   const isFocused = useIsFocused();
 
   const subtypesDict: Record<DossierTypes, DossierSubtype[]> = {
@@ -65,17 +65,19 @@ const EditDossier = (): ReactElement => {
     multi_family_house: [],
   };
 
-  useEffect(() => {
-    if (isFocused) {
-      setDealtype("");
-      setSubtype("");
-      setEnergyLabel("");
-    }
-  }, [isFocused]);
-
+  // useEffect(() => {
+  //   if (isFocused) {
+  //     console.log("address text reseted");
+  //     setAddressText("");
+  //   }
+  // }, [isFocused]);
+  console.log(
+    "dossier?.property=dossier?.property=dossier?.property",
+    dossier?.property
+  );
   useEffect(() => {
     if (!dossier) return;
-    setDealtype(dossier?.dealType || "");
+    setDealType(dossier?.dealType || "");
     setSubtype(dossier.property.propertyType?.subcode || "");
     setEnergyLabel(dossier.property?.energyLabel || "");
     setItemsSubtype(subtypesDict[dossier.property.propertyType.code]);
@@ -117,6 +119,7 @@ const EditDossier = (): ReactElement => {
   useOnFocus(() => fetchDossier({ setDossier, setIsLoading, id }));
 
   const getGoogleAddress = async (lat: number, lng: number) => {
+    console.log("1111");
     const response = await fetch(
       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_API_KEY}`,
       {
@@ -169,8 +172,8 @@ const EditDossier = (): ReactElement => {
         setOpenEnergyLabel,
         subtype,
         setSubtype,
-        dealtype,
-        setDealtype,
+        dealType,
+        setDealType,
         energyLabel,
         setEnergyLabel,
         itemsSubtype,

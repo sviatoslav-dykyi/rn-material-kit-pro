@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
   StatusBar,
   View,
   Dimensions,
+  Text,
 } from "react-native";
 import axios from "axios";
 import {
@@ -14,6 +15,7 @@ import {
 } from "../../screens/dossiers/form/utils";
 import { useDebounce } from "../../hooks/useDebounce";
 import SearchBarWithAutocomplete from ".";
+import { useIsFocused } from "@react-navigation/native";
 const { width } = Dimensions.get("window");
 /**
  * Prediction's type returned from Google Places Autocomplete API
@@ -30,15 +32,34 @@ export type PredictionType = {
 };
 
 const SearchBarWithAutocompleteWrapper = ({
+  mode,
+  addressText,
   onSuccess,
 }: {
+  mode: any;
+  addressText: string;
   onSuccess: (location: any) => void;
 }) => {
-  const [search, setSearch] = useState({ term: "", fetchPredictions: false });
+  const [search, setSearch] = useState({
+    term: mode === "create" ? "" : addressText,
+    fetchPredictions: false,
+  });
   const [showPredictions, setShowPredictions] = useState(false);
   const [predictions, setPredictions] = useState<PredictionType[]>([]);
 
   const { container } = styles;
+
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (!isFocused) {
+      setSearch({ term: "", fetchPredictions: false });
+    }
+  }, [isFocused]);
+
+  useEffect(() => {
+    setSearch({ term: addressText, fetchPredictions: false });
+  }, [addressText]);
 
   const onChangeText = async () => {
     if (search.term.trim() === "") return;
@@ -71,7 +92,6 @@ const SearchBarWithAutocompleteWrapper = ({
         url: apiUrl,
       });
       if (result) {
-        console.log("result", result.data.result);
         const details = result?.data?.result;
 
         if (!details) return;

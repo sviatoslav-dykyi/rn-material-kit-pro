@@ -5,6 +5,7 @@ export const fetchSocioEconomicData = async ({
   setSocioEconomic,
   setSocioEconomicLoading,
   id,
+  setEmployedPopulation,
 }: any) => {
   setSocioEconomicLoading(true);
   const response = await getSocioEconomicData(id, {
@@ -24,7 +25,26 @@ export const fetchSocioEconomicData = async ({
     setSocioEconomic(data);
     // const { dossiers } = json;
     // setDossiers(dossiers);
-    setSocioEconomicLoading(false);
+    //setSocioEconomicLoading(false);
+  }
+  const responseForNat = await getSocioEconomicData(id, {
+    type: "employed_population",
+    divisionsLevel8: ["147130000000"],
+    years: {
+      min: 2000,
+      max: 2100,
+    },
+    countryCode: "DE",
+  });
+  const jsonForNat = await responseForNat.json();
+
+  if ([200, 201].includes(responseForNat.status)) {
+    const { data } = jsonForNat;
+    //console.log("data3", data);
+    setEmployedPopulation(data);
+    // const { dossiers } = json;
+    // setDossiers(dossiers);
+    //setSocioEconomicLoading(false);
   }
   setSocioEconomicLoading(false);
 };

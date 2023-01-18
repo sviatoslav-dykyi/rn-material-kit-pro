@@ -160,7 +160,7 @@ export const styles = StyleSheet.create({
     color: "#3d454d",
   },
   showImage: {
-    width: width * 0.9,
+    width: width,
     height: 200,
   },
   showFieldInfoBlock: { alignItems: "center", paddingTop: 15 },
