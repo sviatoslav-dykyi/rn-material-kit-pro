@@ -120,7 +120,7 @@ const CreateDossiersForm = ({
   };
 
   const hanleButtonTypePress = (code: DossierTypes) => () => {
-    setFieldValue("property.propertyType.subcode", "");
+    //setFieldValue("property.propertyType.subcode", "");
     setFieldValue("property.propertyType.code", code);
   };
 
