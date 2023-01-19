@@ -87,7 +87,7 @@ const HouseForm = ({
   }, [subtype]);
 
   useEffect(() => {
-    setFieldValue("energyLabel", energyLabel);
+    setFieldValue("property.energyLabel", energyLabel);
   }, [energyLabel]);
 
   useEffect(() => {
@@ -682,8 +682,8 @@ const HouseForm = ({
         autoCapitalize="none"
         label={<Text style={styles.inputPaperLabel}>Garage spaces</Text>}
         underlineStyle={styles.inputPaperUnderlineStyle}
-        value={values.numberOfIndoorParkingSpaces}
-        onChangeText={handleChange("numberOfIndoorParkingSpaces")}
+        value={values.property?.numberOfIndoorParkingSpaces}
+        onChangeText={handleChange("property.numberOfIndoorParkingSpaces")}
         left={
           <TextInput.Icon
             size={20}
@@ -696,14 +696,14 @@ const HouseForm = ({
       <HelperText
         type="error"
         visible={
-          touched?.numberOfIndoorParkingSpaces &&
-          (status?.errors.numberOfIndoorParkingSpaces ||
-            errors.numberOfIndoorParkingSpaces)
+          touched?.property?.numberOfIndoorParkingSpaces &&
+          (status?.errors.property?.numberOfIndoorParkingSpaces ||
+            errors.property?.numberOfIndoorParkingSpaces)
         }
       >
         {touched?.property?.numberOfIndoorParkingSpaces &&
-          (status?.errors.numberOfIndoorParkingSpaces ||
-            errors.numberOfIndoorParkingSpaces)}
+          (status?.errors.property?.numberOfIndoorParkingSpaces ||
+            errors.property?.numberOfIndoorParkingSpaces)}
       </HelperText>
       {/* <Input
         bgColor="transparent"

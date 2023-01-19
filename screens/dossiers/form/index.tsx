@@ -51,7 +51,7 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
-import Carousel from "react-native-reanimated-carousel";
+
 import HouseForm from "./House";
 import {
   GooglePlacesAutocomplete,
@@ -71,6 +71,7 @@ import { upload } from "../edit/utils";
 import { REACT_BASE_URL } from "../../../constants/utils";
 import { ImagePickerResult } from "expo-image-picker";
 import SearchBarWithAutocompleteWrapper from "../../../components/searchBarWithAutocomplete/Wrapper";
+import CarouselCustom from "../../../components/carousel";
 const { width } = Dimensions.get("window");
 
 const CreateDossiersForm = ({
@@ -94,13 +95,14 @@ const CreateDossiersForm = ({
   const [imageIsLoading, setImageIsLoading] = useState(false);
   const [imageErrors, setImageErrors] = useState<string[]>([]);
   console.log("errors", errors);
-  const isFocused = useIsFocused();
-  const isCarousel = React.useRef(null);
-  useEffect(() => {
-    if (isFocused) {
-      resetForm();
-    }
-  }, [isFocused]);
+  //console.log("values index.tsx Form", values);
+  // const isFocused = useIsFocused();
+  // const isCarousel = React.useRef(null);
+  // useEffect(() => {
+  //   if (isFocused) {
+  //     resetForm();
+  //   }
+  // }, [isFocused]);
 
   const handleEditorTextChange = (newText: string) =>
     setFieldValue("description", newText);
@@ -120,15 +122,8 @@ const CreateDossiersForm = ({
   };
 
   const hanleButtonTypePress = (code: DossierTypes) => () => {
-    //setFieldValue("property.propertyType.subcode", "");
     setFieldValue("property.propertyType.code", code);
   };
-
-  const ref = useRef<GooglePlacesAutocompleteRef | null>(null);
-
-  useEffect(() => {
-    ref.current?.setAddressText(addressText);
-  }, [addressText]);
 
   const removeImage = (index: number) => {
     const auxImages = [...values.images];
@@ -136,37 +131,9 @@ const CreateDossiersForm = ({
     setFieldValue("images", auxImages);
   };
 
-  const CarouselCardItem =
-    (handleOnPress: (index: number) => void) =>
-    ({ item, index }: any) => {
-      return (
-        <View style={[styles2.container, { position: "relative" }]} key={index}>
-          <Image source={{ uri: item.imgUrl }} style={styles2.image} />
-          <Button
-            onlyIcon
-            shadowColor={true}
-            icon="delete"
-            iconFamily="MaterialIcons"
-            color="red"
-            iconSize={30}
-            onPress={() => {
-              handleOnPress(index);
-            }}
-            style={{
-              width: 40,
-              height: 40,
-              position: "absolute",
-              top: 0,
-              right: 15,
-            }}
-          ></Button>
-        </View>
-      );
-    };
-
   return (
     <View style={{ flex: 1, paddingTop: 30 }}>
-      {/* <Button
+      <Button
         icon="plus"
         iconFamily="Entypo"
         iconSize={20}
@@ -179,7 +146,7 @@ const CreateDossiersForm = ({
         loading={isSubmitting}
       >
         {mode === "create" ? "Create" : "Edit"}
-      </Button> */}
+      </Button>
       <ScrollView nestedScrollEnabled={true}>
         <Block center>
           <TextInput
@@ -204,18 +171,7 @@ const CreateDossiersForm = ({
           >
             {touched.title && (status?.errors.title || errors.title)}
           </HelperText>
-          {/* <Block row style={styles.googlePlacesLabelContainer}>
-            <Icon
-              name="location-on"
-              color="#fff"
-              family="MaterialIcons"
-              icon="location-on"
-              iconSize={18}
-              size={20}
-              style={styles.pickerLabelIcon}
-            />
-            <Text style={styles.pickerLabelText}>Address*</Text>
-          </Block> */}
+
           <Block style={styles.ratingBlock}>
             <SearchBarWithAutocompleteWrapper
               mode={mode}
@@ -226,99 +182,6 @@ const CreateDossiersForm = ({
             />
           </Block>
 
-          {/* <Block>
-        <Block
-          style={{
-            borderColor: "red",
-            borderWidth: 2,
-            height: 200,
-            width: 400,
-          }}
-        >
-          <GooglePlacesAutocomplete
-            ref={ref}
-            placeholder="Search"
-            onPress={(_, details = null) => {
-              console.log("www1");
-              if (!details) return;
-              const { geometry, address_components } = details;
-              const latitude = geometry.location.lat;
-              const longitude = geometry.location.lng;
-              const postCode = findAddressDetail(
-                address_components,
-                "postal_code"
-              );
-              const city = findAddressDetail(
-                address_components,
-                "administrative_area_level_1"
-              );
-              const street = findAddressDetail(address_components, "route");
-              const houseNumber = findAddressDetail(
-                address_components,
-                "street_number"
-              );
-              const location = {
-                address: {
-                  postCode,
-                  city,
-                  street,
-                  houseNumber,
-                },
-                coordinates: {
-                  latitude,
-                  longitude,
-                },
-              };
-              setFieldValue("property.location", location);
-            }}
-            // styles={{
-            //   borderColor: "red",
-            //   borderWidth: 2,
-            //   height: 200,
-            // }}
-            fetchDetails
-            query={{
-              key: GOOGLE_API_KEY,
-              language: "en",
-            }}
-          />
-        </Block>
-      </Block> */}
-
-          {/* <ScrollView
-        horizontal={true}
-        nestedScrollEnabled={true}
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
-        style={[
-          styles.googlePlacesContainer,
-          {
-            top: 135,
-            position: "absolute",
-            flex: 1,
-          },
-        ]}
-      >
-        <GooglePlacesAutocomplete
-          ref={ref}
-          placeholder="Search"
-          onPress={onGoogleAutocompleteChange({
-            setFieldValue,
-            setTouched,
-            touched,
-          })}
-          styles={{
-            borderColor: "red",
-            borderWidth: 2,
-            height: 200,
-          }}
-          fetchDetails
-          query={{
-            key: GOOGLE_API_KEY,
-            language: "en",
-          }}
-        />
-      </ScrollView> */}
           <HelperText
             style={{ marginTop: 10 }}
             type="error"
@@ -481,92 +344,9 @@ const CreateDossiersForm = ({
             </Button>
           </Block>
 
-          {/* <Block flex row>
-            <Button
-              uppercase
-              onPress={pickDocument}
-              icon={"star"}
-              iconFamily="AntDesign"
-              iconSize={19}
-            >
-              Upload document
-            </Button>
-            <Button
-              uppercase
-              onPress={pickImage({
-                setImageIsLoading,
-                setImageErrors,
-                setFieldValue,
-                values,
-              })}
-              icon={"picture"}
-              iconFamily="AntDesign"
-              iconSize={19}
-            >
-              Upload images
-            </Button>
-          </Block> */}
-          {/* <Block>
-            {values.images?.map(({ url }: DossierImage, i: number) => (
-              <Block
-                row
-                space="between"
-                key={url + " " + i}
-                style={styles.homeImageContainer}
-              >
-                <Image
-                  key={i + " " + Math.random()}
-                  style={{
-                    width: styles.homeImage.width,
-                    height: 100,
-                    // height:
-                    //   width > height
-                    //     ? (height / width) * styles.homeImage.width
-                    //     : 130,
-                  }}
-                  source={{ uri: url }}
-                  resizeMode="contain"
-                />
-                <Button
-                  onlyIcon
-                  shadowColor={true}
-                  icon="delete"
-                  iconFamily="MaterialIcons"
-                  color="red"
-                  iconSize={30}
-                  onPress={() => {
-                    const auxImages = [...values.images];
-                    auxImages.splice(i, 1);
-                    setFieldValue("images", auxImages);
-                  }}
-                  style={{ width: 40, height: 40 }}
-                ></Button>
-              </Block>
-            ))}
-          </Block> */}
           {values?.images?.length > 0 && (
             <View style={{ width: width * 0.9, paddingTop: 20 }}>
-              <Carousel
-                loop={true}
-                width={width}
-                height={width / 2}
-                autoPlay={false}
-                data={values.images?.map(({ url }: DossierImage) => ({
-                  imgUrl: url,
-                }))}
-                scrollAnimationDuration={1000}
-                onSnapToItem={(index) => console.log("current index:", index)}
-                renderItem={CarouselCardItem(removeImage)}
-                mode="horizontal-stack"
-                enabled={values?.images?.length > 1}
-                modeConfig={{
-                  snapDirection: "left",
-                  moveSize: 400,
-                  stackInterval: 30,
-                  scaleInterval: 0.08,
-                  rotateZDeg: 135,
-                }}
-              />
+              <CarouselCustom images={values.images} callback={removeImage} />
             </View>
           )}
           {imageIsLoading && (
@@ -603,10 +383,9 @@ const CreateDossiersForm = ({
               Upload
             </Button>
           </Block>
-          <Block style={{ paddingTop: 50 }}>
+          <Block style={{ paddingTop: 50, paddingBottom: 100 }}>
             <Button
               size="large"
-              shadowless
               style={{ height: 48 }}
               color={materialTheme.COLORS.BUTTON_COLOR}
               onPress={() => {
@@ -645,19 +424,6 @@ const styles2 = StyleSheet.create({
   image: {
     width: ITEM_WIDTH,
     height: 300,
-  },
-  header: {
-    color: "#222",
-    fontSize: 28,
-    fontWeight: "bold",
-    paddingLeft: 20,
-    paddingTop: 20,
-  },
-  body: {
-    color: "#222",
-    fontSize: 18,
-    paddingLeft: 20,
-    paddingRight: 20,
   },
 });
 

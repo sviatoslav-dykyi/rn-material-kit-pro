@@ -98,9 +98,7 @@ const Home = () => {
                   property,
                   dealType,
                   updatedAt,
-                  property: {
-                    location: { address },
-                  },
+                  property: { location },
                 },
                 index
               ) => (
@@ -259,8 +257,10 @@ const Home = () => {
                           style={[]}
                         />
                         <Text style={{ fontSize: 15, paddingLeft: 6 }}>
-                          {address.street} {address.houseNumber}, {address.city}{" "}
-                          {address.postCode}
+                          {location?.address?.street}{" "}
+                          {location?.address?.houseNumber},{" "}
+                          {location?.address?.city}{" "}
+                          {location?.address?.postCode}
                         </Text>
                       </Block>
                       <Block
@@ -270,14 +270,14 @@ const Home = () => {
                         <Icon
                           name={
                             dossierTypes.find(
-                              (el) => el.value === property.propertyType.code
+                              (el) => el.value === property?.propertyType?.code
                             )?.icon
                           }
                           color={materialTheme.COLORS.PLACEHOLDER}
                           family="MaterialIcons"
                           icon={
                             dossierTypes.find(
-                              (el) => el.value === property.propertyType.code
+                              (el) => el.value === property?.propertyType?.code
                             )?.icon
                           }
                           iconSize={18}

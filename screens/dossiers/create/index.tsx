@@ -56,17 +56,17 @@ const CreateDossier = ({ navigation }: any): ReactElement => {
   const [itemsSubtype, setItemsSubtype] = useState(appartmentSubtypes);
   const [itemsDealtype, setItemsDealtype] = useState(dealTypes);
   const [itemsEnergyLabel, setItemsEnergyLabel] = useState(energyLabels);
-
+  console.log("CreateDossier rendered");
   const [addressText, setAddressText] = useState("");
 
-  const isFocused = useIsFocused();
+  // const isFocused = useIsFocused();
 
-  useEffect(() => {
-    if (isFocused) {
-      console.log("address text reseted");
-      setAddressText("");
-    }
-  }, [isFocused]);
+  // useEffect(() => {
+  //   if (isFocused) {
+  //     console.log("address text reseted");
+  //     setAddressText("");
+  //   }
+  // }, [isFocused]);
 
   const handleCloseSubtype = (): void => setOpenSubtype(false);
 
@@ -136,7 +136,11 @@ const CreateDossier = ({ navigation }: any): ReactElement => {
         style={[styles.signup, { flex: 1 }]}
       >
         <KeyboardAvoidingView
-          style={{ flex: 1, flexDirection: "column", justifyContent: "center" }}
+          style={{
+            flex: 1,
+            flexDirection: "column",
+            justifyContent: "center",
+          }}
           behavior="padding"
           enabled
           keyboardVerticalOffset={100}

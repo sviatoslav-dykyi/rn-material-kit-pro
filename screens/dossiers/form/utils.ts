@@ -96,6 +96,7 @@ export const prepareDossierBeforeForm = (data: Dossier): Dossier => {
         data.property.numberOfOutdoorParkingSpaces?.toString() ?? "",
       numberOfRooms: data.property.numberOfRooms?.toString() ?? "",
       renovationYear: data.property.renovationYear?.toString() ?? "",
+      landArea: data.property.landArea?.toString() ?? "",
       condition: {
         ...data.property.condition,
         bathrooms: data.property.condition?.bathrooms?.toString() ?? "",
@@ -267,6 +268,7 @@ export const pickDocument = async () => {
       `${REACT_BASE_URL}/dossiers/attachments`,
       result.uri
     );
+    console.log("res", res);
     //this.uploadAPICall(res); //here you can call your API and send the data to that API
   } catch (err) {
     //console.log("error--");

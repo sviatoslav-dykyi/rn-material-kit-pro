@@ -183,6 +183,85 @@ function EditDossierStack(props) {
   );
 }
 
+function HomeStack(props) {
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        mode: "card",
+        headerShown: "screen",
+      }}
+    >
+      <Stack.Screen
+        name="Home"
+        headerShown={false}
+        component={HomeScreen}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header
+              search
+              options
+              title="Home"
+              navigation={navigation}
+              scene={scene}
+            />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="CreateDossier"
+        headerShown={false}
+        component={CreateDossierScreen}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header
+              back
+              search
+              options
+              title="Create"
+              navigation={navigation}
+              scene={scene}
+            />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="EditDossier"
+        headerShown={false}
+        component={EditDossierScreen}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header
+              back
+              search
+              options
+              title="Edit"
+              navigation={navigation}
+              scene={scene}
+            />
+          ),
+        }}
+      />
+      <Stack.Screen
+        name="ShowDossier"
+        headerShown={false}
+        component={ShowScreen}
+        options={{
+          header: ({ navigation, scene }) => (
+            <Header
+              back
+              search
+              options
+              title="Show"
+              navigation={navigation}
+              scene={scene}
+            />
+          ),
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+
 function AppStack(props) {
   const [profile, setProfile] = useState();
   const { state } = useContext(AuthContext);
@@ -300,7 +379,22 @@ function AppStack(props) {
         </>
       ) : (
         <>
-          <Stack.Screen
+          <Drawer.Screen
+            name="Home2"
+            component={HomeStack}
+            options={{
+              headerShown: false,
+              drawerIcon: ({ focused }) => (
+                <Icon
+                  size={16}
+                  name="shop"
+                  family="GalioExtra"
+                  color={focused ? "white" : materialTheme.COLORS.MUTED}
+                />
+              ),
+            }}
+          />
+          {/* <Stack.Screen
             name="Home"
             headerShown={false}
             component={HomeScreen}
@@ -315,8 +409,8 @@ function AppStack(props) {
                 />
               ),
             }}
-          />
-          <Stack.Screen
+          /> */}
+          {/* <Stack.Screen
             name="CreateDossier"
             headerShown={false}
             component={CreateDossierScreen}
@@ -349,7 +443,7 @@ function AppStack(props) {
                 />
               ),
             }}
-          />
+          /> */}
           <Drawer.Screen
             name="Logout"
             component={SignOutScreen}
@@ -381,7 +475,7 @@ function AppStack(props) {
               ),
             }}
           />
-          <Stack.Screen
+          {/* <Stack.Screen
             name="ShowDossier"
             headerShown={false}
             component={ShowScreen}
@@ -397,7 +491,7 @@ function AppStack(props) {
                 />
               ),
             }}
-          />
+          /> */}
         </>
       )}
     </Drawer.Navigator>

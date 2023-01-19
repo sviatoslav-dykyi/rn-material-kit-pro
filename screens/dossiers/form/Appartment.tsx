@@ -44,7 +44,11 @@ import {
 import Form from ".";
 import { getConditionRatingIndex, getQualityRatingIndex } from "./utils";
 const { height, width } = Dimensions.get("window");
-import { useNavigation, useRoute } from "@react-navigation/native";
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import { FormikValues } from "formik";
 import { Tabs } from "../../../components";
 import { DossierTypeIds, DossierTypes } from "../../../utils/constants";
@@ -82,18 +86,22 @@ const AppartmentForm = ({
   const [itemsEnergyLabel, setItemsEnergyLabel] = useState(energyLabels);
 
   useEffect(() => {
+    console.log('setFieldValue("dealType", dealtype);');
     setFieldValue("dealType", dealtype);
   }, [dealtype]);
 
   useEffect(() => {
+    console.log('setFieldValue("property.propertyType.subcode", subtype);');
     setFieldValue("property.propertyType.subcode", subtype);
   }, [subtype]);
 
   useEffect(() => {
-    setFieldValue("energyLabel", energyLabel);
+    console.log('setFieldValue("property.energyLabel", energyLabel);');
+    setFieldValue("property.energyLabel", energyLabel);
   }, [energyLabel]);
 
   useEffect(() => {
+    console.log("if (openSubtype)");
     if (openSubtype) {
       handleCloseDropdownPickers();
       setOpenSubtype(true);
@@ -101,6 +109,7 @@ const AppartmentForm = ({
   }, [openSubtype]);
 
   useEffect(() => {
+    console.log("if (openDealtype)");
     if (openDealtype) {
       handleCloseDropdownPickers();
       setOpenDealtype(true);
@@ -108,6 +117,7 @@ const AppartmentForm = ({
   }, [openDealtype]);
 
   useEffect(() => {
+    console.log("if (if (openEnergyLabel) {)");
     if (openEnergyLabel) {
       handleCloseDropdownPickers();
       setOpenEnergyLabel(true);
@@ -131,18 +141,24 @@ const AppartmentForm = ({
     hasLift: values.property.hasLift,
   });
 
-  useOnFocus(() => {
-    if (mode === "create") {
-      resetDropDownValues();
-      //resetCheckboxed();
-    }
-  });
+  // useOnFocus(() => {
+  //   if (mode === "create") {
+  //     resetDropDownValues();
+  //     //resetCheckboxed();
+  //   }
+  // });
 
-  const resetDropDownValues = (): void => {
-    setDealtype("");
-    setSubtype("");
-    setEnergyLabel("");
-  };
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     resetDropDownValues();
+  //   }, [])
+  // );
+
+  // const resetDropDownValues = (): void => {
+  //   setDealtype("");
+  //   setSubtype("");
+  //   setEnergyLabel("");
+  // };
 
   return (
     <TouchableOpacity activeOpacity={1} onPress={handleCloseDropdownPickers}>
@@ -800,8 +816,8 @@ const AppartmentForm = ({
           autoCapitalize="none"
           label={<Text style={styles.inputPaperLabel}>Garage spaces</Text>}
           underlineStyle={styles.inputPaperUnderlineStyle}
-          value={values.numberOfIndoorParkingSpaces}
-          onChangeText={handleChange("numberOfIndoorParkingSpaces")}
+          value={values.property.numberOfIndoorParkingSpaces}
+          onChangeText={handleChange("property.numberOfIndoorParkingSpaces")}
           left={
             <TextInput.Icon
               size={20}
@@ -814,14 +830,14 @@ const AppartmentForm = ({
         <HelperText
           type="error"
           visible={
-            touched?.numberOfIndoorParkingSpaces &&
-            (status?.errors.numberOfIndoorParkingSpaces ||
-              errors.numberOfIndoorParkingSpaces)
+            touched?.property?.numberOfIndoorParkingSpaces &&
+            (status?.errors.property?.numberOfIndoorParkingSpaces ||
+              errors.property?.numberOfIndoorParkingSpaces)
           }
         >
           {touched?.property?.numberOfIndoorParkingSpaces &&
-            (status?.errors.numberOfIndoorParkingSpaces ||
-              errors.numberOfIndoorParkingSpaces)}
+            (status?.errors.property?.numberOfIndoorParkingSpaces ||
+              errors.property?.numberOfIndoorParkingSpaces)}
         </HelperText>
         {/* <Input
           bgColor="transparent"
@@ -904,11 +920,14 @@ const AppartmentForm = ({
               <Text style={styles.checkboxText}>New building</Text>
             }
             isChecked={Boolean(checkboxes.isNew)}
-            onPress={(isNew: boolean) => {
-              setCheckboxes((prevState) => ({
-                ...prevState,
-                isNew,
-              }));
+            // onPress={(isNew: boolean) => {
+            //   setCheckboxes((prevState) => ({
+            //     ...prevState,
+            //     isNew,
+            //   }));
+            // }}
+            onPress={(isChecked: boolean) => {
+              setFieldValue("property.isNew", isChecked);
             }}
             style={styles.checkbox}
           />
@@ -929,11 +948,14 @@ const AppartmentForm = ({
             fillColor={materialTheme.COLORS.BUTTON_COLOR}
             textComponent={<Text style={styles.checkboxText}>Lift</Text>}
             isChecked={Boolean(checkboxes.hasLift)}
-            onPress={(hasLift: boolean) => {
-              setCheckboxes((prevState) => ({
-                ...prevState,
-                hasLift,
-              }));
+            // onPress={(hasLift: boolean) => {
+            //   setCheckboxes((prevState) => ({
+            //     ...prevState,
+            //     hasLift,
+            //   }));
+            // }}
+            onPress={(isChecked: boolean) => {
+              setFieldValue("property.hasLift", isChecked);
             }}
           />
           {/* <BouncyCheckbox
