@@ -38,7 +38,8 @@ import {
 } from "../utils";
 import { FormContext } from "../../../context/Form";
 import { DossierTypes } from "../../../utils/constants";
-
+import { LogBox } from "react-native";
+LogBox.ignoreAllLogs();
 const EditDossier = (): ReactElement => {
   const { property } = useValidation();
   const navigation = useNavigation();
@@ -46,7 +47,7 @@ const EditDossier = (): ReactElement => {
   const id = route?.params?.id;
   const [dossier, setDossier] = useState<Dossier>();
   const [isLoaing, setIsLoading] = useState(false);
-  const [addressText, setAddressText] = useState("");
+
   // const [openSubtype, setOpenSubtype] = useState(false);
   // const [openDealtype, setOpenDealtype] = useState(false);
   // const [openEnergyLabel, setOpenEnergyLabel] = useState(false);
@@ -113,42 +114,9 @@ const EditDossier = (): ReactElement => {
   //   }
   // }, [openEnergyLabel]);
 
-  //useOnFocus(() => fetchDossier({ setDossier, setIsLoading, id }));
   useEffect(() => {
     fetchDossier({ setDossier, setIsLoading, id });
   }, []);
-
-  const getGoogleAddress = async (lat: number, lng: number) => {
-    console.log("1111");
-    const response = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${GOOGLE_API_KEY}`,
-      {
-        method: "GET",
-        // mode: "cors",
-        // headers: {
-        //   "Content-Type": "application/json",
-        //   Authorization: `Bearer ${token}`,
-        // },
-        // body: JSON.stringify(body),
-      }
-    );
-    const json = await response.json();
-    //console.log("jsonAdd", json.results[0].formatted_address);
-    setAddressText(json.results[0].formatted_address);
-    //console.log("jsonAdd", json.results[0].formatted_address);
-  };
-
-  useEffect(() => {
-    if (!dossier) return;
-    const {
-      property: {
-        location: {
-          coordinates: { latitude, longitude },
-        },
-      },
-    } = dossier;
-    dossier && getGoogleAddress(latitude, longitude);
-  }, [dossier]);
 
   if (isLoaing) {
     return (
@@ -208,16 +176,13 @@ const EditDossier = (): ReactElement => {
           {dossier && (
             <Formik
               initialValues={prepareDossierBeforeForm(dossier)}
-              //onSubmit={() => {}}
               enableReinitialize
               onSubmit={handleEditDossierSubmit({ navigation })}
               validationSchema={Yup.object().shape({
                 property,
               })}
             >
-              {(props) => (
-                <Form {...props} mode="edit" addressText={addressText}></Form>
-              )}
+              {(props) => <Form {...props} mode="edit"></Form>}
             </Formik>
           )}
         </KeyboardAvoidingView>

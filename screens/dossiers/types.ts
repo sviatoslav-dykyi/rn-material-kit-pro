@@ -12,15 +12,7 @@ export interface Dossier {
       code: DossierTypes; //*
       subcode?: AppartmentSubtype | HouseSubtype;
     };
-    location: {
-      address: {
-        postCode: string; // *
-        city: string; // *
-        street: string; // *
-        houseNumber: string; // *
-      };
-      coordinates: { latitude: number; longitude: number };
-    };
+    location: DossierLocation;
     buildingYear: number | string; //* 1850 - current year
     renovationYear?: number | string; // 1950 - current year
     livingArea?: number | string; // 10 - 800
@@ -64,6 +56,23 @@ export interface Dossier {
   userDefinedFields?: any;
   attachments: [];
   updatedAt?: Date | string;
+}
+
+export interface DossierLocation {
+  address: DossierAddress;
+  coordinates: DossierCoordinates;
+}
+
+export interface DossierAddress {
+  postCode: string;
+  city: string;
+  street: string;
+  houseNumber: string;
+}
+
+export interface DossierCoordinates {
+  latitude: number;
+  longitude: number;
 }
 
 export interface DossierImage {

@@ -28,7 +28,7 @@ import homeImages from "../../constants/images/home";
 import CreateDossier from "../dossiers/create";
 import { useNavigation } from "@react-navigation/native";
 import { Dossier } from "../dossiers/types";
-import { fetchDossiers } from "./utils";
+import { extractFullAddress, fetchDossiers } from "./utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { styles } from "../dossiers/styles";
@@ -257,10 +257,7 @@ const Home = () => {
                           style={[]}
                         />
                         <Text style={{ fontSize: 15, paddingLeft: 6 }}>
-                          {location?.address?.street}{" "}
-                          {location?.address?.houseNumber},{" "}
-                          {location?.address?.city}{" "}
-                          {location?.address?.postCode}
+                          {extractFullAddress(location)}
                         </Text>
                       </Block>
                       <Block

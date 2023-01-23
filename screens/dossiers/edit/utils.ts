@@ -86,11 +86,12 @@ export const upload = async (url: string, pathToImage: string) => {
   }
 };
 
-export const uploadDocument = async (url: string, pathToImage: string) => {
+export const uploadDocument = async (url: string, pathToDocument: string) => {
   console.log("\n***** Upload Document *****");
 
-  if (pathToImage) {
+  if (pathToDocument) {
     const token = await getToken();
+    console.log("token in uploadDocument", token);
     console.log("***** get other fields section *****");
     const dataToSend: Record<string, string> = {};
     dataToSend["action"] = "Document Upload";
@@ -110,7 +111,7 @@ export const uploadDocument = async (url: string, pathToImage: string) => {
     };
 
     console.log("***** 'Fetch' section *****");
-    const response = await FileSystem.uploadAsync(url, pathToImage, options);
+    const response = await FileSystem.uploadAsync(url, pathToDocument, options);
 
     if (response.status >= 200 && response.status < 300) {
       return JSON.parse(response.body);

@@ -141,25 +141,6 @@ const AppartmentForm = ({
     hasLift: values.property.hasLift,
   });
 
-  // useOnFocus(() => {
-  //   if (mode === "create") {
-  //     resetDropDownValues();
-  //     //resetCheckboxed();
-  //   }
-  // });
-
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     resetDropDownValues();
-  //   }, [])
-  // );
-
-  // const resetDropDownValues = (): void => {
-  //   setDealtype("");
-  //   setSubtype("");
-  //   setEnergyLabel("");
-  // };
-
   return (
     <TouchableOpacity activeOpacity={1} onPress={handleCloseDropdownPickers}>
       <>

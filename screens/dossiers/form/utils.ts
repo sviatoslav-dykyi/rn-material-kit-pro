@@ -13,6 +13,7 @@ import * as ImagePicker from "expo-image-picker";
 import { upload, uploadDocument } from "../edit/utils";
 import { REACT_BASE_URL } from "../../../constants/utils";
 import { PickImageProps } from "./types";
+import { Dispatch, SetStateAction } from "react";
 
 export const findAddressDetail = (
   arr: AddressComponent[],
@@ -255,25 +256,49 @@ export const pickImage =
     }
   };
 
-export const pickDocument = async () => {
-  try {
-    const result = await DocumentPicker.getDocumentAsync({
-      multiple: true,
-      copyToCacheDirectory: true,
-    });
-    const { type } = result;
-    if (type !== "success") return;
-    console.log("result.uri", result.uri);
-    const res = await uploadDocument(
-      `${REACT_BASE_URL}/dossiers/attachments`,
-      result.uri
-    );
-    console.log("res", res);
-    //this.uploadAPICall(res); //here you can call your API and send the data to that API
-  } catch (err) {
-    //console.log("error--");
-  }
-};
+export const pickDocument =
+  ({
+    setDocumentIsLoading,
+    setDocumentError,
+    setFieldValue,
+  }: {
+    setDocumentIsLoading: Dispatch<SetStateAction<boolean>>;
+    setDocumentError: Dispatch<SetStateAction<string>>;
+    setFieldValue: any;
+  }) =>
+  async () => {
+    try {
+      setDocumentIsLoading(true);
+      const result = await DocumentPicker.getDocumentAsync({
+        multiple: true,
+        copyToCacheDirectory: true,
+      });
+      const { type } = result;
+      if (type !== "success") {
+        return setDocumentIsLoading(false);
+      }
+      const response = await uploadDocument(
+        `${REACT_BASE_URL}/dossiers/attachments`,
+        result.uri
+      );
+      if (response.status === "fail") {
+        setDocumentError(response.message);
+        setDocumentIsLoading(false);
+      } else {
+        const { uuid } = response;
+        console.log("response", response);
+        setFieldValue("attachments", [
+          { uuid, type: "other", caption: "title1" },
+        ]);
+        setDocumentError("");
+        setDocumentIsLoading(false);
+      }
+      //this.uploadAPICall(res); //here you can call your API and send the data to that API
+    } catch (err) {
+      console.log("error: ", err);
+      setDocumentIsLoading(false);
+    }
+  };
 
 export const onGoogleAutocompleteChange =
   ({

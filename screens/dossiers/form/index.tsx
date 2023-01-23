@@ -72,6 +72,7 @@ import { REACT_BASE_URL } from "../../../constants/utils";
 import { ImagePickerResult } from "expo-image-picker";
 import SearchBarWithAutocompleteWrapper from "../../../components/searchBarWithAutocomplete/Wrapper";
 import CarouselCustom from "../../../components/carousel";
+import { extractFullAddress } from "../../home/utils";
 const { width } = Dimensions.get("window");
 
 const CreateDossiersForm = ({
@@ -87,22 +88,14 @@ const CreateDossiersForm = ({
   setTouched,
   isSubmitting,
   mode = "create",
-  addressText,
 }: FormikValues): ReactElement => {
   const RichText = useRef(null);
 
   const [height, setHeight] = useState(MIN_HEIGHT_RICH_CONTAINER);
   const [imageIsLoading, setImageIsLoading] = useState(false);
   const [imageErrors, setImageErrors] = useState<string[]>([]);
-  console.log("errors", errors);
-  //console.log("values index.tsx Form", values);
-  // const isFocused = useIsFocused();
-  // const isCarousel = React.useRef(null);
-  // useEffect(() => {
-  //   if (isFocused) {
-  //     resetForm();
-  //   }
-  // }, [isFocused]);
+  const [documentIsLoading, setDocumentIsLoading] = useState(false);
+  const [documentError, setDocumentError] = useState("");
 
   const handleEditorTextChange = (newText: string) =>
     setFieldValue("description", newText);
@@ -138,7 +131,6 @@ const CreateDossiersForm = ({
         iconFamily="Entypo"
         iconSize={20}
         textStyle={styles.submitDossierBtnText}
-        //style={styles.submitDossierBtn}
         color={materialTheme.COLORS.BUTTON_COLOR}
         onPress={() => {
           submitForm();
@@ -171,11 +163,14 @@ const CreateDossiersForm = ({
           >
             {touched.title && (status?.errors.title || errors.title)}
           </HelperText>
-
           <Block style={styles.ratingBlock}>
             <SearchBarWithAutocompleteWrapper
               mode={mode}
-              addressText={addressText}
+              addressText={
+                mode === "create"
+                  ? ""
+                  : extractFullAddress(values.property.location)
+              }
               onSuccess={(location) => {
                 setFieldValue("property.location", location);
               }}
@@ -334,7 +329,6 @@ const CreateDossiersForm = ({
               style={{
                 paddingLeft: 20,
                 paddingRight: 20,
-                //width: 200,
                 borderRadius: 30,
                 marginLeft: 0,
                 height: 48,
@@ -367,14 +361,17 @@ const CreateDossiersForm = ({
               Attachments
             </Text>
             <Button
-              onPress={pickDocument}
+              onPress={pickDocument({
+                setDocumentIsLoading,
+                setDocumentError,
+                setFieldValue,
+              })}
               icon={"documents"}
               iconFamily="Entypo"
               iconSize={19}
               style={{
                 paddingLeft: 20,
                 paddingRight: 20,
-                //width: 200,
                 borderRadius: 30,
                 marginLeft: 0,
                 height: 48,
@@ -382,6 +379,17 @@ const CreateDossiersForm = ({
             >
               Upload
             </Button>
+            {documentIsLoading && (
+              <Block style={styles.activityIndicator}>
+                <ActivityIndicator
+                  size="large"
+                  color={materialTheme.COLORS.BUTTON_COLOR}
+                />
+              </Block>
+            )}
+            <HelperText type="error" visible={Boolean(documentError)}>
+              {documentError}
+            </HelperText>
           </Block>
           <Block style={{ paddingTop: 50, paddingBottom: 100 }}>
             <Button
@@ -389,7 +397,6 @@ const CreateDossiersForm = ({
               style={{ height: 48 }}
               color={materialTheme.COLORS.BUTTON_COLOR}
               onPress={() => {
-                //console.log("values", values);
                 submitForm();
               }}
               loading={isSubmitting}
@@ -402,29 +409,5 @@ const CreateDossiersForm = ({
     </View>
   );
 };
-
-const SLIDER_WIDTH = Dimensions.get("window").width + 80;
-const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7);
-
-const styles2 = StyleSheet.create({
-  container: {
-    backgroundColor: "white",
-    borderRadius: 8,
-    width: ITEM_WIDTH,
-    paddingBottom: 40,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowOpacity: 0.29,
-    shadowRadius: 4.65,
-    elevation: 7,
-  },
-  image: {
-    width: ITEM_WIDTH,
-    height: 300,
-  },
-});
 
 export default CreateDossiersForm;

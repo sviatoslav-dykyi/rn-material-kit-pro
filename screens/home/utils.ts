@@ -1,4 +1,5 @@
 import { getDossiers } from "../../api/dossier";
+import { DossierLocation } from "../dossiers/types";
 
 export const fetchDossiers = async ({
   params,
@@ -14,3 +15,7 @@ export const fetchDossiers = async ({
   }
   setIsLoading(false);
 };
+
+export const extractFullAddress = ({
+  address: { street, houseNumber, city, postCode },
+}: DossierLocation): string => `${street} ${houseNumber}, ${city}, ${postCode}`;
