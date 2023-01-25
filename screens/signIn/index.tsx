@@ -19,7 +19,7 @@ import { Navigation } from "../../types/navigation";
 import { AuthContext } from "../../context/Auth";
 import DismissKeyboardHOC from "../../hoc/DismissKeyboard";
 import { HelperText, TextInput } from "react-native-paper";
-
+import { LoginManager, AccessToken } from "react-native-fbsdk-next";
 const { width } = Dimensions.get("window");
 
 const SignIn = () => {
@@ -33,6 +33,17 @@ const SignIn = () => {
   const { email, password } = useValidation();
 
   const { signIn } = useContext(AuthContext);
+
+  const signInWithFB = async () => {
+    const result = await LoginManager.logInWithPermissions(["public_profile"]);
+    if (result.isCancelled) {
+      console.log("Login cancelled");
+    } else {
+      AccessToken.getCurrentAccessToken().then((data) => {
+        console.log(data?.accessToken.toString());
+      });
+    }
+  };
 
   return (
     <LinearGradient
@@ -66,7 +77,9 @@ const SignIn = () => {
                     shadowless
                     iconColor={theme.COLORS?.WHITE}
                     style={styles.social}
-                    onPress={() => Alert.alert("Not implemented")}
+                    onPress={() => {
+                      signInWithFB();
+                    }}
                   />
                 </Block>
                 <Block flex middle center>

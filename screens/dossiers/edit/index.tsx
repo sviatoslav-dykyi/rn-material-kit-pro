@@ -128,8 +128,10 @@ const EditDossier = (): ReactElement => {
       </View>
     );
   }
+  dossier && console.log("dossier clear", dossier);
   dossier &&
     console.log("dossier?.property", prepareDossierBeforeForm(dossier));
+
   return (
     <FormContext.Provider
       value={

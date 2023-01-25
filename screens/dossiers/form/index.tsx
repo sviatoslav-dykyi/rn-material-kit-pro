@@ -126,7 +126,7 @@ const CreateDossiersForm = ({
 
   return (
     <View style={{ flex: 1, paddingTop: 30 }}>
-      <Button
+      {/* <Button
         icon="plus"
         iconFamily="Entypo"
         iconSize={20}
@@ -138,7 +138,7 @@ const CreateDossiersForm = ({
         loading={isSubmitting}
       >
         {mode === "create" ? "Create" : "Edit"}
-      </Button>
+      </Button> */}
       <ScrollView nestedScrollEnabled={true}>
         <Block center>
           <TextInput

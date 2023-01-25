@@ -4,10 +4,7 @@
     "description": "React Native - Material Kit PRO",
     "slug": "rn-material-kit-pro",
     "privacy": "unlisted",
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "platforms": ["ios", "android"],
     "version": "1.8.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -19,12 +16,20 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.rn-material-kit-pro"
+      "bundleIdentifier": "com.anonymous.rn-material-kit-pro",
+      "infoPlist": {
+        "SKAdNetworkItems": [
+          {
+            "SKAdNetworkIdentifier": "v9wttpbfk9.skadnetwork"
+          },
+          {
+            "SKAdNetworkIdentifier": "n38lu8286q.skadnetwork"
+          }
+        ]
+      }
     },
     "plugins": [
       [
@@ -38,12 +43,40 @@
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
+      ],
+      [
+        "react-native-fbsdk-next",
+        {
+          "appID": "878965883340523",
+          "clientToken": "20dcb98aa81c9103c07c59efb3a25a87",
+          "displayName": "RN"
+        }
+      ],
+      [
+        "react-native-fbsdk-next",
+        {
+          "appID": "878965883340523",
+          "clientToken": "20dcb98aa81c9103c07c59efb3a25a87",
+          "displayName": "RN SDK Demo",
+          "scheme": "fb48127127xxxxxxxx",
+          "advertiserIDCollectionEnabled": false,
+          "autoLogAppEventsEnabled": false,
+          "isAutoInitEnabled": true,
+          "iosUserTrackingPermission": "This identifier will be used to deliver personalized ads to you."
+        }
       ]
     ],
     "extra": {
       "eas": {
         "projectId": "44447cc0-1382-40a5-b14c-37ff6df6281c"
       }
+    },
+    "android": {
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.INTERNET"
+      ],
+      "package": "com.sviatoslad.rnmaterialkitpro"
     }
   }
 }

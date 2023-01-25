@@ -288,7 +288,7 @@ export const pickDocument =
         const { uuid } = response;
         console.log("response", response);
         setFieldValue("attachments", [
-          { uuid, type: "other", caption: "title1" },
+          // { uuid, type: "other", caption: "title1" },
         ]);
         setDocumentError("");
         setDocumentIsLoading(false);

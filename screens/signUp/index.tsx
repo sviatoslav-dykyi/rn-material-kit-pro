@@ -6,6 +6,7 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  View,
 } from "react-native";
 import { Formik } from "formik";
 import { Block, Button, Input, Text, theme } from "galio-framework";
@@ -65,270 +66,269 @@ const SignUp = () => {
         { flex: 1, paddingTop: (theme.SIZES?.BASE || 0) * 4 },
       ]}
     >
-      <DismissKeyboardHOC>
+      <KeyboardAvoidingView
+        style={{
+          flex: 1,
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
+        behavior="padding"
+        enabled
+        keyboardVerticalOffset={0}
+      >
+        {!verificationMode ? (
+          <>
+            <Formik
+              initialValues={initSignUpValues}
+              onSubmit={handleSignUpSubmit({
+                signUp,
+                setVerificationMode,
+                setVerificationEmail,
+              })}
+              validationSchema={Yup.object().shape({
+                firstName,
+                lastName,
+                email,
+                phone,
+                password,
+                passwordConfirm,
+              })}
+            >
+              {({
+                handleChange,
+                isSubmitting,
+                values,
+                submitForm,
+                touched,
+                status,
+                errors,
+                resetForm,
+              }) => (
+                <View
+                  style={{
+                    justifyContent: "center",
+                    flexDirection: "row",
+
+                    paddingTop: "30%",
+                  }}
+                >
+                  <View style={{ width: Dimensions.get("window").width * 0.9 }}>
+                    <TextInput
+                      style={[styles.inputPaper]}
+                      textColor="white"
+                      autoCapitalize="none"
+                      label={
+                        <Text style={styles.inputPaperLabel}>First name</Text>
+                      }
+                      underlineStyle={styles.inputPaperUnderlineStyle}
+                      value={values.firstName}
+                      onChangeText={handleChange("firstName")}
+                    />
+                    <HelperText
+                      type="error"
+                      visible={
+                        touched.firstName &&
+                        (status?.errors.firstName || errors.firstName)
+                      }
+                    >
+                      {touched.firstName &&
+                        (status?.errors.firstName || errors.firstName)}
+                    </HelperText>
+                    <TextInput
+                      style={[styles.inputPaper]}
+                      textColor="white"
+                      autoCapitalize="none"
+                      label={
+                        <Text style={styles.inputPaperLabel}>Last name</Text>
+                      }
+                      underlineStyle={styles.inputPaperUnderlineStyle}
+                      value={values.lastName}
+                      onChangeText={handleChange("lastName")}
+                    />
+                    <HelperText
+                      type="error"
+                      visible={
+                        touched.lastName &&
+                        (status?.errors.lastName || errors.lastName)
+                      }
+                    >
+                      {touched.lastName &&
+                        (status?.errors.lastName || errors.lastName)}
+                    </HelperText>
+                    <TextInput
+                      keyboardType="phone-pad"
+                      style={[styles.inputPaper]}
+                      textColor="white"
+                      autoCapitalize="none"
+                      label={<Text style={styles.inputPaperLabel}>Phone</Text>}
+                      underlineStyle={styles.inputPaperUnderlineStyle}
+                      value={values.phone}
+                      onChangeText={handleChange("phone")}
+                    />
+                    <HelperText
+                      type="error"
+                      visible={
+                        touched.phone && (status?.errors.phone || errors.phone)
+                      }
+                    >
+                      {touched.phone && (status?.errors.phone || errors.phone)}
+                    </HelperText>
+                    <TextInput
+                      keyboardType="email-address"
+                      style={[styles.inputPaper]}
+                      textColor="white"
+                      autoCapitalize="none"
+                      label={<Text style={styles.inputPaperLabel}>Email</Text>}
+                      underlineStyle={styles.inputPaperUnderlineStyle}
+                      value={values.email}
+                      onChangeText={handleChange("email")}
+                    />
+                    <HelperText
+                      type="error"
+                      visible={
+                        touched.email && (status?.errors.email || errors.email)
+                      }
+                    >
+                      {touched.email && (status?.errors.email || errors.email)}
+                    </HelperText>
+                    <TextInput
+                      secureTextEntry={secureTextEntry.password}
+                      style={[styles.inputPaper]}
+                      textColor="white"
+                      autoCapitalize="none"
+                      label={
+                        <Text style={styles.inputPaperLabel}>Password</Text>
+                      }
+                      underlineStyle={styles.inputPaperUnderlineStyle}
+                      value={values.password}
+                      onChangeText={handleChange("password")}
+                      right={
+                        <TextInput.Icon
+                          icon="eye"
+                          color={() => "white"}
+                          onPress={() => {
+                            setSecureTextEntry((prevState) => ({
+                              ...prevState,
+                              password: !prevState.password,
+                            }));
+                          }}
+                        />
+                      }
+                    />
+                    <HelperText
+                      type="error"
+                      visible={
+                        touched.password &&
+                        (status?.errors.password || errors.password)
+                      }
+                    >
+                      {touched.password &&
+                        (status?.errors.password || errors.password)}
+                    </HelperText>
+                    <TextInput
+                      secureTextEntry={secureTextEntry.passwordConfirm}
+                      style={[styles.inputPaper]}
+                      textColor="white"
+                      autoCapitalize="none"
+                      label={
+                        <Text style={styles.inputPaperLabel}>
+                          Repeat Password
+                        </Text>
+                      }
+                      underlineStyle={styles.inputPaperUnderlineStyle}
+                      value={values.passwordConfirm}
+                      onChangeText={handleChange("passwordConfirm")}
+                      right={
+                        <TextInput.Icon
+                          icon="eye"
+                          color={() => "white"}
+                          onPress={() => {
+                            setSecureTextEntry((prevState) => ({
+                              ...prevState,
+                              passwordConfirm: !prevState.passwordConfirm,
+                            }));
+                          }}
+                        />
+                      }
+                    />
+                    <HelperText
+                      type="error"
+                      visible={
+                        touched.passwordConfirm &&
+                        (status?.errors.passwordConfirm ||
+                          errors.passwordConfirm)
+                      }
+                    >
+                      {touched.passwordConfirm &&
+                        (status?.errors.passwordConfirm ||
+                          errors.passwordConfirm)}
+                    </HelperText>
+                    <Button
+                      size="large"
+                      shadowless
+                      style={{ height: 48, marginTop: 20 }}
+                      color={materialTheme.COLORS.BUTTON_COLOR}
+                      onPress={() => {
+                        submitForm();
+                      }}
+                      loading={isSubmitting}
+                    >
+                      SIGN UP
+                    </Button>
+                    <Button
+                      size="large"
+                      color="transparent"
+                      shadowless
+                      onPress={() => {
+                        resetForm();
+                        navigation?.navigate("Sign In");
+                      }}
+                    >
+                      <Text
+                        center
+                        color={theme.COLORS?.WHITE}
+                        size={(theme.SIZES?.FONT || 0) * 0.75}
+                      >
+                        Already have an account? Sign In
+                      </Text>
+                    </Button>
+                  </View>
+                </View>
+              )}
+            </Formik>
+          </>
+        ) : (
+          <ConfirmationCodeField
+            verificationMode={verificationMode}
+            value={verificationCode}
+            setValue={setVerificationCode}
+            error={verificationError}
+            isSubmitting={verificationSubmitting}
+            message={verificationEmail}
+            onPress={handleVerification({
+              verificationMode,
+              verificationCode,
+              setVerificationCode,
+              setVerificationMode,
+              setVerificationError,
+              setVerificationSubmitting,
+              setVerificationEmail,
+              navigation,
+              dispatch,
+            })}
+          />
+        )}
+      </KeyboardAvoidingView>
+
+      {/* <DismissKeyboardHOC>
         <Block flex middle>
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "position"}
             enabled
             keyboardVerticalOffset={0}
-          >
-            {!verificationMode ? (
-              <>
-                <Formik
-                  initialValues={initSignUpValues}
-                  onSubmit={handleSignUpSubmit({
-                    signUp,
-                    setVerificationMode,
-                    setVerificationEmail,
-                  })}
-                  validationSchema={Yup.object().shape({
-                    firstName,
-                    lastName,
-                    email,
-                    phone,
-                    password,
-                    passwordConfirm,
-                  })}
-                >
-                  {({
-                    handleChange,
-                    isSubmitting,
-                    values,
-                    submitForm,
-                    touched,
-                    status,
-                    errors,
-                    resetForm,
-                  }) => (
-                    <Block
-                      flex={1}
-                      center
-                      space="between"
-                      style={{ paddingTop: "30%" }}
-                    >
-                      <Block center>
-                        <TextInput
-                          style={[styles.inputPaper]}
-                          textColor="white"
-                          autoCapitalize="none"
-                          label={
-                            <Text style={styles.inputPaperLabel}>
-                              First name
-                            </Text>
-                          }
-                          underlineStyle={styles.inputPaperUnderlineStyle}
-                          value={values.firstName}
-                          onChangeText={handleChange("firstName")}
-                        />
-                        <HelperText
-                          type="error"
-                          visible={
-                            touched.firstName &&
-                            (status?.errors.firstName || errors.firstName)
-                          }
-                        >
-                          {touched.firstName &&
-                            (status?.errors.firstName || errors.firstName)}
-                        </HelperText>
-                        <TextInput
-                          style={[styles.inputPaper]}
-                          textColor="white"
-                          autoCapitalize="none"
-                          label={
-                            <Text style={styles.inputPaperLabel}>
-                              Last name
-                            </Text>
-                          }
-                          underlineStyle={styles.inputPaperUnderlineStyle}
-                          value={values.lastName}
-                          onChangeText={handleChange("lastName")}
-                        />
-                        <HelperText
-                          type="error"
-                          visible={
-                            touched.lastName &&
-                            (status?.errors.lastName || errors.lastName)
-                          }
-                        >
-                          {touched.lastName &&
-                            (status?.errors.lastName || errors.lastName)}
-                        </HelperText>
-                        <TextInput
-                          keyboardType="phone-pad"
-                          style={[styles.inputPaper]}
-                          textColor="white"
-                          autoCapitalize="none"
-                          label={
-                            <Text style={styles.inputPaperLabel}>Phone</Text>
-                          }
-                          underlineStyle={styles.inputPaperUnderlineStyle}
-                          value={values.phone}
-                          onChangeText={handleChange("phone")}
-                        />
-                        <HelperText
-                          type="error"
-                          visible={
-                            touched.phone &&
-                            (status?.errors.phone || errors.phone)
-                          }
-                        >
-                          {touched.phone &&
-                            (status?.errors.phone || errors.phone)}
-                        </HelperText>
-                        <TextInput
-                          keyboardType="email-address"
-                          style={[styles.inputPaper]}
-                          textColor="white"
-                          autoCapitalize="none"
-                          label={
-                            <Text style={styles.inputPaperLabel}>Email</Text>
-                          }
-                          underlineStyle={styles.inputPaperUnderlineStyle}
-                          value={values.email}
-                          onChangeText={handleChange("email")}
-                        />
-                        <HelperText
-                          type="error"
-                          visible={
-                            touched.email &&
-                            (status?.errors.email || errors.email)
-                          }
-                        >
-                          {touched.email &&
-                            (status?.errors.email || errors.email)}
-                        </HelperText>
-                        <TextInput
-                          secureTextEntry={secureTextEntry.password}
-                          style={[styles.inputPaper]}
-                          textColor="white"
-                          autoCapitalize="none"
-                          label={
-                            <Text style={styles.inputPaperLabel}>Password</Text>
-                          }
-                          underlineStyle={styles.inputPaperUnderlineStyle}
-                          value={values.password}
-                          onChangeText={handleChange("password")}
-                          right={
-                            <TextInput.Icon
-                              icon="eye"
-                              color={() => "white"}
-                              onPress={() => {
-                                setSecureTextEntry((prevState) => ({
-                                  ...prevState,
-                                  password: !prevState.password,
-                                }));
-                              }}
-                            />
-                          }
-                        />
-                        <HelperText
-                          type="error"
-                          visible={
-                            touched.password &&
-                            (status?.errors.password || errors.password)
-                          }
-                        >
-                          {touched.password &&
-                            (status?.errors.password || errors.password)}
-                        </HelperText>
-                        <TextInput
-                          secureTextEntry={secureTextEntry.passwordConfirm}
-                          style={[styles.inputPaper]}
-                          textColor="white"
-                          autoCapitalize="none"
-                          label={
-                            <Text style={styles.inputPaperLabel}>
-                              Repeat Password
-                            </Text>
-                          }
-                          underlineStyle={styles.inputPaperUnderlineStyle}
-                          value={values.passwordConfirm}
-                          onChangeText={handleChange("passwordConfirm")}
-                          right={
-                            <TextInput.Icon
-                              icon="eye"
-                              color={() => "white"}
-                              onPress={() => {
-                                setSecureTextEntry((prevState) => ({
-                                  ...prevState,
-                                  passwordConfirm: !prevState.passwordConfirm,
-                                }));
-                              }}
-                            />
-                          }
-                        />
-                        <HelperText
-                          type="error"
-                          visible={
-                            touched.passwordConfirm &&
-                            (status?.errors.passwordConfirm ||
-                              errors.passwordConfirm)
-                          }
-                        >
-                          {touched.passwordConfirm &&
-                            (status?.errors.passwordConfirm ||
-                              errors.passwordConfirm)}
-                        </HelperText>
-                      </Block>
-                      <Block flex center style={{ marginTop: 20 }}>
-                        <Button
-                          size="large"
-                          shadowless
-                          style={{ height: 48 }}
-                          color={materialTheme.COLORS.BUTTON_COLOR}
-                          onPress={() => {
-                            submitForm();
-                          }}
-                          loading={isSubmitting}
-                        >
-                          SIGN UP
-                        </Button>
-                        <Button
-                          size="large"
-                          color="transparent"
-                          shadowless
-                          onPress={() => {
-                            resetForm();
-                            navigation?.navigate("Sign In");
-                          }}
-                        >
-                          <Text
-                            center
-                            color={theme.COLORS?.WHITE}
-                            size={(theme.SIZES?.FONT || 0) * 0.75}
-                          >
-                            Already have an account? Sign In
-                          </Text>
-                        </Button>
-                      </Block>
-                    </Block>
-                  )}
-                </Formik>
-              </>
-            ) : (
-              <ConfirmationCodeField
-                verificationMode={verificationMode}
-                value={verificationCode}
-                setValue={setVerificationCode}
-                error={verificationError}
-                isSubmitting={verificationSubmitting}
-                message={verificationEmail}
-                onPress={handleVerification({
-                  verificationMode,
-                  verificationCode,
-                  setVerificationCode,
-                  setVerificationMode,
-                  setVerificationError,
-                  setVerificationSubmitting,
-                  setVerificationEmail,
-                  navigation,
-                  dispatch,
-                })}
-              />
-            )}
-          </KeyboardAvoidingView>
+          ></KeyboardAvoidingView>
         </Block>
-      </DismissKeyboardHOC>
+      </DismissKeyboardHOC> */}
     </LinearGradient>
   );
 };
